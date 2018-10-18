@@ -1,0 +1,8 @@
+Starting a db with authentication:
+cd Program Files\MongoDB\Server\4.0\bin
+mongod --auth --port 27017 --dbpath /data/db
+
+mongo --port 27017 -u "myUserAdmin" -p "abc123" --authenticationDatabase "admin"
+
+SET DEBUG=goal_App:* & npm run devstart
+

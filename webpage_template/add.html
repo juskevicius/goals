@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <title>Norian Goals</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Free Web tutorials">
+    <meta name="keywords" content="HTML,CSS,XML,JavaScript">
+    <meta name="author" content="John Doe">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap. Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Bootstrap. jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Bootstrap. Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+</head>
+<body>
+    <header>    
+    </header>
+    <main>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12">Add a new goal</div>
+            </div>
+            <div class="row">
+                <div class="col-xs-3"></div>
+                <div class="col-xs-6">
+                    <form action="/addAGoal" method="post" href="">
+                        <div class="form-group">
+                            <label for="name">Goal:</label>
+                            <input type="text" class="form-control" name="goal">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="current">Score 2019-01-01:</label>
+                            <input type="text" class="form-control" name="current" placeholder="50%">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="target">Target score:</label>
+                            <input type="text" class="form-control" name="target" placeholder="99%">
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Link as a <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">parent to</a></li>
+                                    <li><a href="#">child to</a></li>
+                                </ul>
+                            </div>
+                            <input type="text" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="assign">Assign to:</label>
+                            <input type="text" class="form-control" name="assign" placeholder="Department or group">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="comment">Comment:</label>
+                            <input type="text" class="form-control" name="comment">
+                        </div>
+
+                        <div class="form-group">
+                            <input class="btn btn-default" type="submit" value="Save">
+                        </div>
+                        
+                    </form>
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </main>
+</body>

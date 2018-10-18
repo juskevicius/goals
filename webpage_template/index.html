@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <title>Norian Goals</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Free Web tutorials">
+    <meta name="keywords" content="HTML,CSS,XML,JavaScript">
+    <meta name="author" content="John Doe">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap. Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Bootstrap. jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Bootstrap. Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--<script src="https://d3js.org/d3.v5.min.js"></script>-->
+    <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    
+</head>
+<body>
+    <header>    
+    </header>
+    <main>
+        <div class="container-fluid">
+            <div class="row">
+                <nav>
+                    <ul class="nav">
+                        <li class="">
+                            <a href="#"><i class="fa fa-sitemap" style="font-size:24px"></i> Lithuania</a>
+                            <ul>
+                                <li>
+                                    <a href="#">Dep1</a>
+                                    <ul>
+                                        <li><a href="#">Unit0</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Dep2</a>
+                                    <ul>
+                                        <li><a href="#">Unit1</a></li>
+                                        <li><a href="#">Unit2</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Dep3</a>
+                                    <ul>
+                                        <li><a href="#">Unit3</a></li>
+                                        <li><a href="#">Unit4</a></li>
+                                        <li><a href="#">Unit5</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Dep4</a>
+                                    <ul>
+                                        <li><a href="#">Unit6</a></li>
+                                        <li><a href="#">Unit7</a></li>
+                                        <li><a href="#">Unit8</a></li>
+                                        <li><a href="#">Unit8</a></li>
+                                        <li><a href="#">Unit9</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Dep5</a>
+                                    <ul>
+                                        <li><a href="#">Unit10</a></li>
+                                        <li><a href="#">Unit11</a></li>
+                                        <li><a href="#">Unit12</a></li>
+                                        <li><a href="#">Unit13</a></li>
+                                        <li><a href="#">Unit14</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Dep6</a>
+                                    <ul>
+                                        <li><a href="#">Unit15</a></li>
+                                        <li><a href="#">Unit16</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="#"><i class="fa fa-bullseye" style="font-size:24px"></i> Goals</a>
+                            <ul>
+                                <li><a href="#" onclick="addFormOn()">Add</a></li>
+                                <li><a href="/displayAll">Pending</a></li>
+                                <li><a href="#">Accepted</a></li>
+                                <li><a href="#">Rejected</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav> 
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-4"></div>
+                <div class="col-xs-4">
+                    <div class="add-form">
+                        <div class="col-xs-12 form-header">Add a new goal</div>
+                        <div class="col-xs-12 form-body">
+                            <form action="/addAGoal" method="post" href="">
+                                <div class="form-group">
+                                    <label for="name">Goal:</label>
+                                    <input type="text" class="form-control" name="goal">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="current">Score 2019-01-01:</label>
+                                    <input type="text" class="form-control" name="current" placeholder="50%">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="target">Target score:</label>
+                                    <input type="text" class="form-control" name="target" placeholder="99%">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="comment">Comment:</label>
+                                    <input type="text" class="form-control" name="comment">
+                                </div>
+
+                                <div class="btn-group more-btn">
+                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        More <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">Offer to</a></li>
+                                        <li><a href="#">Link to</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="form-group save-btn">
+                                    <input class="btn btn-default" type="submit" value="Save">
+                                </div>
+
+                                <div class="col-xs-12" id="offer-group">
+                                    <div class="col-xs-8">
+                                        <div class="btn-group offer-btn">
+                                            <label for="offerTo">Offer to:</label>   
+                                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Choose <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#" onclick="selectUnit()">Dep1</a></li>
+                                                <li><a href="#" onclick="selectUnit()">Dep2</a></li>
+                                                <li><a href="#">Dep3</a></li>
+                                                <li><a href="#">Dep4</a></li>
+                                                <li><a href="#">Dep5</a></li>
+                                                <li><a href="#">Dep6</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-4">
+                                        <div class="form-group weight">
+                                            <label for="comment">Weight:</label>
+                                            <input type="text" class="form-control" name="weight" placeholder="100%">
+                                        </div>
+                                    </div>
+                                </div><!-- /.col-xs-12 -->
+
+                                <div class="col-xs-12">
+                                    <div class="col-xs-8">
+                                        <div class="btn-group offer-btn">
+                                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Choose <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#" onclick="selectUnit()">Dep1</a></li>
+                                                <li><a href="#" onclick="selectUnit()">Dep2</a></li>
+                                                <li><a href="#">Dep3</a></li>
+                                                <li><a href="#">Dep4</a></li>
+                                                <li><a href="#">Dep5</a></li>
+                                                <li><a href="#">Dep6</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-4">
+                                        <div class="form-group weight">
+                                            <input type="text" class="form-control" name="weight" placeholder="100%">
+                                        </div>
+                                    </div>
+                                </div><!-- /.col-xs-12 -->
+
+
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4"></div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        <div class="container-fluid">
+            <div class="row charts">
+                <div class="col-xs-2"></div>
+                <div class="col-xs-4">
+                    <div class="gauge-chart"></div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="line-chart"></div>
+                </div>
+                <div class="col-xs-2"></div>
+            </div><!-- /.row -->
+            <script src="./script.js"></script>
+
+            <div class="overlay" onclick="addFormOff()"></div>
+            
+        </div><!-- /.container-fluid -->
+    </main>
+    <footer>  
+    </footer>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "goals",
+  "version": "1.0.0",
+  "description": "a system to track the implementation of goals in Norian",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "goals",
+    "KPIs"
+  ],
+  "author": "Mantas Juskevicius",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mongodb": "^3.1.4"
+  }
+}
