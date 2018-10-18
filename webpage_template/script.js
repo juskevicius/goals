@@ -1,17 +1,9 @@
 //controll the contents
-
-var onOff1 = true;
 var onOff2 = true;
 
 function showAddForm() {
-    if (onOff1) {
-        document.getElementsByClassName("add-form")[0].style.display = "initial";
-        document.getElementsByClassName("overlay")[0].style.display = "initial";
-    } else {
-        document.getElementsByClassName("add-form")[0].style.display = "none";
-        document.getElementsByClassName("overlay")[0].style.display = "none";
-    }
-    onOff1 = !onOff1;
+    document.getElementsByClassName("add-form")[0].style.display = "initial";
+    document.getElementsByClassName("overlay")[0].style.display = "initial";
 }
 
 function showOfferGrp() {
@@ -23,16 +15,26 @@ function showOfferGrp() {
     onOff2 = !onOff2;
 }
 
+function showAccGoals() {
+    document.getElementsByClassName("acc-goals")[0].style.display = "initial";
+    document.getElementsByClassName("overlay")[0].style.display = "initial";
+}
+
+function hideForms() {
+    document.getElementsByClassName("acc-goals")[0].style.display = "none";
+    document.getElementsByClassName("add-form")[0].style.display = "none";
+    document.getElementsByClassName("overlay")[0].style.display = "none";
+}
+
 function selectUnit(nr) {  
     document.getElementsByClassName("offer-group")[0].getElementsByClassName("dropdown-toggle")[nr].innerHTML = event.target.innerText;
-    createNewOfferElm(nr)
+    if (nr == document.getElementsByClassName("offer-elm").length - 1) {
+        createNewOfferElm(nr);
+    }
 }
 
 function createNewOfferElm(nr) {
     let offerToElm = document.getElementsByClassName("offer-elm")[0].cloneNode(true);
-    let offerLabel = offerToElm.getElementsByTagName("label");
-    offerToElm.getElementsByClassName("offer-list")[0].removeChild(offerLabel[0]);
-    offerToElm.getElementsByClassName("weight")[0].removeChild(offerLabel[0]);
     offerToElm.getElementsByClassName("dropdown-toggle")[0].innerHTML = "Choose <span class='caret'></span>";
     offerToElm.getElementsByClassName("weight")[0].getElementsByTagName("input")[0].value = "";
     let units = offerToElm.getElementsByClassName("dropdown-menu")[0].getElementsByTagName("a");
@@ -42,7 +44,6 @@ function createNewOfferElm(nr) {
     let offerButton = document.getElementsByClassName("offer-btn")[0];
     document.getElementsByClassName("offer-group")[0].insertBefore(offerToElm, offerButton);
 }
-
 
 // Building the gauge chart:
 

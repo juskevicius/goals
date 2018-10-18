@@ -85,7 +85,7 @@
                             <ul>
                                 <li><a href="#" onclick="showAddForm()">Add</a></li>
                                 <li><a href="/displayAll">Pending</a></li>
-                                <li><a href="#">Accepted</a></li>
+                                <li><a href="#" onclick="showAccGoals()">Accepted</a></li>
                                 <li><a href="#">Rejected</a></li>
                             </ul>
                         </li>
@@ -107,8 +107,8 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="current">Score 2019-01-01:</label>
-                                    <input type="text" class="form-control" name="current" placeholder="50%">
+                                    <label for="initScore">Initial score:</label>
+                                    <input type="text" class="form-control" name="initScore" placeholder="50%">
                                 </div>
 
                                 <div class="form-group">
@@ -127,7 +127,7 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li><a href="#" onclick="showOfferGrp()">Offer to</a></li>
-                                        <li><a href="#">Link to</a></li>
+                                        <li><a href="#">Something more</a></li>
                                     </ul>
                                 </div>
 
@@ -140,7 +140,7 @@
                         <form action="/offerTo" method="post" href=""></form>
                             <div class="col-xs-12 offer-group">
                                 <div class="col-xs-12 offer-elm">
-                                    <div class="col-xs-8">
+                                    <div class="col-xs-5">
                                         <div class="btn-group offer-list">
                                             <label for="offerTo">Offer to:</label>   
                                             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -157,11 +157,30 @@
                                             </ul>
                                         </div>
                                     </div>
-
-                                    <div class="col-xs-4">
+                                    <div class="col-xs-2"></div>
+                                    <div class="col-xs-5">
                                         <div class="form-group weight">
-                                            <label for="comment">Weight:</label>
+                                            <label for="weight">Weight:</label>
                                             <input type="text" class="form-control" name="weight" placeholder="100%">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-5">
+                                        <div class="form-group">
+                                            <label for="oInitScore">Initial score:</label>
+                                            <input type="text" class="form-control" name="oInitScore" placeholder="50%">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-2"></div>
+                                    <div class="col-xs-5">
+                                        <div class="form-group">
+                                            <label for="oTarget">Target score:</label>
+                                            <input type="text" class="form-control" name="oTarget" placeholder="100%">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <div class="form-group offer-comment">
+                                            <label for="oComment">Comment:</label>
+                                            <input type="text" class="form-control" name="oComment" placeholder="">
                                         </div>
                                     </div>
                                 </div><!-- /.col-xs-12 offer-elm-->
@@ -175,6 +194,47 @@
                 <div class="col-xs-4"></div>
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-4"></div>
+                <div class="col-xs-4 acc-goals">
+                    <div class="col-xs-12 acc-goals-header">
+                        Accepted goals
+                    </div>
+                    <div class="col-xs-12 acc-goals-body">
+                        <div class="col-xs-12 headers">
+                            <div class="col-xs-6">Goal</div>
+                            <div class="col-xs-2">Initial score</div>
+                            <div class="col-xs-2">Current score</div>
+                            <div class="col-xs-2">Target score</div>
+                        </div>
+                        <div class="col-xs-12 acc-goals-list">
+                            <div class="col-xs-12 acc-goal-data">
+                                <div class="col-xs-6"><a href="">To do something</a></div>
+                                <div class="col-xs-2">0</div>
+                                <div class="col-xs-2">50</div>
+                                <div class="col-xs-2">99</div>    
+                            </div>
+                            <div class="col-xs-12 acc-goal-data">
+                                <div class="col-xs-6"><a href="">To do something else</a></div>
+                                <div class="col-xs-2">10</div>
+                                <div class="col-xs-2">60</div>
+                                <div class="col-xs-2">90</div>    
+                            </div>
+                            <div class="col-xs-12 acc-goal-data">
+                                <div class="col-xs-6"><a href="">To do more of something else</a></div>
+                                <div class="col-xs-2">50</div>
+                                <div class="col-xs-2">90</div>
+                                <div class="col-xs-2">100</div>    
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.col-xs-4 acc-goals-->
+                <div class="col-xs-4"></div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        
         <div class="container-fluid">
             <div class="row charts">
                 <div class="col-xs-2"></div>
@@ -186,13 +246,12 @@
                 </div>
                 <div class="col-xs-2"></div>
             </div><!-- /.row -->
-            <script src="./script.js"></script>
-
-            <div class="overlay" onclick="showAddForm()"></div>
-            
         </div><!-- /.container-fluid -->
+
+        <div class="overlay" onclick="hideForms()"></div>
     </main>
-    <footer>  
+    <footer>
+        <script src="./script.js"></script>  
     </footer>
 </body>
 </html>

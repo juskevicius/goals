@@ -82,18 +82,20 @@ nav ul {
   top: 15%;
 }
 
-.form-header {
+.form-header, .acc-goals-header {
   background-color: #515ad8;
   padding: 4% 10%;
   color: white;
   font-size: 28px;
   z-index: 3;
 }
-.form-body {
+.form-body, .acc-goals-body {
   background-color: white;
   padding: 10%;
   z-index: 3;
 }
+
+/*Styling add-form buttons and labels*/
 
 .add-form input, .btn-group button, .add-form input:focus, .btn-group button:focus, .add-form input:active  {
   border: none;
@@ -102,7 +104,7 @@ nav ul {
   border-radius: 0px; 
 }
 
-.add-form label {
+.add-form label, .acc-goals-body .headers {
   color: rgb(88, 88, 88);
 }
 
@@ -110,6 +112,17 @@ nav ul {
   float: right;
   border: 1px solid rgb(88, 88, 88);
   margin-left: 20px;
+}
+
+/*Styling offer-group*/
+
+.offer-group {
+  display: none;
+}
+
+.offer-elm, .offer-elm div, .offer-list, .weight, .acc-goals-body div {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .offer-list {
@@ -123,8 +136,34 @@ nav ul {
   height: 30px;
 }
 
-.offer-group {
-  display: none;
+.offer-comment {
+  border-bottom: 1px solid rgb(82, 82, 82);
+  margin-bottom: 40px;
 }
+
+/*Styling the accepted goals list*/
+
+.acc-goals {
+  display: none;
+  position: absolute;
+  top: 15%;
+}
+
+.acc-goals-body .headers {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.acc-goal-data {
+  padding-top: 15px;
+}
+
+.acc-goal-data div {
+  text-align: center;
+  font-size: 16px;
+}
+
+ 
 
 
