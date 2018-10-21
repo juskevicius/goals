@@ -1,5 +1,7 @@
 //controll the contents
+var onOff1 = true;
 var onOff2 = true;
+var onOff3 = true;
 
 function showAddForm() {
     document.getElementsByClassName("add-form")[0].style.display = "initial";
@@ -9,6 +11,9 @@ function showAddForm() {
 function showOfferGrp() {
     if (onOff2) {
         document.getElementsByClassName("offer-group")[0].style.display = "initial";
+        document.getElementsByClassName("offer-i-score")[0].getElementsByTagName("input")[0].value = document.getElementsByClassName("i-score")[0].getElementsByTagName("input")[0].value;
+        document.getElementsByClassName("offer-t-score")[0].getElementsByTagName("input")[0].value = document.getElementsByClassName("t-score")[0].getElementsByTagName("input")[0].value;
+        document.getElementsByClassName("offer-comment")[0].getElementsByTagName("input")[0].value = document.getElementsByClassName("comment")[0].getElementsByTagName("input")[0].value;
     } else {
         document.getElementsByClassName("offer-group")[0].style.display = "none";
     }
@@ -20,8 +25,38 @@ function showAccGoals() {
     document.getElementsByClassName("overlay")[0].style.display = "initial";
 }
 
+function showOwnPndGoals() {
+    document.getElementsByClassName("pnd-goals")[0].style.display = "initial";
+    document.getElementsByClassName("overlay")[0].style.display = "initial";
+}
+
+function showPndResponse() {
+    if (onOff1) {
+        document.getElementsByClassName("pnd-my-response")[0].style.display = "initial";
+    } else {
+        document.getElementsByClassName("pnd-my-response")[0].style.display = "none";
+    }
+    onOff1 = !onOff1;
+}
+
+function showOffPndGoals() {
+    document.getElementsByClassName("off-pnd-goals")[0].style.display = "initial";
+    document.getElementsByClassName("overlay")[0].style.display = "initial";
+}
+
+function showPndOffer() {
+    if (onOff3) {
+        document.getElementsByClassName("pnd-my-offer")[0].style.display = "initial";
+    } else {
+        document.getElementsByClassName("pnd-my-offer")[0].style.display = "none";
+    }
+    onOff3 = !onOff3;
+}
+
 function hideForms() {
     document.getElementsByClassName("acc-goals")[0].style.display = "none";
+    document.getElementsByClassName("pnd-goals")[0].style.display = "none";
+    document.getElementsByClassName("off-pnd-goals")[0].style.display = "none";
     document.getElementsByClassName("add-form")[0].style.display = "none";
     document.getElementsByClassName("overlay")[0].style.display = "none";
 }
@@ -42,14 +77,14 @@ function createNewOfferElm(nr) {
         units[i].setAttribute("onclick", "selectUnit(" + (nr + 1) + ")");
     }
     let offerButton = document.getElementsByClassName("offer-btn")[0];
-    document.getElementsByClassName("offer-group")[0].insertBefore(offerToElm, offerButton);
+    document.getElementsByClassName("offer-group")[0].getElementsByClassName("row")[0].insertBefore(offerToElm, offerButton);
 }
 
 // Building the gauge chart:
 
 var perc = 0.75;
 var targetVal = 0.85;
-var width = 550;
+var width = document.getElementsByClassName("dashboard")[0].getElementsByClassName("col-xs-4")[0].offsetWidth - 4 - 20;
 
 var height = width * 0.65;
 var fontSize = width * 0.064;
