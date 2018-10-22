@@ -2,7 +2,132 @@ body {
   background-color: rgb(240, 239, 239);
 }
 
-/*Styling the navbar*/
+.container-fluid {
+  position: relative;
+}
+
+/* General form styling. Forms: Add a goal, Accepted goals, My pending goals, My offered pending goals */
+
+.overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.7);
+  z-index: 2;
+  cursor: pointer;
+}
+
+.add-form, .acc-goals, .pnd-goals, .off-pnd-goals {
+  display: none;
+  position: absolute;
+  margin-top: 10%;
+}
+
+.form-header, .acc-goals-header, .pnd-goals-header {
+  background-color: #515ad8;
+  padding: 4% 10%;
+  color: white;
+  font-size: 28px;
+  z-index: 3;
+}
+
+.form-body, .acc-goals-body, .pnd-goals-body {
+  background-color: white;
+  padding: 10%;
+  z-index: 3;
+}
+
+/* Styling form buttons and labels */
+
+.add-form input, .add-form input:focus, .add-form input:active, .pnd-goals-unit input, .pnd-goals-unit input:focus, .pnd-goals-unit input:read-only, .btn-group button, .btn-group button:focus {
+  border: none;
+  border-bottom: 1px solid rgb(235, 235, 235);
+  box-shadow: none;
+  border-radius: 0px;
+  background-color: white;
+}
+
+.add-form label, .acc-goals-body .headers {
+  color: rgb(88, 88, 88);
+}
+
+.more-btn, .save-btn, .offer-btn, .accept-btn, .negotiate-btn, .reject-btn {
+  float: right;
+  border: 1px solid rgb(88, 88, 88);
+  margin: 10px 0 0 20px;
+}
+
+/* Styling offer-group */
+
+.offer-group {
+  display: none;
+}
+
+.offer-elm {
+  margin: 20px 0;
+}
+
+.offer-list {
+  padding-top: 4px;
+  width: 100%;
+}
+
+.offer-list button {
+  text-align: left;
+  width: 100%;
+  height: 30px;
+}
+
+.offer-comment {
+  border-bottom: 1px solid rgb(82, 82, 82);
+}
+
+/* Styling the accepted goals list */
+
+.acc-goals-body .headers {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.acc-goal-data {
+  padding-top: 15px;
+}
+
+.acc-goal-data div {
+  text-align: center;
+  font-size: 16px;
+}
+
+/* Styling the pending goal list */
+
+.pnd-label {
+  font-weight: bold;
+  margin: 10px 0 40px 0;
+  font-size: 16px;
+}
+
+.pnd-my-response, .pnd-my-offer {
+  display: none;
+  margin: 40px 0;
+  padding-bottom: 25px;
+  border-bottom: 1px solid black;
+}
+
+.pnd-goals .offer-comment, .off-pnd-goals .offer-comment {
+  border-bottom: none;
+}
+
+/* Styling the navbar */
+
+.navbar {
+  padding: 0;
+}
 
 nav ul {
     margin: 0;
@@ -56,139 +181,6 @@ nav ul {
     height: 44px;
 }
 
-.container-fluid {
-  position: relative;
-}
-
-/*Styling the Add form and some other forms*/
-
-.overlay {
-  position: fixed;
-  display: none;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.7);
-  z-index: 2;
-  cursor: pointer;
-}
-
-.add-form {
-  display: none;
-  position: absolute;
-  top: 15%;
-}
-
-.form-header, .acc-goals-header, .pnd-goals-header {
-  background-color: #515ad8;
-  padding: 4% 10%;
-  color: white;
-  font-size: 28px;
-  z-index: 3;
-}
-
-.form-body, .acc-goals-body, .pnd-goals-body {
-  background-color: white;
-  padding: 10%;
-  z-index: 3;
-}
-
-/*Styling add-form buttons and labels*/
-
-.add-form input, .add-form input:focus, .add-form input:active, .pnd-goals-unit input, .pnd-goals-unit input:focus, .pnd-goals-unit input:read-only, .btn-group button, .btn-group button:focus {
-  border: none;
-  border-bottom: 1px solid rgb(235, 235, 235);
-  box-shadow: none;
-  border-radius: 0px;
-  background-color: white;
-}
-
-.add-form label, .acc-goals-body .headers {
-  color: rgb(88, 88, 88);
-}
-
-.more-btn, .save-btn, .offer-btn, .accept-btn, .negotiate-btn, .reject-btn {
-  float: right;
-  border: 1px solid rgb(88, 88, 88);
-  margin: 10px 0 0 20px;
-}
-
-/*Styling offer-group*/
-
-.offer-group {
-  display: none;
-}
-
-.offer-elm {
-  margin: 20px 0;
-}
-
-.offer-list {
-  padding-top: 4px;
-  width: 100%;
-}
-
-.offer-list button {
-  text-align: left;
-  width: 100%;
-  height: 30px;
-}
-
-.offer-comment {
-  border-bottom: 1px solid rgb(82, 82, 82);
-}
-
-/*Styling the accepted goals list*/
-
-.acc-goals {
-  display: none;
-  position: absolute;
-  top: 15%;
-}
-
-.acc-goals-body .headers {
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-}
-
-.acc-goal-data {
-  padding-top: 15px;
-}
-
-.acc-goal-data div {
-  text-align: center;
-  font-size: 16px;
-}
-
-/* Styling the pending goal list */
-
-.pnd-goals, .off-pnd-goals {
-  display: none;
-  position: absolute;
-  top: 15%;
-}
-
-.pnd-label {
-  font-weight: bold;
-  margin: 10px 0 40px 0;
-  font-size: 16px;
-}
-
-.pnd-my-response, .pnd-my-offer {
-  display: none;
-  margin: 40px 0;
-  padding-bottom: 25px;
-  border-bottom: 1px solid black;
-}
-
-.pnd-goals .offer-comment, .off-pnd-goals .offer-comment {
-  border-bottom: none;
-}
-
 /* Styling the dashboard */
 
 .dashboard .header {
@@ -200,8 +192,15 @@ nav ul {
   background-color: white;
 }
 
+.dashboard .col-xs-4 {
+  padding: 0;
+}
+
+.gauge-chart {
+  margin-right: 20px;
+}
 .line-chart {
-  padding-left: 20px;
+  margin-left: 20px;
 }
 
 .dashboard .other {
@@ -209,8 +208,11 @@ nav ul {
   margin-bottom: 40px;
 }
 
-.dashboard .col-xs-4 {
-  padding: 0;
+.dashboard .summary {
+  margin-right: 20px;
+}
+.dashboard .children {
+  margin-left: 20px;
 }
 
 .dashboard .summary, .dashboard .children {
@@ -218,12 +220,4 @@ nav ul {
   font-size: 18px;
   line-height: 36px;
   padding: 40px;
-}
-
-.dashboard .summary {
-  margin-right: 20px;
-}
-
-.dashboard .children {
-  margin-left: 20px;
 }

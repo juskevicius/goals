@@ -26,81 +26,6 @@
     <main>
         <div class="container-fluid">
             <div class="row">
-                <nav>
-                    <ul class="nav">
-                        <li class="">
-                            <a href="#"><i class="fa fa-sitemap" style="font-size:24px"></i> Lithuania</a>
-                            <ul>
-                                <li>
-                                    <a href="#">Dep1</a>
-                                    <ul>
-                                        <li><a href="#">Unit0</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">Dep2</a>
-                                    <ul>
-                                        <li><a href="#">Unit1</a></li>
-                                        <li><a href="#">Unit2</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">Dep3</a>
-                                    <ul>
-                                        <li><a href="#">Unit3</a></li>
-                                        <li><a href="#">Unit4</a></li>
-                                        <li><a href="#">Unit5</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">Dep4</a>
-                                    <ul>
-                                        <li><a href="#">Unit6</a></li>
-                                        <li><a href="#">Unit7</a></li>
-                                        <li><a href="#">Unit8</a></li>
-                                        <li><a href="#">Unit8</a></li>
-                                        <li><a href="#">Unit9</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">Dep5</a>
-                                    <ul>
-                                        <li><a href="#">Unit10</a></li>
-                                        <li><a href="#">Unit11</a></li>
-                                        <li><a href="#">Unit12</a></li>
-                                        <li><a href="#">Unit13</a></li>
-                                        <li><a href="#">Unit14</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">Dep6</a>
-                                    <ul>
-                                        <li><a href="#">Unit15</a></li>
-                                        <li><a href="#">Unit16</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li><a href="#"><i class="fa fa-bullseye" style="font-size:24px"></i> Goals</a>
-                            <ul>
-                                <li><a href="#" onclick="showAddForm()">Add</a></li>
-                                <li>
-                                    <a href="#">Pending</a>
-                                    <ul>
-                                        <li><a href="#" onclick="showOwnPndGoals()">Own</a></li>
-                                        <li><a href="#" onclick="showOffPndGoals()">Offered</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#" onclick="showAccGoals()">Accepted</a></li>
-                                <li><a href="#">Rejected</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </nav> 
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-        <div class="container-fluid">
-            <div class="row">
                 <div class="col-xs-4"></div>
                 <div class="col-xs-4 add-form">
                     <div class="row">
@@ -116,22 +41,18 @@
                                             <label for="name">Goal:</label>
                                             <input type="text" class="form-control" name="goal">
                                         </div>
-
                                         <div class="form-group i-score">
                                             <label for="initScore">Initial score:</label>
                                             <input type="text" class="form-control" name="initScore" placeholder="50%">
                                         </div>
-
                                         <div class="form-group t-score">
                                             <label for="target">Target score:</label>
                                             <input type="text" class="form-control" name="target" placeholder="99%">
                                         </div>
-
                                         <div class="form-group comment">
                                             <label for="comment">Comment:</label>
                                             <input type="text" class="form-control" name="comment">
                                         </div>
-
                                         <div class="btn-group more-btn">
                                             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 More <span class="caret"></span>
@@ -141,7 +62,6 @@
                                                 <li><a href="#">Something more</a></li>
                                             </ul>
                                         </div>
-
                                         <div class="form-group save-btn">
                                             <input class="btn btn-default" type="submit" value="Save">
                                         </div>
@@ -363,8 +283,8 @@
                     </div><!-- /.row -->
                 </div><!-- /.col-xs-6 pnd-goals-->
                 <div class="col-xs-3"></div>
-            </div>
-        </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
 
         <div class="container-fluid">
             <div class="row">
@@ -465,57 +385,136 @@
                     </div><!-- /.row -->
                 </div><!-- /.col-xs-6 off-pnd-goals-->
                 <div class="col-xs-3"></div>
-            </div>
-        </div>
-            
-
-        <div class="container-fluid dashboard">
-            <div class="row title">
-                <div class="col-xs-2"></div>
-                <div class="col-xs-8 header">
-                    Goal: To do something
-                </div>
-                <div class="col-xs-2"></div>
-            </div>
-            <div class="row charts">
-                <div class="col-xs-2"></div>
-                <div class="col-xs-4">
-                    <div class="gauge-chart"></div>
-                </div>
-                <div class="col-xs-4">
-                    <div class="line-chart"></div>
-                </div>
-                <div class="col-xs-2"></div>
             </div><!-- /.row -->
-            <div class="row other">
-                <div class="col-xs-2"></div>
-                <div class="col-xs-4">
-                    <div class="summary">
-                        Details:<br/>
-                        Goal: To do something<br/>
-                        Owner: Name Surname<br/>
-                        Offered: 2018-10-10 16:00<br/>
-                        Offered by: Name2 Surname2<br/>
-                        Accepted: 2018-10-12 14:30<br/>
-                        Initial score: 50%<br/>
-                        Current score: 75%<br/>
-                        Target score: 85%<br/>
-                        Comment: To start from scratch<br/>
+        </div><!-- /.container-fluid -->
+            
+        <div class="container-fluid">
+            <div class="row dashboard">
+                <div class="col-xs-12">
+                    <div class="row title">
+                        <div class="col-xs-2 navbar">
+                            <nav>
+                                <ul class="nav">
+                                    <li class="">
+                                        <a href="#"><i class="fa fa-sitemap" style="font-size:24px"></i> Lithuania</a>
+                                        <ul>
+                                            <li>
+                                                <a href="#">Dep1</a>
+                                                <ul>
+                                                    <li><a href="#">Unit0</a></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#">Dep2</a>
+                                                <ul>
+                                                    <li><a href="#">Unit1</a></li>
+                                                    <li><a href="#">Unit2</a></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#">Dep3</a>
+                                                <ul>
+                                                    <li><a href="#">Unit3</a></li>
+                                                    <li><a href="#">Unit4</a></li>
+                                                    <li><a href="#">Unit5</a></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#">Dep4</a>
+                                                <ul>
+                                                    <li><a href="#">Unit6</a></li>
+                                                    <li><a href="#">Unit7</a></li>
+                                                    <li><a href="#">Unit8</a></li>
+                                                    <li><a href="#">Unit8</a></li>
+                                                    <li><a href="#">Unit9</a></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#">Dep5</a>
+                                                <ul>
+                                                    <li><a href="#">Unit10</a></li>
+                                                    <li><a href="#">Unit11</a></li>
+                                                    <li><a href="#">Unit12</a></li>
+                                                    <li><a href="#">Unit13</a></li>
+                                                    <li><a href="#">Unit14</a></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#">Dep6</a>
+                                                <ul>
+                                                    <li><a href="#">Unit15</a></li>
+                                                    <li><a href="#">Unit16</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#"><i class="fa fa-bullseye" style="font-size:24px"></i> Goals</a>
+                                        <ul>
+                                            <li><a href="#" onclick="showAddForm()">Add</a></li>
+                                            <li>
+                                                <a href="#">Pending</a>
+                                                <ul>
+                                                    <li><a href="#" onclick="showOwnPndGoals()">Own</a></li>
+                                                    <li><a href="#" onclick="showOffPndGoals()">Offered</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#" onclick="showAccGoals()">Accepted</a></li>
+                                            <li><a href="#">Rejected</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </nav> 
+                        </div>
+                        <div class="col-xs-8 header">
+                            Goal: To do something
+                        </div>
+                        <div class="col-xs-2"></div>
                     </div>
                 </div>
-                <div class="col-xs-4">
-                    <div class="children">
-                        Children:<br/>
-                        Dep 1 50 75 100<br/>
-                        Dep 2 654 32 13<br/>
-                        Dep 321 5 32<br/>
-                        other<br/>
-                        Smth more<br/>
-                        Average score<br/>
-                        Average weighted score<br/>
+                <div class="col-xs-12">
+                    <div class="row charts">
+                        <div class="col-xs-2"></div>
+                        <div class="col-xs-4">
+                            <div class="gauge-chart"></div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="line-chart"></div>
+                        </div>
+                        <div class="col-xs-2"></div>
                     </div>
                 </div>
-                <div class="col-xs-2"></div>
+                <div class="col-xs-12">
+                    <div class="row other">
+                        <div class="col-xs-2"></div>
+                        <div class="col-xs-4">
+                            <div class="summary">
+                                Details:<br/>
+                                Goal: To do something<br/>
+                                Owner: Name Surname<br/>
+                                Offered: 2018-10-10 16:00<br/>
+                                Offered by: Name2 Surname2<br/>
+                                Accepted: 2018-10-12 14:30<br/>
+                                Initial score: 50%<br/>
+                                Current score: 75%<br/>
+                                Target score: 85%<br/>
+                                Comment: To start from scratch<br/>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="children">
+                                Children:<br/>
+                                Dep 1 50 75 100<br/>
+                                Dep 2 654 32 13<br/>
+                                Dep 321 5 32<br/>
+                                other<br/>
+                                Smth more<br/>
+                                Average score<br/>
+                                Average weighted score<br/>
+                            </div>
+                        </div>
+                        <div class="col-xs-2"></div>
+                    </div>
+                </div>
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
 
