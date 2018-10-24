@@ -2,15 +2,17 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.redirect('/goalList');
+router.get('/about', function(req, res, next) {
+  res.send('Testing321');
 });
 
 /*
-/goalList/create
+/create
+/goalView
 /goalList/<id>/edit
 /goalList/approved
-/goalList/pending
+/goalList/pending/own
+/goalList/pending/offered
 /goalList/rejected
 
 
