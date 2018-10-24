@@ -84,7 +84,7 @@ function createNewOfferElm(nr) {
 
 var perc = 0.75;
 var targetVal = 0.85;
-var width = document.getElementsByClassName("dashboard")[0].getElementsByClassName("col-xs-4")[0].offsetWidth - 4 - 20;
+var width = document.getElementsByClassName("dashboard")[0].getElementsByClassName("col-xs-4")[0].offsetWidth - 20;
 
 var height = width * 0.65;
 var fontSize = width * 0.064;
