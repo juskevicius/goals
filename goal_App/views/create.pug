@@ -1,5 +1,78 @@
-form(method='POST' action='/create')
-  div.form-group
-    label(for='name') Goal:
-    input#name.form-control(type='text', placeholder='Type smth' name='name' value='')
-  button.btn.btn-primary(type='submit') Submit
+.container-fluid
+  .row
+    .col-xs-4
+    .col-xs-4.add-form
+      .row
+        .col-xs-12.form-header Add a new goal
+      .row
+        .col-xs-12.form-body
+          .row
+            form(action="/addAGoal" method="post" href="")
+              .col-xs-12.add-group
+                .form-group
+                  label(for="name") Goal:
+                  input(type="text" class="form-control" name="goal")
+                .form-group.i-score
+                  label(for="initScore") Initial score:
+                  input(type="text" class="form-control" name="initScore" placeholder="50%")
+                .form-group.t-score
+                  label(for="target") Target score:
+                  input(type="text" class="form-control" name="target" placeholder="99%")
+                .form-group.comment
+                  label(for="comment") Comment:
+                  input(type="text" class="form-control" name="comment")
+                .btn-group.more-btn
+                  button.btn.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") More 
+                    span.caret
+                  ul.dropdown-menu
+                    li
+                      a(href="#" onclick="showOfferGrp()") Offer to
+                    li
+                      a(href="#") Something more
+                .form-group.save-btn
+                  input.btn.btn-default(type="submit" value="Save")
+            form(action="/offerTo" method="post" href="")
+              .col-xs-12.offer-group
+                .row
+                  .col-xs-12.offer-elm
+                    .row
+                      .col-xs-5
+                        .btn-group.offer-list
+                          label(for="offerTo") Offer to:   
+                          button.btn.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Choose 
+                            span.caret
+                          ul.dropdown-menu
+                            li
+                              a(href="#" onclick="selectUnit(0)") Dep1
+                            li
+                              a(href="#" onclick="selectUnit(0)") Dep2
+                            li
+                              a(href="#") Dep3
+                            li
+                              a(href="#") Dep4
+                            li
+                              a(href="#") Dep5
+                            li
+                              a(href="#") Dep6
+                            li
+                              a(href="#") -
+                      .col-xs-2
+                      .col-xs-5
+                        .form-group.weight
+                          label(for="weight") Weight:
+                          input(type="text" class="form-control" name="weight" placeholder="100%")
+                      .col-xs-5
+                        .form-group.offer-i-score
+                          label(for="oInitScore") Initial score:
+                          input(type="text" class="form-control" name="oInitScore" placeholder="50%")
+                      .col-xs-2
+                      .col-xs-5
+                        .form-group.offer-t-score
+                          label(for="oTarget") Target score:
+                          input(type="text" class="form-control" name="oTarget" placeholder="100%")
+                      .col-xs-12
+                        .form-group.offer-comment
+                          label(for="oComment") Comment:
+                          input(type="text" class="form-control" name="oComment" placeholder="")
+                  .form-group.offer-btn
+                    input.btn.btn-default(type="submit" value="Make an offer")
