@@ -7,4 +7,4 @@ var goal_controller = require('../controllers/goalController');
 /// GOAL ROUTES ///
 
 // GET catalog home page.
-router.get('/', goal_controller.index);
+/*router.get('/', goal_controller.index);*/

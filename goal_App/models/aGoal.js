@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var Schema = mongoose.schema;
+var Schema = mongoose.Schema;
 
 var GoalSchema = new Schema(
     {
@@ -13,7 +13,10 @@ var GoalSchema = new Schema(
         statusOwner: {type: String, enum: ['Approved', 'Pending', 'Rejected']},
         statusApprover: {type: String, enum: ['Approved', 'Pending', 'Rejected']},
         history: {type: Schema.Types.ObjectId, ref: 'hData'},
+        created: {type: Date},
+        updated: {type: Date},
         comments: {type: String},
+        offer: {type: Schema.Types.ObjectId, ref: 'goalList'},
         weight: {type: Number, default: 1}
     }
 );
