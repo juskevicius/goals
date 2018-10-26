@@ -9,8 +9,11 @@ main {
 /* General form styling. Forms: Add a goal, Accepted goals, My pending goals, My offered pending goals */
 
 .overlay {
-  position: fixed;
   display: none;
+}
+
+.overlay, .overlay2 {
+  position: fixed;
   width: 100%;
   height: 100%;
   top: 0;
@@ -22,8 +25,11 @@ main {
   cursor: pointer;
 }
 
-.add-form, .acc-goals, .pnd-goals, .off-pnd-goals {
+.add-form {
   display: none;
+}
+
+.add-form, .acc-goals, .pnd-goals, .off-pnd-goals {
   position: absolute;
   top: 0;
   margin-top: 10%;
@@ -179,7 +185,7 @@ nav ul {
     background-color: #4574a0;
 }
 
-.nav > li:last-child a, .nav > li:last-child li:last-child a {
+.nav > li:last-child > a {
     height: 44px;
 }
 

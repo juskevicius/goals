@@ -67,18 +67,17 @@ body
                           li: a(href="#") Unit16
                   li
                     a(href="#")
-                      i.fa.fa-bullseye(style="font-size:24px") 
+                      i.fa.fa-bullseye(style="font-size:24px")
                       |  Goals
                     ul
                       li: a(href="#", onclick="(function showAddForm(){ document.getElementsByClassName('add-form')[0].style.display = 'initial'; document.getElementsByClassName('overlay')[0].style.display = 'initial';})()") Add
                       li: a(href="#") Pending
                         ul
-                          li: a(href="#", onclick="showOwnPndGoals()") Own
-                          li: a(href="#", onclick="showOffPndGoals()") Offered
+                          li: a(href="/pending/own") Own
+                          li: a(href="/pending/offered") Offered
                       li: a(href="/accepted") Accepted
                       li: a(href="#") Rejected
-            
-            //- GOAL DETAILS:
+                    
             .col-xs-8.header Goal: to do something
             .col-xs-2
         .col-xs-12
@@ -336,3 +335,5 @@ body
     //- ADD FORM:
     include f_add.pug
     block accepted
+    block pendingOwn
+    block pendingOff

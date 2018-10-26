@@ -1,10 +1,17 @@
 extends a_primary.pug
 block accepted
-  .overlay
-  .container-fluid
+  .overlay2(onclick="(hideAccGoals())")
+  script.
+    function hideAccGoals() {
+      let elmToRemove1 = document.getElementsByClassName("acc-goals")[0];
+      let elmToRemove2 = document.getElementsByClassName("overlay2")[0];
+      elmToRemove1.parentNode.removeChild(elmToRemove1);
+      elmToRemove2.parentNode.removeChild(elmToRemove2);
+    }
+  .container-fluid.acc-goals
     .row
       .col-xs-3
-      .col-xs-6.acc-goals
+      .col-xs-6
         .row
           .col-xs-12.acc-goals-header Accepted goals
           .col-xs-12.acc-goals-body
@@ -23,7 +30,7 @@ block accepted
                       .col-xs-2 0
                       .col-xs-2 50
                       .col-xs-2 99
-                  .col-xs-12 acc-goal-data
+                  .col-xs-12.acc-goal-data
                     .row
                       .col-xs-6: a(href="#") To do something else
                       .col-xs-2 10

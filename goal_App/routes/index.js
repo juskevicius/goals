@@ -7,9 +7,6 @@ var userController = require('../controllers/userController');
 /* GET home page. */
 router.get('/', goalController.index);
 
-/* GET create */
-router.get('/create', goalController.goal_create_get);
-
 /* POST create */
 router.post('/create', goalController.goal_create_post);
 

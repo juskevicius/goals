@@ -1,0 +1,85 @@
+extends a_primary.pug
+block pendingOff
+  .overlay2(onclick="(hidePndGoals())")
+    script.
+      function hidePndGoals() {
+        let elmToRemove1 = document.getElementsByClassName("off-pnd-goals")[0];
+        let elmToRemove2 = document.getElementsByClassName("overlay2")[0];
+        elmToRemove1.parentNode.removeChild(elmToRemove1);
+        elmToRemove2.parentNode.removeChild(elmToRemove2);
+      }
+  .container-fluid.off-pnd-goals
+    .row
+      .col-xs-3
+      .col-xs-6
+        .row
+          .col-xs-12.pnd-goals-header My offered pending goals
+          .col-xs-12.pnd-goals-body
+            .row
+              .col-xs-12.pnd-goals-unit
+                .row
+                  .col-xs-12.pnd-response
+                    .row
+                      form(action="/test321" method="post" href="")
+                        .col-xs-7.pnd-label Response from Dep1:
+                        .col-xs-5.pnd-label Date: 2018-10-10 16:00
+                        .col-xs-12
+                          .form-group.offer-goal
+                            label(for="oName") Goal:
+                            input(type="text" class="form-control" name="oName" value="To do something" readonly)
+                        .col-xs-5
+                          .form-group.offer-i-score
+                            label(for="oInitScore") Initial score:
+                            input(type="text" class="form-control" name="oInitScore" value="50%" readonly)
+                        .col-xs-2
+                        .col-xs-5
+                          .form-group.offer-t-score
+                            label(for="oTarget") Target score:
+                            input(type="text" class="form-control" name="oTarget" value="100%" readonly)
+                        .col-xs-12
+                          .form-group.offer-comment
+                            label(for="oComment") Comment:
+                            input(type="text" class="form-control" name="oComment" value="To start from scratch" readonly)
+                        .col-xs-12
+                          .form-group.reject-btn
+                            input.btn.btn-default(type="submit" value="Delete")
+                          .form-group.negotiate-btn
+                            input.btn.btn-default(type="button" onclick="showPndOffer()" value="Negotiate")
+                            script.
+                              let onOff = true;
+                              function showPndOffer() {
+                                if (onOff) {
+                                    document.getElementsByClassName("pnd-my-offer")[0].style.display = "initial";
+                                } else {
+                                    document.getElementsByClassName("pnd-my-offer")[0].style.display = "none";
+                                }
+                                onOff = !onOff;
+                              }
+                          .form-group.accept-btn
+                            input.btn.btn-default(type="submit" value="Accept")
+                  .col-xs-12.pnd-my-offer
+                    .row
+                      form(action="" method="post" href="")
+                        .col-xs-7.pnd-label My offer:
+                        .col-xs-5.pnd-label Date: 2018-10-12 14:30
+                        .col-xs-12
+                          .form-group.offer-goal
+                            label(for="oName") Goal:
+                            input(type="text" class="form-control" name="oName" value="To do something else")
+                        .col-xs-5
+                          .form-group.offer-i-score
+                            label(for="oInitScore") Initial score:
+                            input(type="text" class="form-control" name="oInitScore" value="50%")
+                        .col-xs-2
+                        .col-xs-5
+                          .form-group.offer-t-score
+                            label(for="oTarget") Target score:
+                            input(type="text" class="form-control" name="oTarget" value="150%")
+                        .col-xs-12
+                          .form-group.offer-comment
+                            label(for="oComment") Comment:
+                            input(type="text" class="form-control" name="oComment" value="To start from scratch and move on")
+                        .col-xs-12
+                          .form-group.reject-btn
+                            input.btn.btn-default(type="submit" value="Submit new offer")       
+      .col-xs-3

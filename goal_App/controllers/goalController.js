@@ -6,8 +6,7 @@ const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 exports.index = function(req, res) {
-    res.send('NOT IMPLEMENTED: Goal update POST---------');
-    /*res.render('aprimary');*/
+    res.render('a_primary');
 };
 
 // Handle Goal create on POST.
@@ -37,17 +36,17 @@ exports.goal_detail = function(req, res) {
 
 // Display list of all accepted Goals.
 exports.goal_accepted_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Goal update POST---------');
+    res.render('f_accepted');
 };
 
 // Display list of all own pending Goals.
 exports.goal_own_pending_list = function(req, res) {
-    res.send('display all own pending goals');
+    res.render('f_pendingOwn');
 };
 
 // Display list of all offered pending Goals.
 exports.goal_off_pending_list = function(req, res) {
-    res.send('display all offered pending goals');
+    res.render('f_pendingOff');
 };
 
 // Display list of all rejected Goals.
