@@ -25,86 +25,60 @@ body
       .row.dashboard
         .col-xs-12
           .row.title
+
+            //- NAVBAR:
             .col-xs-2.navbar
               nav
                 ul.nav
-                  li
+                  li 
                     a(href="#")
-                      i.fa.fa-sitemap(style="font-size:24px")
+                      i.fa.fa-sitemap(style="font-size:24px")  
                       |  Lithuania
                     ul
-                      li
-                        a(href="#") Dep1
+                      li: a(href="#") Dep1
                         ul
-                          li
-                            a(href="#") Unit0
-                      li
-                        a(href="#") Dep2
+                          li: a(href="#") Unit0
+                      li: a(href="#") Dep2
                         ul
-                          li
-                            a(href="#") Unit1
-                          li
-                            a(href="#") Unit2
-                      li
-                        a(href="#") Dep3
+                          li: a(href="#") Unit1
+                          li: a(href="#") Unit2
+                      li: a(href="#") Dep3
                         ul
-                          li
-                            a(href="#") Unit3
-                          li
-                            a(href="#") Unit4
-                          li
-                            a(href="#") Unit5
-                      li
-                        a(href="#") Dep4
+                          li: a(href="#") Unit3
+                          li: a(href="#") Unit4
+                          li: a(href="#") Unit5
+                      li: a(href="#") Dep4
                         ul
-                          li
-                            a(href="#") Unit6
-                          li
-                            a(href="#") Unit7
-                          li
-                            a(href="#") Unit8
-                          li
-                            a(href="#") Unit8
-                          li
-                            a(href="#") Unit9
-                      li
-                        a(href="#") Dep5
+                          li: a(href="#") Unit6
+                          li: a(href="#") Unit7
+                          li: a(href="#") Unit8
+                          li: a(href="#") Unit8
+                          li: a(href="#") Unit9
+                      li: a(href="#") Dep5
                         ul
-                          li
-                            a(href="#") Unit10
-                          li
-                            a(href="#") Unit11
-                          li
-                            a(href="#") Unit12
-                          li
-                            a(href="#") Unit13
-                          li
-                            a(href="#") Unit14
-                      li
-                        a(href="#") Dep6
+                          li: a(href="#") Unit10
+                          li: a(href="#") Unit11
+                          li: a(href="#") Unit12
+                          li: a(href="#") Unit13
+                          li: a(href="#") Unit14
+                      li: a(href="#") Dep6
                         ul
-                          li
-                            a(href="#") Unit15
-                          li
-                            a(href="#") Unit16
+                          li: a(href="#") Unit15
+                          li: a(href="#") Unit16
                   li
                     a(href="#")
                       i.fa.fa-bullseye(style="font-size:24px") 
                       |  Goals
                     ul
-                      li
-                        a(href="#", onclick="showAddForm()") Add
-                      li
-                        a(href="#") Pending
+                      li: a(href="#", onclick="(function showAddForm(){ document.getElementsByClassName('add-form')[0].style.display = 'initial'; document.getElementsByClassName('overlay')[0].style.display = 'initial';})()") Add
+                      li: a(href="#") Pending
                         ul
-                          li
-                            a(href="#", onclick="showOwnPndGoals()") Own
-                          li
-                            a(href="#", onclick="showOffPndGoals()") Offered
-                      li
-                        a(href="#", onclick="showAccGoals()") Accepted
-                      li
-                        a(href="#") Rejected
+                          li: a(href="#", onclick="showOwnPndGoals()") Own
+                          li: a(href="#", onclick="showOffPndGoals()") Offered
+                      li: a(href="/accepted") Accepted
+                      li: a(href="#") Rejected
+            
+            //- GOAL DETAILS:
             .col-xs-8.header Goal: to do something
             .col-xs-2
         .col-xs-12
@@ -116,30 +90,25 @@ body
                 var perc = 0.75;
                 var targetVal = 0.85;
                 var width = document.getElementsByClassName("dashboard")[0].getElementsByClassName("col-xs-4")[0].offsetWidth - 20 - 4;
-                
                 var height = width * 0.65;
                 var fontSize = width * 0.064;
                 var deg180 = 0.5 * Math.PI;
-
                 var theGauge = d3.arc()
                     .startAngle(-0.5 * Math.PI)
                     .innerRadius(width / 2 * 0.5)
                     .outerRadius(width / 2 * 0.7)
                     .cornerRadius(6);
-
                 var theTarget = d3.arc()
                     .startAngle((2 * targetVal - 1) * deg180)
                     .endAngle((2 * targetVal - 1) * deg180 + 0.04)
                     .innerRadius(width / 2 * 0.48)
                     .outerRadius(width / 2 * 0.72);
-
                 var svg = d3.select(".gauge-chart").append("svg")
                     .attr("width", width)
                     .attr("height", height)
                     .style("background-color", "white")
                     .append("g")
                     .attr("transform", "translate(" + width / 2 + ", " + (height * 0.9) + ")");
-
                     //add labels on the top-right and top-left corners
                     svg.append('text')
                     .attr("x", -width * 0.8 / 2)
@@ -173,13 +142,11 @@ body
                     .transition()
                     .duration(750)
                     .text(Math.round(targetVal * 100) + "%");
-
                 //add grey backgound
                 var background = svg.append("path")
                     .datum({endAngle: deg180})
                     .attr("fill", "#e5e5e5")
                     .attr("d", theGauge);  
-
                 //add foreground
                 var foreground = svg.append("path")
                     .datum({endAngle: (2 * 0 - 1) * deg180})
@@ -188,7 +155,6 @@ body
                     .transition()
                     .duration(750)
                     .attrTween("d", arcTween((2 * perc - 1) * deg180));
-
                 //animate foreground
                 function arcTween(newAngle) {
                     return function(d) {
@@ -199,7 +165,6 @@ body
                         };
                     };
                 }
-
                 //add target
                 var targetArc = svg.append("path")
                     .attr("fill", "#e5e5e5")
@@ -208,7 +173,6 @@ body
                     .duration(750)
                     .attr("fill", "#214566")
                     .attr("d", theTarget);
-
                 //animate current value
                 var middleCount = svg.append('text')
                     .attr("class", "middle-text")
@@ -244,39 +208,31 @@ body
                         }
                     );
                 }
-
                 var svg = d3.select('.line-chart')
                     .append('svg')
                     .attr("width", width)
                     .attr("height", height)
                     .style("background-color", "white");
-
                 var g = svg.append("g")
                     .attr("transform", 
                     "translate(" + width * 0.1 + "," + height * 0.1 + ")"
                 );
-
                 var x = d3.scaleTime().rangeRound([0, width * 0.8]);
                 var y = d3.scaleLinear().rangeRound([height * 0.8, 0]);
-
                 var line = d3.line()
                     .x(d => x(d.date))
                     .y(d => y(d.value));
-
                 //detect lowest and highest values and define axis limits
                 var minY = d3.min(LCData.concat(tData), d => d.value) * 0.95;
                 var maxY = d3.max(LCData.concat(tData), d => d.value);
                 maxY = maxY > 80 ? 100 : maxY * 1.1; 
-
                 x.domain(d3.extent(LCData, d => d.date));
                 y.domain([Math.floor(minY / 10) * 10, Math.ceil(maxY / 10) * 10]);
-
                 //add x-axis and ticks (months)
                 g.append("g")
                 .attr("transform", "translate(0," + height * 0.8 + ")")
                 .call(d3.axisBottom(x).ticks(LCData.length))
                 .attr("font-size", fontSize * 0.5 + "px");
-
                 //add y-axis and ticks (5 ticks)
                 g.append("g")
                 .call(d3.axisLeft(y).ticks(5))
@@ -288,7 +244,6 @@ body
                 .attr("dy", "0.71em")
                 .attr("text-anchor", "end")
                 .text("Units")*/;
-
                 //draw a line corresponding the data
                 g.append("path")
                 .datum(LCData)
@@ -298,7 +253,6 @@ body
                 .attr("stroke-linecap", "round")
                 .attr("stroke-width", 5.5)
                 .attr("d", line);
-
                 //draw a line corresponding the target
                 g.append("path")
                 .datum(tData)
@@ -308,31 +262,26 @@ body
                 .attr("stroke-linecap", "round")
                 .attr("stroke-width", 2)
                 .attr("d", line);
-
                 g.append("text")
                 .attr("transform", "translate(" + width * 0.71  + "," + (y(tData[0].value) - 6) + ")")
                 .attr("font-size", fontSize * 0.5 + "px")
                 .style("fill", "#606060")
                 .text("Target");
-
                 //tooltips:
                 var bisectDate = d3.bisector(d => d.date).left;
                 var focus = svg.append("g")
                     .style("display", "none");
-
                 // append the circle at the intersection
                 focus.append("circle")
                 .attr("class", "y")
                 .style("fill", "none")
                 .style("stroke", "blue")
                 .attr("r", 4);
-
                 //append text above the intersection
                 focus.append("text")
                 .attr("y", height * -0.05)
                 .attr("x", width * -0.0175)
                 .attr("font-size", fontSize * 0.5 + "px");
-
                 // append the rectangle to capture mouse
                 svg.append("rect")
                 .attr("width", width)
@@ -342,7 +291,6 @@ body
                 .on("mouseover", function() { focus.style("display", null); })
                 .on("mouseout", function() { focus.style("display", "none"); })
                 .on("mousemove", mousemove);
-
                 function mousemove() {
                     var xPosition = d3.mouse(this)[0] - width * 0.1;
                     xPosition = xPosition > (width * 0.8) ? width * 0.8 : xPosition; 
@@ -351,7 +299,6 @@ body
                     d0 = LCData[i - 1],
                     d1 = LCData[i],
                     d = x0 - d0.date > d1.date - x0 ? d1 : d0;
-
                     focus.select("circle.y")
                     .attr("transform", "translate(" + (x(d.date) + width * 0.1) + "," + (y(d.value) + height * 0.1) + ")");
                     focus.select("text")
@@ -359,7 +306,6 @@ body
                     .style("fill", "#606060")
                     .attr("transform", "translate(" + (x(d.date) + width * 0.1) + "," + (y(d.value) + height * 0.1) + ")");;
                 }                                                      
-
             .col-xs-2
         .col-xs-12
           .row.other
@@ -387,3 +333,6 @@ body
                 Average score<br/>
                 Average weighted score
             .col-xs-2
+    //- ADD FORM:
+    include f_add.pug
+    block accepted

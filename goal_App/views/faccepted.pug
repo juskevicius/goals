@@ -1,0 +1,38 @@
+extends a_primary.pug
+block accepted
+  .overlay
+  .container-fluid
+    .row
+      .col-xs-3
+      .col-xs-6.acc-goals
+        .row
+          .col-xs-12.acc-goals-header Accepted goals
+          .col-xs-12.acc-goals-body
+            .row
+              .col-xs-12.headers
+                .row
+                  .col-xs-6 Goal
+                  .col-xs-2 Initial score
+                  .col-xs-2 Current score
+                  .col-xs-2 Target score
+              .col-xs-12.acc-goals-list
+                .row
+                  .col-xs-12.acc-goal-data
+                    .row
+                      .col-xs-6: a(href="#") To do something
+                      .col-xs-2 0
+                      .col-xs-2 50
+                      .col-xs-2 99
+                  .col-xs-12 acc-goal-data
+                    .row
+                      .col-xs-6: a(href="#") To do something else
+                      .col-xs-2 10
+                      .col-xs-2 60
+                      .col-xs-2 90
+                  .col-xs-12.acc-goal-data
+                    .row
+                      .col-xs-6: a(href="#") To do more of something else
+                      .col-xs-2 50
+                      .col-xs-2 90
+                      .col-xs-2 100
+      .col-xs-3

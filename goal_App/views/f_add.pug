@@ -1,13 +1,14 @@
-.container-fluid
+.overlay(onclick="(function showAddForm(){ document.getElementsByClassName('add-form')[0].style.display = 'none'; document.getElementsByClassName('overlay')[0].style.display = 'none';})()")
+.container-fluid.add-form
   .row
     .col-xs-4
-    .col-xs-4.add-form
+    .col-xs-4
       .row
         .col-xs-12.form-header Add a new goal
       .row
         .col-xs-12.form-body
           .row
-            form(action="/addAGoal" method="post" href="")
+            form(action="/create" method="post" href="")
               .col-xs-12.add-group
                 .form-group
                   label(for="name") Goal:
@@ -27,6 +28,13 @@
                   ul.dropdown-menu
                     li
                       a(href="#" onclick="showOfferGrp()") Offer to
+                      script.
+                        function showOfferGrp() {
+                              document.getElementsByClassName("offer-group")[0].style.display = "initial";
+                              document.getElementsByClassName("offer-i-score")[0].getElementsByTagName("input")[0].value = document.getElementsByClassName("i-score")[0].getElementsByTagName("input")[0].value;
+                              document.getElementsByClassName("offer-t-score")[0].getElementsByTagName("input")[0].value = document.getElementsByClassName("t-score")[0].getElementsByTagName("input")[0].value;
+                              document.getElementsByClassName("offer-comment")[0].getElementsByTagName("input")[0].value = document.getElementsByClassName("comment")[0].getElementsByTagName("input")[0].value;
+                        }
                     li
                       a(href="#") Something more
                 .form-group.save-btn
@@ -42,20 +50,24 @@
                           button.btn.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Choose 
                             span.caret
                           ul.dropdown-menu
-                            li
-                              a(href="#" onclick="selectUnit(0)") Dep1
-                            li
-                              a(href="#" onclick="selectUnit(0)") Dep2
-                            li
-                              a(href="#") Dep3
-                            li
-                              a(href="#") Dep4
-                            li
-                              a(href="#") Dep5
-                            li
-                              a(href="#") Dep6
-                            li
-                              a(href="#") -
+                            - var values = ["Dep1", "Dep2", "Dep3", "Dep4", "Dep5", "Dep6"]; 
+                            each val in values
+                              li: a(href="#" onclick="selectUnit(0)") #{val}
+                          script.
+                            function selectUnit(nr) {  
+                              document.getElementsByClassName("offer-group")[0].getElementsByClassName("dropdown-toggle")[nr].innerHTML = event.target.innerText;
+                              if (nr == document.getElementsByClassName("offer-elm").length - 1) {                                  
+                                let offerToElm = document.getElementsByClassName("offer-elm")[0].cloneNode(true);
+                                offerToElm.getElementsByClassName("dropdown-toggle")[0].innerHTML = "Choose <span class='caret'></span>";
+                                offerToElm.getElementsByClassName("weight")[0].getElementsByTagName("input")[0].value = "";
+                                let units = offerToElm.getElementsByClassName("dropdown-menu")[0].getElementsByTagName("a");
+                                for (let i=0; i < units.length; i++) {
+                                    units[i].setAttribute("onclick", "selectUnit(" + (nr + 1) + ")");
+                                }
+                                let offerButton = document.getElementsByClassName("offer-btn")[0];
+                                document.getElementsByClassName("offer-group")[0].getElementsByClassName("row")[0].insertBefore(offerToElm, offerButton);
+                              }
+                            }
                       .col-xs-2
                       .col-xs-5
                         .form-group.weight
@@ -75,4 +87,4 @@
                           label(for="oComment") Comment:
                           input(type="text" class="form-control" name="oComment" placeholder="")
                   .form-group.offer-btn
-                    input.btn.btn-default(type="submit" value="Make an offer")
+                    input.btn.btn-default(type="submit" value="Make an offer")  

@@ -2,7 +2,7 @@ body {
   background-color: rgb(240, 239, 239);
 }
 
-.container-fluid {
+main {
   position: relative;
 }
 
@@ -25,7 +25,9 @@ body {
 .add-form, .acc-goals, .pnd-goals, .off-pnd-goals {
   display: none;
   position: absolute;
+  top: 0;
   margin-top: 10%;
+  width: 100%;
 }
 
 .form-header, .acc-goals-header, .pnd-goals-header {

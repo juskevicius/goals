@@ -6,12 +6,8 @@ const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 exports.index = function(req, res) {
-    res.render('primary');
-};
-
-// Display Goal create form on GET.
-exports.goal_create_get = function(req, res) {
-    res.render('create');
+    res.send('NOT IMPLEMENTED: Goal update POST---------');
+    /*res.render('aprimary');*/
 };
 
 // Handle Goal create on POST.
@@ -39,9 +35,9 @@ exports.goal_detail = function(req, res) {
     res.send('display details of a goal ' + req.params.id);
 };
 
-// Display list of all approved Goals.
-exports.goal_approved_list = function(req, res) {
-    res.send('display all approved goals');
+// Display list of all accepted Goals.
+exports.goal_accepted_list = function(req, res) {
+    res.send('NOT IMPLEMENTED: Goal update POST---------');
 };
 
 // Display list of all own pending Goals.

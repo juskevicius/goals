@@ -17,7 +17,7 @@ router.post('/create', goalController.goal_create_post);
 router.get('/goalDetails', goalController.goal_detail);
 
 /* GET approved goals */
-router.get('/approved', goalController.goal_approved_list);
+router.get('/accepted', goalController.goal_accepted_list);
 
 /* GET own pending goals */
 router.get('/pending/own', goalController.goal_own_pending_list);
