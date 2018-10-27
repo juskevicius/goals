@@ -16,4 +16,4 @@ orgUnit.virtual('url').get(function() {
     return '/catalog/orgChart/' + this._id;
 });
 
-module.exports = mongoose.model('orgChart', orgUnit);
+module.exports = mongoose.model('orgChart', orgUnit, 'orgchart');
