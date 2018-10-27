@@ -2,6 +2,8 @@ var Goal = require('../models/aGoal');
 var hData = require('../models/hData');
 var orgChart = require('../models/orgChart');
 
+var async = require('async');
+
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
@@ -11,7 +13,8 @@ exports.index = function(req, res) {
 
 // Handle Goal create on POST.
 exports.goal_create_post = function(req, res) {
-    res.send('will try to create a goal');
+    res.send(req.body.goal);
+    console.log(req.body);
 };
 
 // Handle Goal delete on POST.

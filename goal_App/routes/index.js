@@ -25,4 +25,8 @@ router.get('/pending/offered', goalController.goal_off_pending_list);
 /* GET rejected */
 router.get('/rejected', goalController.goal_rejected_list);
 
+/* GET user management */
+router.get('/users', userController.user_smth);
+
+
 module.exports = router;
