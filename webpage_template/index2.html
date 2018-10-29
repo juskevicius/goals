@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <title>Norian Goals</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<form class="contact-form" action="/" method="post" href="#">
+  <label for="email">Email: </label>
+  <input type="text" name="email">
+  <label for="password">Password: </label>
+  <input type="text" name="password">
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+/*
+var xhr = new XMLHttpRequest();
+var url = "http://127.0.0.1:3000/api/users";
+xhr.open("POST", url, true);
+xhr.setRequestHeader("Content-Type", "application/json");
+xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        var json = JSON.parse(xhr.responseText);
+        console.log(json.user.email + ", " + json.user.password);
+    }
+};
+var data = JSON.stringify({
+  "user": {
+    "email": "mantas@test.eu",
+    "password": "123456"
+  }
+});
+xhr.send(data);*/
+
+
+var xhr = new XMLHttpRequest();
+var url = "url?data=" + encodeURIComponent(JSON.stringify({"email": "hey@mail.com", "password": "101010"}));
+xhr.open("GET", url, true);
+xhr.setRequestHeader("Content-Type", "application/json");
+xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        var json = JSON.parse(xhr.responseText);
+        console.log(json.email + ", " + json.password);
+    }
+};
+xhr.send();
+
+</script>
