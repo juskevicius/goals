@@ -1,55 +1,74 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var bodyParser = require('body-parser');
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const cors = require('cors');
+const errorHandler = require('errorhandler');
+/*const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');*/
 
-var app = express();
+//Configure isProduction variable
+const isProduction = process.env.NODE_ENV === 'production';
+
+const app = express();
 
 //Set up mongoose connection.
-var mongoose = require('mongoose');
-var mongoDB = 'mongodb://127.0.0.1:27017/Goals';
+const mongoose = require('mongoose');
+const mongoDB = 'mongodb://127.0.0.1:27017/Goals';
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
-var db = mongoose.connection;
+mongoose.set('debug', true);
+const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(logger('dev'));
+app.use(cors());
+app.use(require('morgan')('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+require('./models/Users');
+require('./config/passport');
+app.use(require('./routes'));
+/*app.use('/', indexRouter);
+app.use('/users', usersRouter);*/
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+if(!isProduction) {
+  app.use(errorHandler());
+}
 
+//Error handlers & middlewares
+if(!isProduction) {
+  app.use((err, req, res, next) => {
+    res.status(err.status || 500);
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    res.json({
+      errors: {
+        message: err.message,
+        error: err,
+      },
+    });
+  });
+}
 
-  // render the error page
+app.use((err, req, res, next) => {
   res.status(err.status || 500);
-  res.render('error');
-});
 
-app.use('/static', express.static(path.join(__dirname, 'public')))
+  res.json({
+    errors: {
+      message: err.message,
+      error: {},
+    },
+  });
+});
 
 module.exports = app;

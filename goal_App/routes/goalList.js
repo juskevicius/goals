@@ -1,8 +1,8 @@
-var express = require('express');
+const express = require('express');
 
-var router = express.Router();
+const router = express.Router();
 
-var goal_controller = require('../controllers/goalController');
+const goal_controller = require('../controllers/goalController');
 
 /// GOAL ROUTES ///
 

@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var orgUnit = new Schema(
+const orgUnit = new Schema(
     {
         name: {type: String, required: true, max: 25},
         owner: {type: String, required: true, max: 30},

@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var GoalSchema = new Schema(
+const GoalSchema = new Schema(
     {
         goal: {type: String, required: true, max: 100},
         owner: {type: Schema.Types.ObjectId, ref: 'orgChart'},

@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var hData = new Schema(
+const hData = new Schema(
     {
         data: [{
             date: {type: Date, required: true},
