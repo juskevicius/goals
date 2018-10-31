@@ -10,6 +10,7 @@ const { sanitizeBody } = require('express-validator/filter');
 exports.user_create_get = function(req, res) {
     orgChart.find({}, function(err, docs) {
         if (err) { return next(err); }
+        console.log(JSON.stringify(req.headers));
         res.render("userCreate", { units: docs});
     });
     
