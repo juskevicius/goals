@@ -2,9 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const goalController = require('../controllers/goalController');
-const userController = require('../controllers/userController');
-
-router.use('/api', require('./api'));
 
 /* GET home page. */
 /*router.get('/', goalController.index);*/
@@ -26,12 +23,6 @@ router.get('/pending/offered', goalController.goal_off_pending_list);
 
 /* GET rejected */
 router.get('/rejected', goalController.goal_rejected_list);
-
-/* GET user management */
-router.get('/userManagement', userController.user_create_get);
-
-/* POST user management */
-router.post('/createUser', userController.user_create_post);
 
 
 module.exports = router;

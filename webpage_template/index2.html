@@ -15,7 +15,7 @@
 let tokenVal;
 
 function login() {
-fetch("http://127.0.0.1:3000/api/users/login", {
+fetch("http://127.0.0.1:3000/login", {
     method: "post", 
     headers: {"Content-Type": "application/json"}, 
     body: JSON.stringify({
@@ -32,7 +32,7 @@ fetch("http://127.0.0.1:3000/api/users/login", {
 }
 
 function getResponse() {
-fetch("http://127.0.0.1:3000/api/users/current", {
+fetch("http://127.0.0.1:3000/current", {
     method: "GET", 
     headers: {
         'Content-Type': 'application/json',

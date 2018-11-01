@@ -1,12 +1,82 @@
-var orgChart = require('../models/orgChart');
+const orgChart = require('../models/orgChart');
+const mongoose = require('mongoose');
+const Users = mongoose.model('Users');
+const passport = require('passport');
 
-var async = require('async');
+const async = require('async');
 
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
+// Handle User save new credentials on POST
+exports.user_save_new_credentials = function(req, res, next) {
+    const { body: { user } } = req;
+    if(!user.email) {
+        return res.status(422).json({
+        errors: {
+            email: 'is required',
+        },
+        });
+    }
+    if(!user.password) {
+        return res.status(422).json({
+        errors: {
+            password: 'is required',
+        },
+        });
+    }
+    const finalUser = new Users(user);
+    finalUser.setPassword(user.password);
+    return finalUser.save()
+        .then(() => res.json({ user: finalUser.toAuthJSON() }));
+};
 
-// Handle Goal create on POST.
+// Handle user login on POST
+
+exports.user_login = function(req, res, next) {
+    const { body: { user } } = req;
+    if(!user.email) {
+        return res.status(422).json({
+        errors: {
+            email: 'is required',
+        },
+        });
+    }
+    if(!user.password) {
+        return res.status(422).json({
+        errors: {
+            password: 'is required',
+        },
+        });
+    }
+    passport.authenticate('local', { session: false }, function(err, passportUser, info) {
+        console.log("executing");
+        if(err) {
+        return next(err);
+        }
+        if(passportUser) {
+        const user = passportUser;
+        user.token = passportUser.generateJWT();
+        return res.json({ user: user.toAuthJSON() });
+        }
+        return status(400).info;
+    })(req, res, next);
+};
+
+// Handle current user on GET
+
+exports.user_current = function(req, res, next) {
+    const { payload: { id } } = req;
+    return Users.findById(id)
+        .then((user) => {
+        if(!user) {
+            return res.sendStatus(400);
+        }
+        return res.json({ user: user.toAuthJSON() });
+        });
+};
+
+// Handle user create on GET.
 exports.user_create_get = function(req, res) {
     orgChart.find({}, function(err, docs) {
         if (err) { return next(err); }
