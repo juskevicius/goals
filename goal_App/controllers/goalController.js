@@ -34,7 +34,7 @@ exports.goal_update_post = function(req, res) {
 
 // Display detail page for a specific Goal.
 exports.goal_detail = function(req, res) {
-    res.send('display details of a goal ' + req.params.id);
+    res.render('a_primary');
 };
 
 // Display list of all accepted Goals.

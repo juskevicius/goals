@@ -8,6 +8,45 @@ const async = require('async');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
+// Handle user login on GET
+
+exports.user_login_get = function(req, res, next) {
+    res.render('login');
+};
+
+// Handle user login on POST
+
+exports.user_login_post = function(req, res, next) {
+
+    const { body: { user } } = req;
+    if(!user.email) {
+        return res.status(422).json({
+        errors: {
+            email: 'is required',
+        },
+        });
+    }
+    if(!user.password) {
+        return res.status(422).json({
+        errors: {
+            password: 'is required',
+        },
+        });
+    }
+    passport.authenticate('local', { session: false }, function(err, passportUser, info) {
+        if(err) {
+        return next(err);
+        }
+        if(passportUser) {
+        const user = passportUser;
+        user.token = passportUser.generateJWT();
+        res.cookie("Token", user.token, {httpOnly: true, secure: false, maxAge: 2592000000});
+        return res.redirect("/goalDetails");
+        }
+        return status(400).info;
+    })(req, res, next);
+};
+
 // Handle User save new credentials on POST
 exports.user_save_new_credentials = function(req, res, next) {
     const { body: { user } } = req;
@@ -29,51 +68,6 @@ exports.user_save_new_credentials = function(req, res, next) {
     finalUser.setPassword(user.password);
     return finalUser.save()
         .then(() => res.json({ user: finalUser.toAuthJSON() }));
-};
-
-// Handle user login on POST
-
-exports.user_login = function(req, res, next) {
-    const { body: { user } } = req;
-    if(!user.email) {
-        return res.status(422).json({
-        errors: {
-            email: 'is required',
-        },
-        });
-    }
-    if(!user.password) {
-        return res.status(422).json({
-        errors: {
-            password: 'is required',
-        },
-        });
-    }
-    passport.authenticate('local', { session: false }, function(err, passportUser, info) {
-        console.log("executing");
-        if(err) {
-        return next(err);
-        }
-        if(passportUser) {
-        const user = passportUser;
-        user.token = passportUser.generateJWT();
-        return res.json({ user: user.toAuthJSON() });
-        }
-        return status(400).info;
-    })(req, res, next);
-};
-
-// Handle current user on GET
-
-exports.user_current = function(req, res, next) {
-    const { payload: { id } } = req;
-    return Users.findById(id)
-        .then((user) => {
-        if(!user) {
-            return res.sendStatus(400);
-        }
-        return res.json({ user: user.toAuthJSON() });
-        });
 };
 
 // Handle user create on GET.

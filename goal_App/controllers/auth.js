@@ -1,11 +1,15 @@
 const jwt = require('express-jwt');
 
-const getTokenFromHeaders = (req) => {
-  const { headers: { authorization } } = req;
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
 
-  if(authorization && authorization.split(' ')[0] === 'Token') {
-    return authorization.split(' ')[1];
-  }
+/*req.cookies("Token").escape();*/
+
+const getTokenFromCookies = (req) => {
+  const { cookies: { Token } } = req;
+  if (Token) {
+    return Token;
+  } 
   return null;
 };
 
@@ -13,12 +17,12 @@ const auth = {
   required: jwt({
     secret: 'secret',
     userProperty: 'payload',
-    getToken: getTokenFromHeaders,
+    getToken: getTokenFromCookies,
   }),
   optional: jwt({
     secret: 'secret',
     userProperty: 'payload',
-    getToken: getTokenFromHeaders,
+    getToken: getTokenFromCookies,
     credentialsRequired: false,
   }),
 };
