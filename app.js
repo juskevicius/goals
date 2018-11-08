@@ -11,7 +11,6 @@ var port = 27017;
 
 // Connection URL
 const url = 'mongodb://localhost:27017/goals';
- 
 
 // Database Name
 const dbName = 'Goals';
