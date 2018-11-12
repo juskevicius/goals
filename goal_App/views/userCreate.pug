@@ -18,60 +18,34 @@ html(lang="en-US")
     link(rel="stylesheet" href="/stylesheets/style.css")
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
     link(href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet")
-body
+    link(href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet")
+body.login-screen
   .container-fluid
     .row
       .col-xs-4
-        form(action="/createUser" method="post" href="")
-          
+      .col-xs-4.logo
+        img(src="/images/Norian_grow_logo2.png")
+      .col-xs-4
+    .row
+      .col-xs-5
+      .col-xs-2 Create a new user:
+      .col-xs-5
+    .row
+      .col-xs-5
+      .col-xs-2
+        form.login-form(action="http://127.0.0.1:3000/users", method="post", href="#", enctype='application/json')
           .form-group
-            label(for="name") Unit name:
+            label(for="empId") id:
+            input.form-control(type="text" name="empId")
+          .form-group
+            label(for="name") name:
             input.form-control(type="text" name="name")
-          
           .form-group
-            label(for="owner") Owner:
-            input.form-control(type="text" name="owner")
-          
+            label(for="password") password:
+            input.form-control(type="text" name="password")
           .form-group
-            label(for="unitType") Unit type:
-            .row
-              .col-xs-2
-                |  Country 
-                input(type="radio" name="unitType" value="Country")
-              .col-xs-3
-                |  Department 
-                input(type="radio" name="unitType" value="Department")
-              .col-xs-2
-                |  Group 
-                input(type="radio" name="unitType" value="Group" checked)
-          
-          .form-group
-            label(for="parentTo") Parent to:
-            .row
-              each val in units
-                |  #{val.name}
-                input(type="checkbox" name="parentTo" value=val._id)
-          
-          .form-group
-            label(for="childTo") Child to:
-            .row
-              each val in units
-                |  #{val.name}
-                input(type="checkbox" name="childTo" value=val._id)
-          
-          .form-group.save-btn
-            input.btn.btn-default(type="submit" value="Save")
-p Countries:
-each val in units
-  if val.unitType == "Country" 
-    p= val
-
-p Departments:
-each val in units
-  if val.unitType == "Department" 
-    p= val
-
-p Groups:
-each val in units
-  if val.unitType == "Group" 
-    p= val
+            label(for="role") role:
+            input.form-control(type="text" name="role")
+          .form-group.login-btn
+            button.btn.btn-default(type="submit") create
+      .col-xs-5

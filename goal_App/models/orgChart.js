@@ -5,8 +5,8 @@ const Schema = mongoose.Schema;
 const orgUnit = new Schema(
     {
         name: {type: String, required: true, max: 25},
-        owner: {type: String, required: true, max: 30},
-        unitType: {type: String, required: true, enum: ['Country', 'Department', 'Group'], max: 30},
+        owner: {type: Schema.Types.ObjectId, ref: 'Users'},
+        unitType: {type: String, required: true, enum: ['Country', 'Department', 'Group', 'Person'], max: 30},
         parentTo: [{type: Schema.Types.ObjectId, ref: 'orgChart'}],
         childTo: [{type: Schema.Types.ObjectId, ref: 'orgChart'}],
     }

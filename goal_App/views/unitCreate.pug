@@ -1,0 +1,77 @@
+doctype html
+html(lang="en-US")
+  head
+    title Norian Goals
+    meta(charset="UTF-8")
+    meta(name="description" content="Free Web tutorials")
+    meta(name="keywords" content="Norian,Goals")
+    meta(name="author" content="Mantas Juskevicius")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    //- Bootstrap. Latest compiled and minified CSS
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
+    //- Bootstrap. jQuery library
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+    //- Bootstrap. Latest compiled JavaScript
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+    //- D3:
+    script(src="https://d3js.org/d3.v5.min.js" charset="utf-8")
+    link(rel="stylesheet" href="/stylesheets/style.css")
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    link(href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet")
+body
+  .container-fluid
+    .row
+      .col-xs-4
+        form(action="/createUser" method="post" href="")
+          
+          .form-group
+            label(for="name") Unit name:
+            input.form-control(type="text" name="name")
+          
+          .form-group
+            label(for="owner") Owner:
+            input.form-control(type="text" name="owner")
+          
+          .form-group
+            label(for="unitType") Unit type:
+            .row
+              .col-xs-2
+                |  Country 
+                input(type="radio" name="unitType" value="Country")
+              .col-xs-3
+                |  Department 
+                input(type="radio" name="unitType" value="Department")
+              .col-xs-2
+                |  Group 
+                input(type="radio" name="unitType" value="Group" checked)
+          
+          .form-group
+            label(for="parentTo") Parent to:
+            .row
+              each val in units
+                |  #{val.name}
+                input(type="checkbox" name="parentTo" value=val._id)
+          
+          .form-group
+            label(for="childTo") Child to:
+            .row
+              each val in units
+                |  #{val.name}
+                input(type="checkbox" name="childTo" value=val._id)
+          
+          .form-group.save-btn
+            input.btn.btn-default(type="submit" value="Save")
+p Countries:
+each val in units
+  if val.unitType == "Country" 
+    p= val
+
+p Departments:
+each val in units
+  if val.unitType == "Department" 
+    p= val
+
+p Groups:
+each val in units
+  if val.unitType == "Group" 
+    p= val

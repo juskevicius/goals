@@ -31,11 +31,11 @@ body.login-screen
       .col-xs-2
         form.login-form(action="http://127.0.0.1:3000/login", method="post", href="#", enctype='application/json')
           .form-group
-            label(for="user[email]") username:
-            input.form-control(type="text" name="user[email]")
+            label(for="empId") id:
+            input.form-control(type="text" name="empId")
           .form-group
-            label(for="user[password]") password:
-            input.form-control(type="text" name="user[password]")
+            label(for="password") password:
+            input.form-control(type="password" name="password")
           .form-group.login-btn
             button.btn.btn-default(type="submit") login
       .col-xs-5
