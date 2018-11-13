@@ -11,7 +11,11 @@ const { sanitizeBody } = require('express-validator/filter');
 //Handle user create on GET
 
 exports.user_create_get = function(req, res, next) {
-    res.render('userCreate');
+    Users.find({}, function(err, users) {
+        if (err) { return next(err); }
+        console.log(JSON.stringify(req.headers));
+        res.render("userCreate", { users: users});
+    });
 };
 
 // Handle user create on POST
@@ -30,7 +34,7 @@ exports.user_create_post = [
         const errors = validationResult(req);
 
         // Create a User object with escaped and trimmed data.
-        const finalUser = new Users(
+        const newUser = new Users(
             {
                 empId: req.body.empId,
                 name: req.body.name,
@@ -41,16 +45,82 @@ exports.user_create_post = [
         if (!errors.isEmpty()) {
             // There are errors
             return res.status(422).json({ errors: errors.array() });
-        }
-        else {
+        } else {
             // Data from form is valid. Save final user
-            finalUser.setPassword(req.body.password);
-            return finalUser.save()
-                .then(() => res.json({ user: finalUser.toAuthJSON() }));
+            newUser.setPassword(req.body.password);
+            return newUser.save(
+                function (err) {
+                    if (err) { return next(err); }
+                    res.redirect('/users');
+                }
+            );
         }
     }
-
 ];
+
+// Handle user update on POST
+exports.user_update_post = [
+
+    body('empId').isLength({ min: 1 }).trim().withMessage('EmpId empty.'),
+    body('name').isLength({ min: 1 }).trim().withMessage('Name empty.'),
+    body('role').isLength({ min: 1 }).trim().withMessage('Role empty.'),
+    
+    sanitizeBody('*').trim().escape(),
+
+    (req, res, next) => {
+        
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            // There are errors
+            return res.status(422).json({ errors: errors.array() });
+        } else {
+            // Data from form is valid. Update the user
+            Users.findById(req.body.id, function(err, user) {
+                if (err) return err;
+                user.empId = req.body.empId;
+                user.name = req.body.name;
+                user.role = req.body.role;
+                if (req.body.password) {
+                    user.setPassword(req.body.password);
+                }
+                user.save(function(err, success) {
+                    if (err) return err;
+                    res.redirect('/users');
+                });
+            });
+        }
+    }
+];
+
+// Handle user delete on POST
+exports.user_delete_post = [
+
+    body('empId').isLength({ min: 1 }).trim().withMessage('EmpId empty.'),
+    body('name').isLength({ min: 1 }).trim().withMessage('Name empty.'),
+    body('role').isLength({ min: 1 }).trim().withMessage('Role empty.'),
+    
+    sanitizeBody('*').trim().escape(),
+
+    (req, res, next) => {
+        
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            // There are errors
+            return res.status(422).json({ errors: errors.array() });
+        } else {
+            // Data from form is valid. Update the user
+            Users.findByIdAndRemove(req.body.id, function(err, user) {
+                if (err) return err;
+                res.redirect('/users');
+            });
+        }
+    }
+];
+
 
 
 // Handle user login on GET

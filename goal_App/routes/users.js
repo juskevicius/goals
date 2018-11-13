@@ -12,6 +12,12 @@ router.get('/users', auth.optional, userController.user_create_get);
 //POST create user
 router.post('/users', auth.optional, userController.user_create_post);
 
+//POST update user
+router.post('/usersUpdate', auth.optional, userController.user_update_post);
+
+//POST delete user
+router.post('/usersDelete', auth.optional, userController.user_delete_post);
+
 //GET login route
 router.get('/login', auth.optional, userController.user_login_get);
 

@@ -1,8 +1,5 @@
 const jwt = require('express-jwt');
 
-const { cookie,validationResult } = require('express-validator/check');
-const { sanitizeBody } = require('express-validator/filter');
-
 const getTokenFromCookies = (req) => {
   const { cookies: { Token } } = req;
   if (Token) {

@@ -29,6 +29,9 @@ body.login-screen
     .row
       .col-xs-5
       .col-xs-2 Create a new user:
+        <br/>
+        <br/>
+        <br/>
       .col-xs-5
     .row
       .col-xs-5
@@ -49,3 +52,34 @@ body.login-screen
           .form-group.login-btn
             button.btn.btn-default(type="submit") create
       .col-xs-5
+    each user in users
+      p User:
+      form(action="http://127.0.0.1:3000/usersUpdate", method="post", href="#", enctype='application/json')
+        label(for="id") Id:
+        <br/>
+        input(type="text" name="id" value=user.id readonly)
+        <br/>
+        label(for="empId") emp id:
+        <br/>
+        input(type="text" name="empId" value=user.empId)
+        <br/>
+        label(for="name") name:
+        <br/>
+        input(type="text" name="name" value=user.name)
+        <br/>
+        label(for="password") password:
+        <br/>
+        input(type="text" name="password")
+        <br/>
+        label(for="role") role:
+        <br/>
+        input(type="text" name="role" value=user.role)
+        <br/>
+        <br/>
+        button.btn.btn-default(type="submit") update
+        <br/>
+        <br/>
+        button.btn.btn-default(type="submit" formaction="http://127.0.0.1:3000/usersDelete") delete
+      <br/>
+      <br/>
+      <br/>
