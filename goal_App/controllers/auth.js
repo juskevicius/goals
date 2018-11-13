@@ -5,7 +5,6 @@ const { sanitizeBody } = require('express-validator/filter');
 
 const getTokenFromCookies = (req) => {
   const { cookies: { Token } } = req;
-  console.log(req.cookies.Token);
   if (Token) {
     return Token;
   } 

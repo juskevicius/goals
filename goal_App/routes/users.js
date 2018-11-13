@@ -4,6 +4,7 @@ const router = express.Router();
 const auth = require('../controllers/auth');
 const userController = require('../controllers/userController');
 const cookieController = require('../controllers/cookieValid');
+const authorization = require('../controllers/authorization');
 
 //GET create user
 router.get('/users', auth.optional, userController.user_create_get);
@@ -18,7 +19,7 @@ router.get('/login', auth.optional, userController.user_login_get);
 router.post('/login', auth.optional, userController.user_login_post);
 
 /* GET unit management */
-router.get('/units', cookieController.validate_cookie, auth.required, userController.unit_create_get);
+router.get('/units', cookieController.validate_cookie, auth.required, authorization.restrict_to_admin, userController.unit_create_get);
 
 /* POST unit management */
 router.post('/units', auth.required, userController.unit_create_post);
