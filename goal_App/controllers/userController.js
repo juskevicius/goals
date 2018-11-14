@@ -214,5 +214,9 @@ exports.unit_create_post = function(req, res) {
 
         }
     })
+};
 
+exports.logout_get = function(req, res) {
+    req.logout();
+    res.redirect('/login');
 };
