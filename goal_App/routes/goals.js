@@ -7,6 +7,10 @@ const goalController = require('../controllers/goalController');
 /* GET home page. */
 router.get('/', auth.required, goalController.index);
 
+/* GET create */
+/* Is loaded in the background together with the home page. 
+Gets displayed when clicked. Gets hidden when submitted or clicked on the background */
+
 /* POST create */
 router.post('/create', auth.required, goalController.goal_create_post);
 

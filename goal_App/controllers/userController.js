@@ -1,6 +1,6 @@
-const orgChart = require('../models/orgChart');
+const Unit = require('../models/Unit');
 const mongoose = require('mongoose');
-const Users = mongoose.model('Users');
+const User = mongoose.model('User');
 const passport = require('passport');
 
 const async = require('async');
@@ -11,9 +11,8 @@ const { sanitizeBody } = require('express-validator/filter');
 //Handle user create on GET
 
 exports.user_create_get = function(req, res, next) {
-    Users.find({}, function(err, users) {
+    User.find({}, function(err, users) {
         if (err) { return next(err); }
-        console.log(JSON.stringify(req.headers));
         res.render("userCreate", { users: users});
     });
 };
@@ -34,7 +33,7 @@ exports.user_create_post = [
         const errors = validationResult(req);
 
         // Create a User object with escaped and trimmed data.
-        const newUser = new Users(
+        const newUser = new User(
             {
                 empId: req.body.empId,
                 name: req.body.name,
@@ -77,7 +76,7 @@ exports.user_update_post = [
             return res.status(422).json({ errors: errors.array() });
         } else {
             // Data from form is valid. Update the user
-            Users.findById(req.body.id, function(err, user) {
+            User.findById(req.body.id, function(err, user) {
                 if (err) return err;
                 user.empId = req.body.empId;
                 user.name = req.body.name;
@@ -113,7 +112,7 @@ exports.user_delete_post = [
             return res.status(422).json({ errors: errors.array() });
         } else {
             // Data from form is valid. Update the user
-            Users.findByIdAndRemove(req.body.id, function(err, user) {
+            User.findByIdAndRemove(req.body.id, function(err, user) {
                 if (err) return err;
                 res.redirect('/users');
             });
@@ -167,17 +166,24 @@ exports.user_login_post = [
 
 // Handle unit create on GET.
 exports.unit_create_get = function(req, res) {
-    orgChart.find({}, function(err, docs) {
-        if (err) { return next(err); }
-        console.log(JSON.stringify(req.headers));
-        res.render("unitCreate", { units: docs});
-    });
-    
+    Unit.
+        find({}).
+        populate("parentTo").
+        populate("childTo").
+        populate("owner").
+        exec( function(err, units) {
+            if (err) { return next(err); }
+            User.find({}, function(err, users) {
+                if (err) { return next(err); }
+                res.render("unitCreate", { units: units, owners: users});
+            });
+
+        });
 };
 
 exports.unit_create_post = function(req, res) {
     
-    orgChart.find({name: req.body.name}, function (err, docs) {
+    Unit.find({name: req.body.name}, function (err, docs) {
         if (err) { return next(err); }
         if (docs.length > 0) {
             
@@ -191,14 +197,14 @@ exports.unit_create_post = function(req, res) {
             docs[0].save(
                 function (err) {
                     if (err) { return next(err); }
-                    res.redirect('/userManagement');
+                    res.redirect('/units');
                 }
             );
             
         } else {
 
             /* Create a new user */
-            var unit = new orgChart({
+            var unit = new Unit({
                 name: req.body.name,
                 owner: req.body.owner,
                 unitType: req.body.unitType,
@@ -208,7 +214,7 @@ exports.unit_create_post = function(req, res) {
             unit.save(
                 function (err) {
                     if (err) { return next(err); }
-                    res.redirect('/userManagement');
+                    res.redirect('/units');
                 }
             );
 

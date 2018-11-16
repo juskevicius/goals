@@ -22,7 +22,7 @@ body
   .container-fluid
     .row
       .col-xs-4
-        form(action="/createUser" method="post" href="")
+        form(action="/units" method="post" href="")
           
           .form-group
             label(for="name") Unit name:
@@ -30,7 +30,9 @@ body
           
           .form-group
             label(for="owner") Owner:
-            input.form-control(type="text" name="owner")
+            select.form-control(name="owner")
+              each owner in owners
+                option(value=owner._id) #{owner.name}
           
           .form-group
             label(for="unitType") Unit type:
@@ -61,17 +63,56 @@ body
           
           .form-group.save-btn
             input.btn.btn-default(type="submit" value="Save")
-p Countries:
-each val in units
-  if val.unitType == "Country" 
-    p= val
 
-p Departments:
-each val in units
-  if val.unitType == "Department" 
-    p= val
-
-p Groups:
-each val in units
-  if val.unitType == "Group" 
-    p= val
+P ---------- Countries:
+p .
+each unit in units
+  if unit.unitType == "Country" 
+    p <strong> #{unit.unitType} : </strong>
+    p= unit.name
+    p <strong>Owner:</strong>
+    p= unit.owner.name
+    if unit.childTo.length > 0
+      p <strong>Parents:</strong>
+      each parent in unit.childTo
+        p= parent.name
+    if unit.parentTo.length > 0
+      p <strong>Children:</strong>
+      each child in unit.parentTo
+        p= child.name
+p .
+P ---------- Departments:
+p .
+each unit in units
+  if unit.unitType == "Department" 
+    p <strong> #{unit.unitType} : </strong>
+    p= unit.name
+    p <strong>Owner:</strong>
+    p= unit.owner.name
+    if unit.childTo.length > 0
+      p <strong>Parents:</strong>
+      each parent in unit.childTo
+        p= parent.name
+    if unit.parentTo.length > 0
+      p <strong>Children:</strong>
+      each child in unit.parentTo
+        p= child.name
+    p .
+p .
+P ---------- Groups:
+p.
+each unit in units
+  if unit.unitType == "Group" 
+    p <strong> #{unit.unitType} : </strong>
+    p= unit.name
+    p <strong>Owner:</strong>
+    p= unit.owner.name
+    if unit.childTo.length > 0
+      p <strong>Parents:</strong>
+      each parent in unit.childTo
+        p= parent.name
+    if unit.parentTo.length > 0
+      p <strong>Children:</strong>
+      each child in unit.parentTo
+        p= child.name
+    p .
