@@ -31,6 +31,6 @@ router.get('/units', cookieController.validate_cookie, auth.required, authorizat
 router.post('/units', cookieController.validate_cookie, auth.required, authorization.restrict_to_admin, userController.unit_create_post);
 
 /* POST unit management */
-router.get('/logout', cookieController.validate_cookie, auth.required, authorization.restrict_to_admin, userController.logout_get);
+router.get('/logout', cookieController.validate_cookie, auth.required, userController.logout_get);
 
 module.exports = router;

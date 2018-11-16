@@ -36,7 +36,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 
-require('./models/Users');
+require('./models/User');
 require('./config/passport');
 app.use(require('./routes/users'));
 app.use(require('./routes/goals'));

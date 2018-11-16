@@ -1,6 +1,6 @@
-var Goal = require('../models/aGoal');
+var Goal = require('../models/Goal');
 var hData = require('../models/hData');
-var orgChart = require('../models/orgChart');
+var Unit = require('../models/Unit');
 
 var async = require('async');
 
@@ -8,14 +8,57 @@ const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 exports.index = function(req, res) {
-    res.render('a_primary');
+    res.render('a_primary', {user: req.payload.id});
 };
 
+// Handle Goal create on get
+/* Is loaded in the background together with the home page. 
+Gets displayed when clicked. Gets hidden when submitted or clicked on the background */
+
 // Handle Goal create on POST.
-exports.goal_create_post = function(req, res) {
-    res.send(req.body.goal);
-    console.log(req.body);
-};
+exports.goal_create_post = [
+    body("goal").isLength({ min: 1 }).trim().withMessage("Goal is not set"),
+    body("initScore").trim(),
+    body("targScore").trim(),
+    body("comment").trim(),
+
+    sanitizeBody('*').trim().escape(),
+
+    (req, res, next) => {
+
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        Unit.
+            findOne({ owner: req.payload.id }).
+            exec( function (err, owner) {
+                // Create a Goal object with escaped and trimmed data.
+                const goal = new Goal(
+                    {
+                        goal: req.body.goal,
+                        owner: owner._id,
+                        initScore: req.body.initScore ? req.body.initScore : "",
+                        targScore: req.body.targScore ? req.body.targScore : "",
+                        //childTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
+                        //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
+                        statusOwner: 'Approved',
+                        statusApprover: 'Pending',
+                        history: {type: Schema.Types.ObjectId, ref: 'hData'},
+                        created: {type: Date},
+                        updated: {type: Date},
+                        comments: {type: String},
+                        offer: {type: Schema.Types.ObjectId, ref: 'goalList'},
+                        weight: {type: Number, default: 1}
+                    }
+                );
+            });
+         
+
+        res.send(req.body.goal);
+    }
+
+    
+];
 
 // Handle Goal delete on POST.
 exports.goal_delete_post = function(req, res) {

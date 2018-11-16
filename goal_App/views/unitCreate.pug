@@ -32,7 +32,7 @@ body
             label(for="owner") Owner:
             select.form-control(name="owner")
               each owner in owners
-                option(value=owner.id) #{owner.name}
+                option(value=owner._id) #{owner.name}
           
           .form-group
             label(for="unitType") Unit type:
@@ -63,31 +63,56 @@ body
           
           .form-group.save-btn
             input.btn.btn-default(type="submit" value="Save")
-p Countries:
-- var units2 = units
+
+P ---------- Countries:
+p .
 each unit in units
   if unit.unitType == "Country" 
-    p= unit
-    each subUnit in units2
-      p Test
-      if unit.parentTo[0] == subUnit._id
-        p= subUnit.name
-
-each unit in units
-  if unit.unitType == "Country" 
-    each child in unit.parentTo
-      each unit2 in units
-        p #{unit2._id} vs #{child}
-        if unit2._id == child
-          p= unit2.name
-
-
-p Departments:
+    p <strong> #{unit.unitType} : </strong>
+    p= unit.name
+    p <strong>Owner:</strong>
+    p= unit.owner.name
+    if unit.childTo.length > 0
+      p <strong>Parents:</strong>
+      each parent in unit.childTo
+        p= parent.name
+    if unit.parentTo.length > 0
+      p <strong>Children:</strong>
+      each child in unit.parentTo
+        p= child.name
+p .
+P ---------- Departments:
+p .
 each unit in units
   if unit.unitType == "Department" 
-    p= unit
-
-p Groups:
+    p <strong> #{unit.unitType} : </strong>
+    p= unit.name
+    p <strong>Owner:</strong>
+    p= unit.owner.name
+    if unit.childTo.length > 0
+      p <strong>Parents:</strong>
+      each parent in unit.childTo
+        p= parent.name
+    if unit.parentTo.length > 0
+      p <strong>Children:</strong>
+      each child in unit.parentTo
+        p= child.name
+    p .
+p .
+P ---------- Groups:
+p.
 each unit in units
   if unit.unitType == "Group" 
-    p= unit
+    p <strong> #{unit.unitType} : </strong>
+    p= unit.name
+    p <strong>Owner:</strong>
+    p= unit.owner.name
+    if unit.childTo.length > 0
+      p <strong>Parents:</strong>
+      each parent in unit.childTo
+        p= parent.name
+    if unit.parentTo.length > 0
+      p <strong>Children:</strong>
+      each child in unit.parentTo
+        p= child.name
+    p .
