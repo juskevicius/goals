@@ -206,6 +206,14 @@ nav ul {
     height: 44px;
 }
 
+.fa-sign-out, .fa-sign-out:hover {
+  text-decoration: none;
+  color: #0e2f4d;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
 /* Styling the dashboard */
 
 .dashboard .header {

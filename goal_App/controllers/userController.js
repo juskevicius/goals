@@ -169,8 +169,10 @@ exports.user_login_post = [
 exports.unit_create_get = function(req, res) {
     orgChart.find({}, function(err, docs) {
         if (err) { return next(err); }
-        console.log(JSON.stringify(req.headers));
-        res.render("unitCreate", { units: docs});
+        Users.find({}, function(err, users) {
+            if (err) { return next(err); }
+            res.render("unitCreate", { units: docs, owners: users});
+        });
     });
     
 };
@@ -191,7 +193,7 @@ exports.unit_create_post = function(req, res) {
             docs[0].save(
                 function (err) {
                     if (err) { return next(err); }
-                    res.redirect('/userManagement');
+                    res.redirect('/units');
                 }
             );
             
@@ -208,7 +210,7 @@ exports.unit_create_post = function(req, res) {
             unit.save(
                 function (err) {
                     if (err) { return next(err); }
-                    res.redirect('/userManagement');
+                    res.redirect('/units');
                 }
             );
 
@@ -218,5 +220,6 @@ exports.unit_create_post = function(req, res) {
 
 exports.logout_get = function(req, res) {
     req.logout();
-    res.redirect('/login');
+    res.cookie("Token", "", { expires: new Date(0)});
+    res.redirect("/login");
 };

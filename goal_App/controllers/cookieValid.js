@@ -15,7 +15,8 @@ exports.validate_cookie = [
 
         if (!errors.isEmpty()) {
             // There are errors
-            return res.status(422).json({ errors: errors.array() });
+            // res.status(422).json({ errors: errors.array() });
+            return res.redirect("/login");
         }
         else {
             next();

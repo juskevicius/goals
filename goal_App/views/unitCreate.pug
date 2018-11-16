@@ -22,7 +22,7 @@ body
   .container-fluid
     .row
       .col-xs-4
-        form(action="/createUser" method="post" href="")
+        form(action="/units" method="post" href="")
           
           .form-group
             label(for="name") Unit name:
@@ -30,7 +30,9 @@ body
           
           .form-group
             label(for="owner") Owner:
-            input.form-control(type="text" name="owner")
+            select.form-control(name="owner")
+              each owner in owners
+                option(value=owner.id) #{owner.name}
           
           .form-group
             label(for="unitType") Unit type:
@@ -62,16 +64,30 @@ body
           .form-group.save-btn
             input.btn.btn-default(type="submit" value="Save")
 p Countries:
-each val in units
-  if val.unitType == "Country" 
-    p= val
+- var units2 = units
+each unit in units
+  if unit.unitType == "Country" 
+    p= unit
+    each subUnit in units2
+      p Test
+      if unit.parentTo[0] == subUnit._id
+        p= subUnit.name
+
+each unit in units
+  if unit.unitType == "Country" 
+    each child in unit.parentTo
+      each unit2 in units
+        p #{unit2._id} vs #{child}
+        if unit2._id == child
+          p= unit2.name
+
 
 p Departments:
-each val in units
-  if val.unitType == "Department" 
-    p= val
+each unit in units
+  if unit.unitType == "Department" 
+    p= unit
 
 p Groups:
-each val in units
-  if val.unitType == "Group" 
-    p= val
+each unit in units
+  if unit.unitType == "Group" 
+    p= unit
