@@ -322,15 +322,11 @@ body
                 Target score: 85%<br/>
                 Comment: To start from scratch
             .col-xs-4
-              .children.
-                Children:<br/>
-                Dep 1 50 75 100<br/>
-                Dep 2 654 32 13<br/>
-                Dep 321 5 32<br/>
-                other<br/>
-                Smth more<br/>
-                Average score<br/>
-                Average weighted score
+              .children
+                p Children:
+                p= children
+                each child in children
+                  p= child.name
             .col-xs-2
     //- ADD FORM:
     include f_add.pug

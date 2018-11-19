@@ -183,18 +183,18 @@ exports.unit_create_get = function(req, res) {
 
 exports.unit_create_post = function(req, res) {
     
-    Unit.find({name: req.body.name}, function (err, docs) {
+    Unit.findOne({name: req.body.name}, function (err, unit) {
         if (err) { return next(err); }
-        if (docs.length > 0) {
+        if (unit.length > 0) {
             
             /* Update existing user */
-            docs[0].name = req.body.name ? req.body.name : docs[0].name;
-            docs[0].owner = req.body.owner ? req.body.owner : docs[0].owner;
-            docs[0].unitType = req.body.unitType ? req.body.unitType : docs[0].unitType;
-            docs[0].parentTo = req.body.parentTo ? req.body.parentTo : docs[0].parentTo;
-            docs[0].childTo = req.body.childTo ? req.body.childTo : docs[0].childTo;
+            unit.name = req.body.name ? req.body.name : unit.name;
+            unit.owner = req.body.owner ? req.body.owner : unit.owner;
+            unit.unitType = req.body.unitType ? req.body.unitType : unit.unitType;
+            unit.parentTo = req.body.parentTo ? req.body.parentTo : unit.parentTo;
+            unit.childTo = req.body.childTo ? req.body.childTo : unit.childTo;
 
-            docs[0].save(
+            unit.save(
                 function (err) {
                     if (err) { return next(err); }
                     res.redirect('/units');

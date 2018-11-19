@@ -43,31 +43,18 @@
               .col-xs-12.offer-group
                 .row
                   .col-xs-12.offer-elm
+
                     .row
                       .col-xs-5
-                        .btn-group.offer-list
-                          label(for="offerTo") Offer to:   
-                          button.btn.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Choose 
+                      - var offgr = 
+                        .form-group.offer-list
+                          label(for="offerTo") Offer to:
+                          <br/>
+                          select(name="offerTo")
+                            option(value="") Choose 
                             span.caret
-                          ul.dropdown-menu
-                            - var values = ["Dep1", "Dep2", "Dep3", "Dep4", "Dep5", "Dep6"]; 
-                            each val in values
-                              li: a(href="#" onclick="selectUnit(0)") #{val}
-                          script.
-                            function selectUnit(nr) {  
-                              document.getElementsByClassName("offer-group")[0].getElementsByClassName("dropdown-toggle")[nr].innerHTML = event.target.innerText;
-                              if (nr == document.getElementsByClassName("offer-elm").length - 1) {                                  
-                                let offerToElm = document.getElementsByClassName("offer-elm")[0].cloneNode(true);
-                                offerToElm.getElementsByClassName("dropdown-toggle")[0].innerHTML = "Choose <span class='caret'></span>";
-                                offerToElm.getElementsByClassName("weight")[0].getElementsByTagName("input")[0].value = "";
-                                let units = offerToElm.getElementsByClassName("dropdown-menu")[0].getElementsByTagName("a");
-                                for (let i=0; i < units.length; i++) {
-                                    units[i].setAttribute("onclick", "selectUnit(" + (nr + 1) + ")");
-                                }
-                                let offerButton = document.getElementsByClassName("offer-btn")[0];
-                                document.getElementsByClassName("offer-group")[0].getElementsByClassName("row")[0].insertBefore(offerToElm, offerButton);
-                              }
-                            }
+                            each child in children
+                              option(value=child.id) #{child.name}
                       .col-xs-2
                       .col-xs-5
                         .form-group.weight

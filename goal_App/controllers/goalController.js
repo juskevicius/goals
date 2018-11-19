@@ -8,7 +8,13 @@ const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 exports.index = function(req, res) {
-    res.render('a_primary', {user: req.payload.id});
+    Unit.
+    findOne({ owner: req.payload.id }).
+    populate("parentTo").
+    exec( function (err, ownerUnit) {
+        if (err) { return err; }
+        res.render('a_primary', {children: ownerUnit.parentTo});
+    });
 };
 
 // Handle Goal create on get
@@ -32,32 +38,76 @@ exports.goal_create_post = [
         Unit.
             findOne({ owner: req.payload.id }).
             exec( function (err, owner) {
+                if (err) { return err; }
                 // Create a Goal object with escaped and trimmed data.
-                const goal = new Goal(
-                    {
-                        goal: req.body.goal,
-                        owner: owner._id,
-                        initScore: req.body.initScore ? req.body.initScore : "",
-                        targScore: req.body.targScore ? req.body.targScore : "",
-                        //childTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
-                        //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
-                        statusOwner: 'Approved',
-                        statusApprover: 'Pending',
-                        history: {type: Schema.Types.ObjectId, ref: 'hData'},
-                        created: {type: Date},
-                        updated: {type: Date},
-                        comments: {type: String},
-                        offer: {type: Schema.Types.ObjectId, ref: 'goalList'},
-                        weight: {type: Number, default: 1}
-                    }
-                );
+                        const goal = new Goal(
+                            {
+                                goal: req.body.goal,
+                                owner: owner._id,
+                                initScore: req.body.initScore ? req.body.initScore : "",
+                                targScore: req.body.targScore ? req.body.targScore : "",
+                                //childTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
+                                //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
+                                statusOwner: 'Approved',
+                                statusApprover: 'Pending',
+                                //history: hDataObj._id, - implemented below
+                                created: Date(Date.now()),
+                                //updated: {type: Date},
+                                comments: req.body.comment ? req.body.comment : "",
+                                //offer: {type: Schema.Types.ObjectId, ref: 'goalList'},
+                                //weight: {type: Number, default: 1}
+                            }
+                        );
+                        
+                        async.parallel({
+                            history: function(callback) {
+                                if (req.body.initScore) {
+                                    const hdata = new hData(
+                                        {
+                                            data: [{
+                                                date: new Date("2019-01-01"),
+                                                value: req.body.initScore
+                                            }]  
+                                        }
+                                    );
+                                    hdata.save(callback);
+                                } else {
+                                    callback(null, null);
+                                }
+                            },
+                            parentTo: function(callback) {
+                                callback(null, null);
+                            }
+                        }, function(err, results) {
+                            res.send(results);
+                        });
+
+                        /*
+                        if (req.body.initScore) {
+                            const hdata = new hData(
+                                {
+                                    data: [{
+                                        date: new Date("2019-01-01"),
+                                        value: req.body.initScore
+                                    }]  
+                                }
+                            );
+                            hdata.save( function(err, hdataObj) {
+                                if (err) { return (err); }
+                                goal.history = hdataObj.id;
+                                goal.save( function (err, goalObj) {
+                                    if (err) { return (err); }
+                                    return res.send(goalObj);
+                                });
+                            });
+                        } else {
+                            goal.save( function (err, goalObj) {
+                                if (err) { return (err); }
+                                return res.send(goalObj);
+                            });
+                        }*/
             });
-         
-
-        res.send(req.body.goal);
     }
-
-    
 ];
 
 // Handle Goal delete on POST.
