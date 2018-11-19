@@ -43,14 +43,12 @@
               .col-xs-12.offer-group
                 .row
                   .col-xs-12.offer-elm
-
                     .row
                       .col-xs-5
-                      - var offgr = 
                         .form-group.offer-list
                           label(for="offerTo") Offer to:
                           <br/>
-                          select(name="offerTo")
+                          select(name="offerTo" onchange="selectUnit(0)")
                             option(value="") Choose 
                             span.caret
                             each child in children
@@ -74,4 +72,13 @@
                           label(for="oComment") Comment:
                           input(type="text" class="form-control" name="oComment" placeholder="")
                   .form-group.offer-btn
-                    input.btn.btn-default(type="submit" value="Make an offer")  
+                    input.btn.btn-default(type="submit" value="Make an offer")
+  script.
+    function selectUnit(nr) {
+      if (nr == document.getElementsByClassName("offer-elm").length - 1) {                                  
+        let offerToElm = document.getElementsByClassName("offer-elm")[0].cloneNode(true);
+        offerToElm.getElementsByClassName("offer-list")[0].getElementsByTagName("select")[0].setAttribute("onchange", "selectUnit(" + (nr + 1) + ")");
+        let offerButton = document.getElementsByClassName("offer-btn")[0];
+        document.getElementsByClassName("offer-group")[0].getElementsByClassName("row")[0].insertBefore(offerToElm, offerButton);
+      }
+    }
