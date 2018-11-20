@@ -13,7 +13,7 @@ exports.index = function(req, res) {
     populate("parentTo").
     exec( function (err, ownerUnit) {
         if (err) { return err; }
-        res.render('a_primary', {children: ownerUnit.parentTo});
+        res.render('a_primary', {children: ownerUnit.parentTo, displayAddForm: false});
     });
 };
 
@@ -37,13 +37,14 @@ exports.goal_create_post = [
 
         Unit.
             findOne({ owner: req.payload.id }).
-            exec( function (err, owner) {
+            populate("parentTo").
+            exec( function (err, ownerUnit) {
                 if (err) { return err; }
                 // Create a Goal object with escaped and trimmed data.
                         const goal = new Goal(
                             {
                                 goal: req.body.goal,
-                                owner: owner._id,
+                                owner: ownerUnit._id,
                                 initScore: req.body.initScore ? req.body.initScore : "",
                                 targScore: req.body.targScore ? req.body.targScore : "",
                                 //childTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
@@ -79,7 +80,8 @@ exports.goal_create_post = [
                                 callback(null, null);
                             }
                         }, function(err, results) {
-                            res.send(results);
+                            res.render('a_primary', {children: ownerUnit.parentTo, displayAddForm: true, goalDetails: goal});
+                            //-res.send(results);
                         });
 
                         /*

@@ -42,7 +42,7 @@ main {
   cursor: pointer;
 }
 
-.add-form {
+.add-form, .offer-btn {
   display: none;
 }
 
@@ -88,7 +88,7 @@ select {
   color: rgb(88, 88, 88);
 }
 
-.more-btn, .save-btn, .offer-btn, .accept-btn, .negotiate-btn, .reject-btn, .login-btn {
+.offer-btn, .save-btn, .make-offer-btn, .accept-btn, .negotiate-btn, .reject-btn, .login-btn {
   float: right;
   border: 1px solid rgb(88, 88, 88);
   margin: 10px 0 0 20px;
