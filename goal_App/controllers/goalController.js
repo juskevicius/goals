@@ -22,7 +22,7 @@ exports.index = function(req, res) {
 Gets displayed when clicked. Gets hidden when submitted or clicked on the background */
 
 // Handle Goal create on POST.
-exports.goal_create_post = [
+exports.goal_add_post = [
     body("goal").isLength({ min: 1 }).trim().withMessage("Goal is not set"),
     body("initScore").trim(),
     body("targScore").trim(),
@@ -50,7 +50,7 @@ exports.goal_create_post = [
                                 //childTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
                                 //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
                                 statusOwner: 'Approved',
-                                statusApprover: 'Pending',
+                                statusApprover: ownerUnit.childTo.length ? 'Pending' : 'Approved',
                                 //history: hDataObj._id, - implemented below
                                 created: Date(Date.now()),
                                 //updated: {type: Date},
@@ -59,32 +59,7 @@ exports.goal_create_post = [
                                 //weight: {type: Number, default: 1}
                             }
                         );
-                        
-                        async.parallel({
-                            history: function(callback) {
-                                if (req.body.initScore) {
-                                    const hdata = new hData(
-                                        {
-                                            data: [{
-                                                date: new Date("2019-01-01"),
-                                                value: req.body.initScore
-                                            }]  
-                                        }
-                                    );
-                                    hdata.save(callback);
-                                } else {
-                                    callback(null, null);
-                                }
-                            },
-                            parentTo: function(callback) {
-                                callback(null, null);
-                            }
-                        }, function(err, results) {
-                            res.render('a_primary', {children: ownerUnit.parentTo, displayAddForm: true, goalDetails: goal});
-                            //-res.send(results);
-                        });
 
-                        /*
                         if (req.body.initScore) {
                             const hdata = new hData(
                                 {
@@ -107,10 +82,15 @@ exports.goal_create_post = [
                                 if (err) { return (err); }
                                 return res.send(goalObj);
                             });
-                        }*/
+                        }
             });
     }
 ];
+
+// Handle Goal delete on POST.
+exports.goal_offerTo_post = function(req, res) {
+    res.send(req.body);
+};
 
 // Handle Goal delete on POST.
 exports.goal_delete_post = function(req, res) {

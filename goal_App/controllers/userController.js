@@ -156,7 +156,7 @@ exports.user_login_post = [
                 const user = passportUser;
                 user.token = passportUser.generateJWT();
                 res.cookie("Token", user.token, {httpOnly: true, secure: false, maxAge: 2592000000});
-                return res.redirect("/goalDetails");
+                return res.redirect("/");
                 }
                 return res.status(422).json({ "Login": "Unsuccessful. Either id or password is incorrect" });
             })(req, res, next);

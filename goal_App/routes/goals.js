@@ -7,12 +7,15 @@ const goalController = require('../controllers/goalController');
 /* GET home page. */
 router.get('/', auth.required, goalController.index);
 
-/* GET create */
+/* GET add */
 /* Is loaded in the background together with the home page. 
 Gets displayed when clicked. Gets hidden when submitted or clicked on the background */
 
-/* POST create */
-router.post('/create', auth.required, goalController.goal_create_post);
+/* POST add */
+router.post('/add', auth.required, goalController.goal_add_post);
+
+/* POST offerTo */
+router.post('/offerTo', auth.required, goalController.goal_offerTo_post);
 
 /* GET goalView */
 router.get('/goalDetails', auth.required, goalController.goal_detail);
