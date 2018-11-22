@@ -87,6 +87,54 @@ exports.goal_add_post = [
     }
 ];
 
+exports.goal_all_get = function(req, res) {
+    Unit.
+    findOne({ owner: req.payload.id }).
+    populate("parentTo").
+    exec( function (err, ownerUnit) {
+        if (err) { return err; }
+        Goal.
+        find({ owner: ownerUnit.id}).
+        populate("childTo").
+        populate("parentTo").
+        populate("history").
+        populate("offer").
+        exec( function (err, ownerGoals) {
+            if (err) { return err; }
+            res.render('f_all', {children: ownerUnit.parentTo, goals: ownerGoals});
+        }); 
+    });
+};
+
+exports.goal_edit_get = function(req, res) {
+    Unit.
+    findOne({ owner: req.payload.id }).
+    populate("parentTo").
+    exec( function (err, ownerUnit) {
+        if (err) { return err; }
+        Goal.
+        find({ owner: ownerUnit.id}).
+        populate("childTo").
+        populate("parentTo").
+        populate("history").
+        populate("offer").
+        exec( function (err, ownerGoals) {
+            if (err) { return err; }
+            Goal.
+            findById(req.body.id).
+            exec( function(err, goalToEdit) {
+                if(err) { return err; }
+                res.render('f_edit', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToEdit});
+            });
+        }); 
+    });
+}
+
+exports.goal_edit_post = function(req, res) {
+    res.send('NOT IMPLEMENTED: Goal edit POST---------');
+}
+
+
 // Handle Goal delete on POST.
 exports.goal_offerTo_post = function(req, res) {
     res.send(req.body);
@@ -114,7 +162,13 @@ exports.goal_detail = function(req, res) {
 
 // Display list of all accepted Goals.
 exports.goal_accepted_list = function(req, res) {
-    res.render('f_accepted');
+    Unit.
+    findOne({ owner: req.payload.id }).
+    populate("parentTo").
+    exec( function (err, ownerUnit) {
+        if (err) { return err; }
+        res.render('f_accepted', {children: ownerUnit.parentTo, displayAddForm: false});
+    });
 };
 
 // Display list of all own pending Goals.

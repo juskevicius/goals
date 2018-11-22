@@ -1,0 +1,35 @@
+extends f_all.pug
+block edit
+  .overlay3(onclick="hideEditForm()")
+  .container-fluid.edit-form
+    .row
+      .col-xs-4
+      .col-xs-4
+        .row
+          .col-xs-12.form-header Add a new goal
+        .row
+          .col-xs-12.form-body
+            .row
+              form(action="/edit" method="post" href="")
+                .col-xs-12.add-group
+                  .form-group
+                    label(for="name") Goal:
+                    input(type="text" class="form-control" name="goal" value=goal.goal) 
+                  .form-group.i-score
+                    label(for="initScore") Initial score:
+                    input(type="text" class="form-control" name="initScore" placeholder="50%" value=goal.initScore)
+                  .form-group.t-score
+                    label(for="targScore") Target score:
+                    input(type="text" class="form-control" name="targScore" placeholder="99%" value=goal.targScore)
+                  .form-group.comment
+                    label(for="comment") Comment:
+                    input(type="text" class="form-control" name="comment" value=goal.comments)
+                  .form-group.save-btn
+                    input.btn.btn-default(type="submit" value="Save")
+  script.
+    function hideEditForm() {
+      let elmToRemove1 = document.getElementsByClassName("edit-form")[0];
+      let elmToRemove2 = document.getElementsByClassName("overlay3")[0];
+      elmToRemove1.parentNode.removeChild(elmToRemove1);
+      elmToRemove2.parentNode.removeChild(elmToRemove2);
+    }

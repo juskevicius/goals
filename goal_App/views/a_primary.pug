@@ -71,6 +71,7 @@ body
                       |  Goals
                     ul
                       li: a(href="#", onclick="(function showAddForm(){ document.getElementsByClassName('add-form')[0].style.display = 'initial'; document.getElementsByClassName('overlay')[0].style.display = 'initial';})()") Add
+                      li: a(href="/all") All
                       li: a(href="#") Pending
                         ul
                           li: a(href="/pending/own") Own
@@ -330,6 +331,8 @@ body
             .col-xs-2
     //- ADD FORM:
     include f_add.pug
+    //- OTHER FORMS:
     block accepted
+    block all
     block pendingOwn
     block pendingOff

@@ -29,7 +29,7 @@ main {
   display: none;
 }
 
-.overlay, .overlay2 {
+.overlay, .overlay2, .overlay3 {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -42,15 +42,23 @@ main {
   cursor: pointer;
 }
 
+.overlay3 {
+  z-index: 4;
+}
+
 .add-form, .offer-btn {
   display: none;
 }
 
-.add-form, .acc-goals, .pnd-goals, .off-pnd-goals {
+.add-form, .acc-goals, .pnd-goals, .off-pnd-goals, .all-goals, .edit-form {
   position: absolute;
   top: 0;
   margin-top: 10%;
   width: 100%;
+}
+
+.all-goals {
+  margin-top: 5%;
 }
 
 .form-header, .acc-goals-header, .pnd-goals-header {
@@ -61,10 +69,18 @@ main {
   z-index: 3;
 }
 
+.edit-form .form-header {
+  z-index: 5;
+}
+
 .form-body, .acc-goals-body, .pnd-goals-body {
   background-color: white;
   padding: 10%;
   z-index: 3;
+}
+
+.edit-form .form-body {
+  z-index: 5;
 }
 
 select {
@@ -121,19 +137,46 @@ select {
 
 /* Styling the accepted goals list */
 
-.acc-goals-body .headers {
+.acc-goals-body .headers, .col-headers {
   font-size: 20px;
   font-weight: bold;
   text-align: center;
 }
 
-.acc-goal-data {
+.acc-goal-data, .col-data {
   padding-top: 15px;
 }
 
-.acc-goal-data div {
+.col-headers > div > div {
+  line-height: 50px;
+  height: 50px;
+  text-align: center;
+}
+
+.col-headers > div > div > p {
+  line-height: 25px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.acc-goal-data div, .col-data div {
   text-align: center;
   font-size: 16px;
+}
+
+.col-data .row {
+  margin-bottom: 10px;
+}
+
+.col-data form {
+  float: left;
+  margin-left: 10px;
+}
+
+.col-data button {
+  padding: 0;
+  border: none;
+  background-color: white;
 }
 
 /* Styling the pending goal list */
