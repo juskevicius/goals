@@ -1,89 +1,74 @@
-.overlay(onclick="(function showAddForm(){ document.getElementsByClassName('add-form')[0].style.display = 'none'; document.getElementsByClassName('overlay')[0].style.display = 'none';})()")
-.container-fluid.add-form
-  .row
-    .col-xs-4
-    .col-xs-4
-      .row
-        .col-xs-12.form-header Add a new goal
-      .row
-        .col-xs-12.form-body
-          .row
-            form(action="/add" method="post" href="")
+extends f_all.pug
+block edit
+  a.overlay3(href="/all")
+  .container-fluid.form_level2
+    .row
+      .col-xs-4
+      .col-xs-4
+        .row
+          .col-xs-12.form-header Offer the goal to:
+        .row
+          .col-xs-12.form-body
+            .row
               .col-xs-12.add-group
                 .form-group
                   label(for="name") Goal:
-                  input(type="text" class="form-control" name="goal" value=goalDetails ? goalDetails.goal : "") 
+                  input(type="text" class="form-control" name="goal" value=goal.goal readonly) 
                 .form-group.i-score
                   label(for="initScore") Initial score:
-                  input(type="text" class="form-control" name="initScore" placeholder="50%", value=goalDetails ? goalDetails.initScore : "")
+                  input(type="text" class="form-control" name="initScore" value=goal.initScore readonly)
                 .form-group.t-score
                   label(for="targScore") Target score:
-                  input(type="text" class="form-control" name="targScore" placeholder="99%", value=goalDetails ? goalDetails.targScore : "")
+                  input(type="text" class="form-control" name="targScore" value=goal.targScore readonly)
                 .form-group.comment
                   label(for="comment") Comment:
-                  input(type="text" class="form-control" name="comment", value=goalDetails ? goalDetails.comments : "")
-                .btn-group.offer-btn
-                  button.btn.btn-default(type="button" onclick="showOfferGrp()") Offer to...
-                    script.
-                      function showOfferGrp() {
-                            document.getElementsByClassName("offer-group")[0].style.display = "initial";
-                            document.getElementsByClassName("offer-i-score")[0].getElementsByTagName("input")[0].value = document.getElementsByClassName("i-score")[0].getElementsByTagName("input")[0].value;
-                            document.getElementsByClassName("offer-t-score")[0].getElementsByTagName("input")[0].value = document.getElementsByClassName("t-score")[0].getElementsByTagName("input")[0].value;
-                            document.getElementsByClassName("offer-comment")[0].getElementsByTagName("input")[0].value = document.getElementsByClassName("comment")[0].getElementsByTagName("input")[0].value;
-                      }
-                .form-group.save-btn
-                  input.btn.btn-default(type="submit" value="Save")
-            form(action="/offerTo" method="post" href="")
-              .col-xs-12.offer-group
-                .row
-                  .col-xs-12.offer-elm
-                    .row
-                      .col-xs-5
-                        .form-group.offer-list
-                          label(for="offerTo") Offer to:
-                          <br/>
-                          select(name="offerTo[0]" onchange="selectUnit(0)")
-                            option(value="") Choose
-                            each child in children
-                              option(value=child.id) #{child.name}
-                      .col-xs-2
-                      .col-xs-5
-                        .form-group.weight
-                          label(for="weight") Weight:
-                          input(type="text" class="form-control" name="weight[0]" placeholder="100%")
-                      .col-xs-5
-                        .form-group.offer-i-score
-                          label(for="oInitScore") Initial score:
-                          input(type="text" class="form-control" name="oInitScore[0]" placeholder="50%")
-                      .col-xs-2
-                      .col-xs-5
-                        .form-group.offer-t-score
-                          label(for="oTarget") Target score:
-                          input(type="text" class="form-control" name="oTarget[0]" placeholder="100%")
-                      .col-xs-12
-                        .form-group.offer-comment
-                          label(for="oComment") Comment:
-                          input(type="text" class="form-control" name="oComment[0]" placeholder="")
-                          input(type="hidden", name="parent[0]", value=goalDetails ? goalDetails._id : "")
-                  .form-group.make-offer-btn
-                    input.btn.btn-default(type="submit" value="Submit the offers")
-  script.
-    function selectUnit(nr) {
-      if (nr == document.getElementsByClassName("offer-elm").length - 1) {                                  
-        let offerToElm = document.getElementsByClassName("offer-elm")[0].cloneNode(true);
-        offerToElm.getElementsByClassName("offer-list")[0].getElementsByTagName("select")[0].setAttribute("onchange", "selectUnit(" + (nr + 1) + ")");
-        offerToElm.getElementsByClassName("offer-list")[0].getElementsByTagName("select")[0].setAttribute("name", "offerTo[" + (nr + 1) + "]");
-        offerToElm.getElementsByClassName("weight")[0].getElementsByTagName("input")[0].setAttribute("name", "weight[" + (nr + 1) + "]");
-        offerToElm.getElementsByClassName("offer-i-score")[0].getElementsByTagName("input")[0].setAttribute("name", "oInitScore[" + (nr + 1) + "]");
-        offerToElm.getElementsByClassName("offer-t-score")[0].getElementsByTagName("input")[0].setAttribute("name", "oTarget[" + (nr + 1) + "]");
-        offerToElm.getElementsByClassName("offer-comment")[0].getElementsByTagName("input")[0].setAttribute("name", "oComment[" + (nr + 1) + "]");
-        offerToElm.getElementsByClassName("offer-comment")[0].getElementsByTagName("input")[1].setAttribute("name", "parent[" + (nr + 1) + "]");
-        let makeOfferButton = document.getElementsByClassName("make-offer-btn")[0];
-        document.getElementsByClassName("offer-group")[0].getElementsByClassName("row")[0].insertBefore(offerToElm, makeOfferButton);
+                  input(type="text" class="form-control" name="comment" value=goal.comments readonly)
+              form(action="/offerTo" method="post" href="")
+                .col-xs-12.offer-group
+                  .row
+                    .col-xs-12.offer-elm
+                      .row
+                        .col-xs-5
+                          .form-group.offer-list
+                            label(for="offerTo") Offer to:
+                            <br/>
+                            select(name="offerTo[0]" onchange="selectUnit(0)")
+                              option(value="") Choose
+                              each child in children
+                                option(value=child.id) #{child.name}
+                        .col-xs-2
+                        .col-xs-5
+                          .form-group.weight
+                            label(for="weight") Weight:
+                            input(type="text" class="form-control" name="weight[0]" placeholder="100%")
+                        .col-xs-5
+                          .form-group.offer-i-score
+                            label(for="oInitScore") Initial score:
+                            input(type="text" class="form-control" name="oInitScore[0]" value=goal.initScore)
+                        .col-xs-2
+                        .col-xs-5
+                          .form-group.offer-t-score
+                            label(for="oTarget") Target score:
+                            input(type="text" class="form-control" name="oTarget[0]" value=goal.targScore)
+                        .col-xs-12
+                          .form-group.offer-comment
+                            label(for="oComment") Comment:
+                            input(type="text" class="form-control" name="oComment[0]" value=goal.comments)
+                            input(type="hidden", name="parent[0]", value=goal._id)
+                    .form-group.make-offer-btn
+                      input.btn.btn-default(type="submit" value="Submit the offers")
+    script.
+      function selectUnit(nr) {
+        if (nr == document.getElementsByClassName("offer-elm").length - 1) {                                  
+          let offerToElm = document.getElementsByClassName("offer-elm")[0].cloneNode(true);
+          offerToElm.getElementsByClassName("offer-list")[0].getElementsByTagName("select")[0].setAttribute("onchange", "selectUnit(" + (nr + 1) + ")");
+          offerToElm.getElementsByClassName("offer-list")[0].getElementsByTagName("select")[0].setAttribute("name", "offerTo[" + (nr + 1) + "]");
+          offerToElm.getElementsByClassName("weight")[0].getElementsByTagName("input")[0].setAttribute("name", "weight[" + (nr + 1) + "]");
+          offerToElm.getElementsByClassName("offer-i-score")[0].getElementsByTagName("input")[0].setAttribute("name", "oInitScore[" + (nr + 1) + "]");
+          offerToElm.getElementsByClassName("offer-t-score")[0].getElementsByTagName("input")[0].setAttribute("name", "oTarget[" + (nr + 1) + "]");
+          offerToElm.getElementsByClassName("offer-comment")[0].getElementsByTagName("input")[0].setAttribute("name", "oComment[" + (nr + 1) + "]");
+          offerToElm.getElementsByClassName("offer-comment")[0].getElementsByTagName("input")[1].setAttribute("name", "parent[" + (nr + 1) + "]");
+          let makeOfferButton = document.getElementsByClassName("make-offer-btn")[0];
+          document.getElementsByClassName("offer-group")[0].getElementsByClassName("row")[0].insertBefore(offerToElm, makeOfferButton);
+        }
       }
-    }
-if displayAddForm 
-  script. 
-    document.getElementsByClassName('add-form')[0].style.display = 'initial';
-    document.getElementsByClassName('overlay')[0].style.display = 'initial';
-    document.getElementsByClassName('offer-btn')[0].style.display = 'initial';

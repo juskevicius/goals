@@ -60,33 +60,28 @@ exports.goal_add_post = [
                             }
                         );
 
-                        if (req.body.initScore) {
-                            const hdata = new hData(
-                                {
-                                    data: [{
-                                        date: new Date("2019-01-01"),
-                                        value: req.body.initScore
-                                    }]  
-                                }
-                            );
-                            hdata.save( function(err, hdataObj) {
-                                if (err) { return (err); }
-                                goal.history = hdataObj.id;
-                                goal.save( function (err, goalObj) {
-                                    if (err) { return (err); }
-                                    return res.send(goalObj);
-                                });
-                            });
-                        } else {
+                        const hdata = new hData(
+                            {
+                                data: [{
+                                    date: new Date("2019-01-01"),
+                                    value: req.body.initScore ? req.body.initScore : 0
+                                }]  
+                            }
+                        );
+
+                        hdata.save( function(err, hdataObj) {
+                            if (err) { return (err); }
+                            goal.history = hdataObj.id;
                             goal.save( function (err, goalObj) {
                                 if (err) { return (err); }
-                                return res.send(goalObj);
+                                return res.redirect('/');
                             });
-                        }
+                        });
             });
     }
 ];
 
+// Handle Goal all on GET.
 exports.goal_all_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -106,6 +101,7 @@ exports.goal_all_get = function(req, res) {
     });
 };
 
+// Handle Goal edit on GET.
 exports.goal_edit_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -121,7 +117,7 @@ exports.goal_edit_get = function(req, res) {
         exec( function (err, ownerGoals) {
             if (err) { return err; }
             Goal.
-            findById(req.body.id).
+            findById(req.params.id).
             exec( function(err, goalToEdit) {
                 if(err) { return err; }
                 res.render('f_edit', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToEdit});
@@ -130,9 +126,127 @@ exports.goal_edit_get = function(req, res) {
     });
 }
 
-exports.goal_edit_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Goal edit POST---------');
+// Handle Goal edit on POST.
+exports.goal_edit_post = [
+    body("goal").isLength({ min: 1 }).trim().withMessage("Goal is not set"),
+    body("initScore").trim(),
+    body("targScore").trim(),
+    body("comment").trim(),
+
+    sanitizeBody('*').trim().escape(),
+
+    (req, res, next) => {
+
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        Unit.
+            findOne({ owner: req.payload.id }).
+            populate("parentTo").
+            exec( function (err, ownerUnit) {
+                if (err) { return err; }
+                Goal.
+                findById(req.body.id).
+                populate('history').
+                exec( function(err, goalToUpdate) {
+                    if(err) { return err; } 
+                    goalToUpdate.set(
+                        {
+                            goal: req.body.goal,
+                            initScore: req.body.initScore ? req.body.initScore : "",
+                            targScore: req.body.targScore ? req.body.targScore : "",
+                            //childTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
+                            //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
+                            //statusOwner: 'Approved',
+                            statusApprover: ownerUnit.childTo.length ? 'Pending' : 'Approved',
+                            //history: hDataObj._id, - implemented below
+                            //created: Date(Date.now()),
+                            updated: Date(Date.now()),
+                            comments: req.body.comment ? req.body.comment : "",
+                            //offer: {type: Schema.Types.ObjectId, ref: 'goalList'},
+                            //weight: {type: Number, default: 1}
+                            _id: req.body.id
+                        }
+                    );
+                    goalToUpdate.save( function (err, goalUpdated) {
+                        if (err) { return err; }
+                        hData. 
+                        findById(goalUpdated.history.id).
+                        exec( function(err, hDataToUpdate) {
+                            if (err) { return err; }
+                            hDataToUpdate.data[0].value = req.body.initScore ? req.body.initScore : 0;
+                            hDataToUpdate._id = goalUpdated.history.id;
+                            hDataToUpdate.save(function(err, hdataUpdated) {
+                                res.redirect('/all');  
+                            });
+                            //res.redirect('/all');
+                            //res.send(goalUpdated);
+                        });
+                    });
+                });
+            });       
+    }
+];
+
+// Handle Goal delete on GET.
+exports.goal_delete_get = function(req, res) {
+    Unit.
+    findOne({ owner: req.payload.id }).
+    populate("parentTo").
+    exec( function (err, ownerUnit) {
+        if (err) { return err; }
+        Goal.
+        find({ owner: ownerUnit.id}).
+        populate("childTo").
+        populate("parentTo").
+        populate("history").
+        populate("offer").
+        exec( function (err, ownerGoals) {
+            if (err) { return err; }
+            Goal.
+            findById(req.params.id).
+            exec( function(err, goalToDelete) {
+                if(err) { return err; }
+                res.render('f_delete', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToDelete});
+            });
+        }); 
+    });
 }
+
+// Handle Goal delete on POST.
+exports.goal_delete_post = function(req, res) {
+    Goal.
+    findByIdAndDelete(req.body.id).
+    exec( function(err, goalToDelete) {
+        if(err) { return err; }
+        res.redirect('/all');
+    });
+};
+
+// Handle Goal offerTo on GET.
+exports.goal_offerTo_get = function(req, res) {
+    Unit.
+    findOne({ owner: req.payload.id }).
+    populate("parentTo").
+    exec( function (err, ownerUnit) {
+        if (err) { return err; }
+        Goal.
+        find({ owner: ownerUnit.id}).
+        populate("childTo").
+        populate("parentTo").
+        populate("history").
+        populate("offer").
+        exec( function (err, ownerGoals) {
+            if (err) { return err; }
+            Goal.
+            findById(req.params.id).
+            exec( function(err, goalToEdit) {
+                if(err) { return err; }
+                res.render('f_offerTo', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToEdit});
+            });
+        }); 
+    });
+};
 
 
 // Handle Goal delete on POST.
@@ -140,10 +254,6 @@ exports.goal_offerTo_post = function(req, res) {
     res.send(req.body);
 };
 
-// Handle Goal delete on POST.
-exports.goal_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Goal delete POST---------');
-};
 
 // Display Goal update form on GET.
 exports.goal_update_get = function(req, res) {

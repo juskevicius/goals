@@ -18,17 +18,24 @@ router.post('/add', auth.required, goalController.goal_add_post);
 router.get('/all', auth.required, goalController.goal_all_get);
 
 /* GET edit */
-router.post('/editGet', auth.required, goalController.goal_edit_get);
+router.get('/edit/:id', auth.required, goalController.goal_edit_get);
 
 /* POST edit */
 router.post('/edit', auth.required, goalController.goal_edit_post);
 
+/* GET delete */
+router.get('/delete/:id', auth.required, goalController.goal_delete_get);
 
+/* POST delete */
+router.post('/delete', auth.required, goalController.goal_delete_post);
 
-
+/* GET offerTo */
+router.get('/offerTo/:id', auth.required, goalController.goal_offerTo_get);
 
 /* POST offerTo */
 router.post('/offerTo', auth.required, goalController.goal_offerTo_post);
+
+
 
 /* GET goalView */
 router.get('/goalDetails', auth.required, goalController.goal_detail);

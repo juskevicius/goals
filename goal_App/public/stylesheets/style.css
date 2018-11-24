@@ -50,7 +50,7 @@ main {
   display: none;
 }
 
-.add-form, .acc-goals, .pnd-goals, .off-pnd-goals, .all-goals, .edit-form {
+.add-form, .acc-goals, .pnd-goals, .off-pnd-goals, .all-goals, .form_level2 {
   position: absolute;
   top: 0;
   margin-top: 10%;
@@ -69,17 +69,13 @@ main {
   z-index: 3;
 }
 
-.edit-form .form-header {
-  z-index: 5;
-}
-
 .form-body, .acc-goals-body, .pnd-goals-body {
   background-color: white;
   padding: 10%;
   z-index: 3;
 }
 
-.edit-form .form-body {
+.form_level2 .form-body, .form_level2 .form-header {
   z-index: 5;
 }
 
@@ -92,7 +88,7 @@ select {
 
 /* Styling form buttons and labels */
 
-.add-form input, .add-form input:focus, .add-form input:active, .pnd-goals-unit input, .pnd-goals-unit input:focus, .pnd-goals-unit input:read-only, .login-form input, .login-form input:focus, .login-form input:active, .login-form button, .btn-group button, .btn-group button:focus {
+.form-group input, .form-group input:focus, .form-group input:active, .form-group input:read-only, .login-form button, .btn-group button, .btn-group button:focus {
   border: none;
   border-bottom: 1px solid rgb(235, 235, 235);
   box-shadow: none;
@@ -100,7 +96,7 @@ select {
   background-color: white;
 }
 
-.add-form label, .acc-goals-body .headers {
+.form-group label, .acc-goals-body .headers {
   color: rgb(88, 88, 88);
 }
 
@@ -113,7 +109,7 @@ select {
 /* Styling offer-group */
 
 .offer-group {
-  display: none;
+  margin: 40px 0 0 0;
 }
 
 .offer-elm {
@@ -168,15 +164,11 @@ select {
   margin-bottom: 10px;
 }
 
-.col-data form {
+.col-data a, .col-data a:hover {
   float: left;
   margin-left: 10px;
-}
-
-.col-data button {
-  padding: 0;
-  border: none;
-  background-color: white;
+  text-decoration: none;
+  color: rgb(80, 80, 80);
 }
 
 /* Styling the pending goal list */

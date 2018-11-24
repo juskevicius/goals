@@ -1,12 +1,12 @@
 extends f_all.pug
 block edit
-  .overlay3(onclick="hideEditForm()")
-  .container-fluid.edit-form
+  a.overlay3(href="/all")
+  .container-fluid.form_level2
     .row
       .col-xs-4
       .col-xs-4
         .row
-          .col-xs-12.form-header Add a new goal
+          .col-xs-12.form-header Edit a goal
         .row
           .col-xs-12.form-body
             .row
@@ -24,12 +24,6 @@ block edit
                   .form-group.comment
                     label(for="comment") Comment:
                     input(type="text" class="form-control" name="comment" value=goal.comments)
+                    input(type="hidden" name="id" value=goal.id)
                   .form-group.save-btn
                     input.btn.btn-default(type="submit" value="Save")
-  script.
-    function hideEditForm() {
-      let elmToRemove1 = document.getElementsByClassName("edit-form")[0];
-      let elmToRemove2 = document.getElementsByClassName("overlay3")[0];
-      elmToRemove1.parentNode.removeChild(elmToRemove1);
-      elmToRemove2.parentNode.removeChild(elmToRemove2);
-    }

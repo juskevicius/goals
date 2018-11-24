@@ -1,6 +1,6 @@
 extends a_primary.pug
 block all
-  .overlay2(onclick="(hideAllGoals())")
+  a.overlay2(href="/")
   .container-fluid.all-goals
     .row
       .col-xs-2
@@ -31,25 +31,14 @@ block all
                     .col-xs-1 #{goal.targScore}
                     .col-xs-1 #{goal.status}
                     .col-xs-2
-                      form(action="/editGet" method="post")
-                        input(type="hidden" name="id" value=goal.id)
-                        button(type="submit")
-                          i.fa.fa-edit(style="font-size:24px")
-                      form(action="/delete" method="post")
-                        input(type="hidden" name="id" value=goal.id)
-                        button(type="submit")
-                          i.fa.fa-remove(style="font-size:24px")
-                      form(action="/offerTo" method="post")
-                        input(type="hidden" name="id" value=goal.id)
-                        button(type="submit")
-                          i.fa.fa-share-alt(style="font-size:24px")
+                      a(href="/edit/" + goal.id)
+                        i.fa.fa-edit(style="font-size:24px")
+                      a(href="/delete/" + goal.id)
+                        i.fa.fa-remove(style="font-size:24px")
+                      a(href="/offerTo/" + goal.id)
+                        i.fa.fa-share-alt(style="font-size:24px")
       .col-xs-2
-  script.
-    function hideAllGoals() {
-      let elmToRemove1 = document.getElementsByClassName("all-goals")[0];
-      let elmToRemove2 = document.getElementsByClassName("overlay2")[0];
-      elmToRemove1.parentNode.removeChild(elmToRemove1);
-      elmToRemove2.parentNode.removeChild(elmToRemove2);
-    }
-
   block edit
+  block delete
+  block offerTo
+
