@@ -23,7 +23,7 @@ Gets displayed when clicked. Gets hidden when submitted or clicked on the backgr
 
 // Handle Goal create on POST.
 exports.goal_add_post = [
-    body("goal").isLength({ min: 1 }).trim().withMessage("Goal is not set"),
+    body("name").isLength({ min: 1 }).trim().withMessage("Goal is not set"),
     body("initScore").trim(),
     body("targScore").trim(),
     body("comment").trim(),
@@ -43,7 +43,7 @@ exports.goal_add_post = [
                 // Create a Goal object with escaped and trimmed data.
                         const goal = new Goal(
                             {
-                                goal: req.body.goal,
+                                name: req.body.name,
                                 owner: ownerUnit._id,
                                 initScore: req.body.initScore ? req.body.initScore : "",
                                 targScore: req.body.targScore ? req.body.targScore : "",
@@ -54,7 +54,7 @@ exports.goal_add_post = [
                                 //history: hDataObj._id, - implemented below
                                 created: Date(Date.now()),
                                 //updated: {type: Date},
-                                comments: req.body.comment ? req.body.comment : "",
+                                comment: req.body.comment ? req.body.comment : "",
                                 //offer: {type: Schema.Types.ObjectId, ref: 'goalList'},
                                 //weight: {type: Number, default: 1}
                             }
@@ -152,7 +152,7 @@ exports.goal_edit_post = [
                     if(err) { return err; } 
                     goalToUpdate.set(
                         {
-                            goal: req.body.goal,
+                            name: req.body.name,
                             initScore: req.body.initScore ? req.body.initScore : "",
                             targScore: req.body.targScore ? req.body.targScore : "",
                             //childTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
@@ -162,7 +162,7 @@ exports.goal_edit_post = [
                             //history: hDataObj._id, - implemented below
                             //created: Date(Date.now()),
                             updated: Date(Date.now()),
-                            comments: req.body.comment ? req.body.comment : "",
+                            comment: req.body.comment ? req.body.comment : "",
                             //offer: {type: Schema.Types.ObjectId, ref: 'goalList'},
                             //weight: {type: Number, default: 1}
                             _id: req.body.id
@@ -252,6 +252,7 @@ exports.goal_offerTo_get = function(req, res) {
 // Handle Goal delete on POST.
 exports.goal_offerTo_post = function(req, res) {
     
+    //create an array for historical data
     var hDataArr = [];
     for (let i = 0; i < req.body.owner.length; i++) {
         if (req.body.owner[i]) {
@@ -263,39 +264,45 @@ exports.goal_offerTo_post = function(req, res) {
             });
         }
     }
+    //create docs for historical data useing the array
     hData.create(hDataArr, function(err, hDataDocs){
         if (err) { return err; }
+        //create an array for new goals
         var goalArr = [];
         for (let i = 0; i < req.body.owner.length; i++) {
             if (req.body.owner[i]) {
                 goalArr.push({
-                    goal: req.body.goal[i],
+                    name: req.body.name[i],
                     owner: req.body.owner[i],
                     initScore: req.body.oInitScore[i],
-                    targScore: req.body.oTarget[i],
+                    targScore: req.body.oTargScore[i],
                     childTo: [req.body.childTo[i]],
-                    //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
+                    //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}], - not relevant in this case
                     statusOwner: 'Pending',
                     statusApprover: 'Approved',
                     history: hDataDocs[i].id,
                     created: Date(Date.now()),
-                    //updated: Date(Date.now()),
-                    comments: req.body.oComment[i],
-                    //offer: {type: Schema.Types.ObjectId, ref: 'goalList'},
+                    //updated: Date(Date.now()), - not relevant in this case
+                    comment: req.body.oComment[i],
+                    //offer: {type: Schema.Types.ObjectId, ref: 'goalList'}, - not relevant in this case
                     weight: req.body.weight[i],
                 });  
             }
         }
+        //create docs for new goals
         Goal.create(goalArr, function(err, goalDocs) {
             if (err) { return err; }
+            //create an array for their ids
             var parentToGoals = goalDocs.map((goal)=>{ return goal._id; });
-            Goal.updateOne({id: req.body.childTo[0]}, {parentTo: parentToGoals}, {}, function(err, updatedGoal) {
-                if(err) { return err; }
-                Goal.findById(req.body.childTo[0], function(err, docc){
-                    res.send(docc);
-                });
-                //res.send(updatedGoal);
-                //res.redirect('/all');
+            //and assign it to their parent goal
+            Goal.
+            findById(req.body.childTo[0]).
+            exec( function(err, goalDoc){
+                goalDoc.parentTo = parentToGoals;
+                goalDoc.save(function(err, updatedGoal) {
+                    if (err) { return err; }
+                    res.redirect('/all');
+                }); 
             });
         });
     });

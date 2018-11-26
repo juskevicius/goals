@@ -14,7 +14,7 @@ block delete
                 .col-xs-12.add-group
                   .form-group
                     label(for="name") Are you sure you want to delete this goal?
-                    input(type="text" class="form-control" name="goal" value=goal.goal readonly) 
+                    input(type="text" class="form-control" name="name" value=goal.name readonly) 
                     input(type="hidden" name="id" value=goal.id)
                   .form-group.save-btn
                     input.btn.btn-default(type="submit" value="Delete")

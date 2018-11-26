@@ -25,7 +25,7 @@ block all
               .col-xs-12.col-data
                 each goal in goals
                   .row
-                    .col-xs-6 #{goal.goal}
+                    .col-xs-6 #{goal.name}
                     .col-xs-1 #{goal.initScore}
                     .col-xs-1 #{goal.history ? goal.history.data[goal.history.data.length - 1].value : ""}
                     .col-xs-1 #{goal.targScore}

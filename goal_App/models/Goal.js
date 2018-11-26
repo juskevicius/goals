@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const GoalSchema = new Schema(
     {
-        goal: {type: String, required: true, max: 100},
+        name: {type: String, required: true, max: 100}, // to rename to "name" or "description"
         owner: {type: Schema.Types.ObjectId, ref: 'Unit'},
         initScore: {type: Number},
         targScore: {type: Number},
@@ -15,7 +15,7 @@ const GoalSchema = new Schema(
         history: {type: Schema.Types.ObjectId, ref: 'hData'},
         created: {type: Date},
         updated: {type: Date},
-        comments: {type: String},
+        comment: {type: String}, // to rename to "comment"
         offer: {type: Schema.Types.ObjectId, ref: 'Goal'},
         weight: {type: Number, default: 1}
     }
