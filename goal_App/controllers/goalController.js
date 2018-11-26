@@ -251,7 +251,54 @@ exports.goal_offerTo_get = function(req, res) {
 
 // Handle Goal delete on POST.
 exports.goal_offerTo_post = function(req, res) {
-    res.send(req.body);
+    
+    var hDataArr = [];
+    for (let i = 0; i < req.body.owner.length; i++) {
+        if (req.body.owner[i]) {
+            hDataArr.push({
+                data: [{
+                    date: new Date("2019-01-01"),
+                    value: req.body.oInitScore[i] ? req.body.oInitScore[i] : 0
+                }]  
+            });
+        }
+    }
+    hData.create(hDataArr, function(err, hDataDocs){
+        if (err) { return err; }
+        var goalArr = [];
+        for (let i = 0; i < req.body.owner.length; i++) {
+            if (req.body.owner[i]) {
+                goalArr.push({
+                    goal: req.body.goal[i],
+                    owner: req.body.owner[i],
+                    initScore: req.body.oInitScore[i],
+                    targScore: req.body.oTarget[i],
+                    childTo: [req.body.childTo[i]],
+                    //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
+                    statusOwner: 'Pending',
+                    statusApprover: 'Approved',
+                    history: hDataDocs[i].id,
+                    created: Date(Date.now()),
+                    //updated: Date(Date.now()),
+                    comments: req.body.oComment[i],
+                    //offer: {type: Schema.Types.ObjectId, ref: 'goalList'},
+                    weight: req.body.weight[i],
+                });  
+            }
+        }
+        Goal.create(goalArr, function(err, goalDocs) {
+            if (err) { return err; }
+            var parentToGoals = goalDocs.map((goal)=>{ return goal._id; });
+            Goal.updateOne({id: req.body.childTo[0]}, {parentTo: parentToGoals}, {}, function(err, updatedGoal) {
+                if(err) { return err; }
+                Goal.findById(req.body.childTo[0], function(err, docc){
+                    res.send(docc);
+                });
+                //res.send(updatedGoal);
+                //res.redirect('/all');
+            });
+        });
+    });
 };
 
 
