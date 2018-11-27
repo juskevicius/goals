@@ -14,8 +14,8 @@ Gets displayed when clicked. Gets hidden when submitted or clicked on the backgr
 /* POST add */
 router.post('/add', auth.required, goalController.goal_add_post);
 
-/* GET all */
-router.get('/all', auth.required, goalController.goal_all_get);
+/* GET myOwn */
+router.get('/myOwn', auth.required, goalController.goal_myOwn_get);
 
 /* GET edit */
 router.get('/edit/:id', auth.required, goalController.goal_edit_get);
@@ -34,6 +34,13 @@ router.get('/offerTo/:id', auth.required, goalController.goal_offerTo_get);
 
 /* POST offerTo */
 router.post('/offerTo', auth.required, goalController.goal_offerTo_post);
+
+/* GET accept */
+router.get('/accept/:id', auth.required, goalController.goal_accept_get);
+
+/* POST accept */
+router.post('/accept', auth.required, goalController.goal_accept_post);
+
 
 
 

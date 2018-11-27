@@ -43,7 +43,7 @@ exports.goal_add_post = [
                 // Create a Goal object with escaped and trimmed data.
                         const goal = new Goal(
                             {
-                                name: req.body.name,
+                                name: req.body.name.replace("&#x27;", "’"),
                                 owner: ownerUnit._id,
                                 initScore: req.body.initScore ? req.body.initScore : "",
                                 targScore: req.body.targScore ? req.body.targScore : "",
@@ -81,8 +81,8 @@ exports.goal_add_post = [
     }
 ];
 
-// Handle Goal all on GET.
-exports.goal_all_get = function(req, res) {
+// Handle Goal myOwn on GET.
+exports.goal_myOwn_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
     populate("parentTo").
@@ -96,7 +96,7 @@ exports.goal_all_get = function(req, res) {
         populate("offer").
         exec( function (err, ownerGoals) {
             if (err) { return err; }
-            res.render('f_all', {children: ownerUnit.parentTo, goals: ownerGoals});
+            res.render('f_myOwn', {children: ownerUnit.parentTo, goals: ownerGoals});
         }); 
     });
 };
@@ -120,7 +120,7 @@ exports.goal_edit_get = function(req, res) {
             findById(req.params.id).
             exec( function(err, goalToEdit) {
                 if(err) { return err; }
-                res.render('f_edit', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToEdit});
+                res.render('f_myOwn_edit', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToEdit});
             });
         }); 
     });
@@ -152,7 +152,7 @@ exports.goal_edit_post = [
                     if(err) { return err; } 
                     goalToUpdate.set(
                         {
-                            name: req.body.name,
+                            name: req.body.name.replace("&#x27;", "’"),
                             initScore: req.body.initScore ? req.body.initScore : "",
                             targScore: req.body.targScore ? req.body.targScore : "",
                             //childTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
@@ -177,7 +177,7 @@ exports.goal_edit_post = [
                             hDataToUpdate.data[0].value = req.body.initScore ? req.body.initScore : 0;
                             hDataToUpdate._id = goalUpdated.history.id;
                             hDataToUpdate.save(function(err, hdataUpdated) {
-                                res.redirect('/all');  
+                                res.redirect('/myOwn');  
                             });
                             //res.redirect('/all');
                             //res.send(goalUpdated);
@@ -207,7 +207,7 @@ exports.goal_delete_get = function(req, res) {
             findById(req.params.id).
             exec( function(err, goalToDelete) {
                 if(err) { return err; }
-                res.render('f_delete', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToDelete});
+                res.render('f_myOwn_delete', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToDelete});
             });
         }); 
     });
@@ -219,7 +219,7 @@ exports.goal_delete_post = function(req, res) {
     findByIdAndDelete(req.body.id).
     exec( function(err, goalToDelete) {
         if(err) { return err; }
-        res.redirect('/all');
+        res.redirect('/myOwn');
     });
 };
 
@@ -242,7 +242,7 @@ exports.goal_offerTo_get = function(req, res) {
             findById(req.params.id).
             exec( function(err, goalToEdit) {
                 if(err) { return err; }
-                res.render('f_offerTo', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToEdit});
+                res.render('f_myOwn_offerTo', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToEdit});
             });
         }); 
     });
@@ -301,12 +301,62 @@ exports.goal_offerTo_post = function(req, res) {
                 goalDoc.parentTo = parentToGoals;
                 goalDoc.save(function(err, updatedGoal) {
                     if (err) { return err; }
-                    res.redirect('/all');
+                    res.redirect('/myOwn');
                 }); 
             });
         });
     });
 };
+
+
+// Handle Goal accept on GET.
+exports.goal_accept_get = function(req, res) {
+    Unit.
+    findOne({ owner: req.payload.id }).
+    populate("parentTo").
+    exec( function (err, ownerUnit) {
+        if (err) { return err; }
+        Goal.
+        find({ owner: ownerUnit.id}).
+        populate("childTo").
+        populate("parentTo").
+        populate("history").
+        populate("offer").
+        exec( function (err, ownerGoals) {
+            if (err) { return err; }
+            Goal.
+            findById(req.params.id).
+            exec( function(err, goalToAccept) {
+                if(err) { return err; }
+                res.render('f_myOwn_accept', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToAccept});
+            });
+        }); 
+    });
+}
+
+// Handle Goal accept on POST.
+exports.goal_accept_post = [
+    
+    sanitizeBody('*').trim().escape(),
+
+    (req, res, next) => {
+
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        Goal.
+        findById(req.body.id).
+        exec( function(err, goalToAccept) {
+            if(err) { return err; } 
+            goalToAccept.set({statusOwner: 'Approved'});
+            goalToAccept.save( function (err, goalAccepted) {
+                if (err) { return err; }
+                res.redirect('/myOwn');
+            });
+        });       
+    }
+];
+
 
 
 // Display Goal update form on GET.

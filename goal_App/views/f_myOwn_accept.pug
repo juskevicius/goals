@@ -1,0 +1,28 @@
+extends f_myOwn.pug
+block accept
+  a.overlay3(href="/myOwn")
+  .container-fluid.form_level2
+    .row
+      .col-xs-4
+      .col-xs-4
+        .row
+          .col-xs-12.form-header Accept a goal
+        .row
+          .col-xs-12.form-body
+            .row
+              form(action="/accept" method="post" href="")
+                .form-group
+                  label(for="name") Goal:
+                  input(type="text" class="form-control" value=goal.name readonly) 
+                .form-group.i-score
+                  label(for="initScore") Initial score:
+                  input(type="text" class="form-control" value=goal.initScore readonly)
+                .form-group.t-score
+                  label(for="targScore") Target score:
+                  input(type="text" class="form-control" value=goal.targScore readonly)
+                .form-group.comment
+                  label(for="comment") Comment:
+                  input(type="text" class="form-control" value=goal.comment readonly)
+                  input(type="hidden" name="id" value=goal.id)
+                .form-group.save-btn
+                    input.btn.btn-default(type="submit" value="Accept")

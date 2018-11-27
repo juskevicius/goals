@@ -16,6 +16,7 @@ html(lang="en-US")
     //- D3:
     script(src="https://d3js.org/d3.v5.min.js" charset="utf-8")
     link(rel="stylesheet" href="/stylesheets/style.css")
+    link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous")
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
     link(href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet")
 body
@@ -25,7 +26,7 @@ body
       .row.dashboard
         .col-xs-12
           .row.title
-            a.fa.fa-sign-out.fa-4x(href="/logout")
+            a.fa.fa-sign-out(href="/logout", style="font-size:54px")
             //- NAVBAR:
             .col-xs-2.navbar
               nav
@@ -71,7 +72,7 @@ body
                       |  Goals
                     ul
                       li: a(href="#", onclick="(function showAddForm(){ document.getElementsByClassName('add-form')[0].style.display = 'initial'; document.getElementsByClassName('overlay')[0].style.display = 'initial';})()") Add
-                      li: a(href="/all") All
+                      li: a(href="/myOwn") My own
                       li: a(href="#") Pending
                         ul
                           li: a(href="/pending/own") Own
@@ -332,6 +333,6 @@ body
     include f_add.pug
     //- OTHER FORMS:
     block accepted
-    block all
+    block myOwn
     block pendingOwn
     block pendingOff
