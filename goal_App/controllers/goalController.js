@@ -1,8 +1,9 @@
 var Goal = require('../models/Goal');
 var hData = require('../models/hData');
 var Unit = require('../models/Unit');
-
 var async = require('async');
+import each from 'async/each'
+
 
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
@@ -295,14 +296,38 @@ exports.goal_offerTo_post = function(req, res) {
             //create an array for their ids
             var parentToGoals = goalDocs.map((goal)=>{ return goal._id; });
             //and assign it to their parent goal
-            Goal.
-            findById(req.body.childTo[0]).
-            exec( function(err, goalDoc){
-                goalDoc.parentTo = parentToGoals;
-                goalDoc.save(function(err, updatedGoal) {
+           
+           
+            each(goalDocs, function(goalOffer, callback) {
+                let currId = goalOffer.id;
+                goalOffer._id = mongoose.Types.ObjectId();
+                goalOffer.isNew = true;
+                goalOffer.save(function (err, newGoalOffer){
                     if (err) { return err; }
-                    res.redirect('/myOwn');
-                }); 
+                    Goal.
+                    findById(currId).
+                    exec( function(err, goalDoc) {
+                        if (err) { return err; }
+                        goalDoc.set({offer: newGoalOffer.id});
+                        goalDoc.save(function(err, updatedGoalDoc){
+                            if (err) { return err; }
+                            callback();
+                        });    
+                    });
+                });
+            }, 
+            
+            function(err){    
+                Goal.
+                findById(req.body.childTo[0]).
+                exec( function(err, goalDoc){
+                    if (err) { return err; }
+                    goalDoc.parentTo = parentToGoals;
+                    goalDoc.save(function(err, updatedGoal) {
+                        if (err) { return err; }              
+                        res.redirect('/myOwn');
+                    }); 
+                });
             });
         });
     });

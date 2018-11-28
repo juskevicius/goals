@@ -14,7 +14,7 @@ block edit
                 .col-xs-12.add-group
                   .form-group
                     label(for="name") Goal:
-                    input(type="text" class="form-control" name="name" value=goal.goal) 
+                    input(type="text" class="form-control" name="name" value=goal.name) 
                   .form-group.i-score
                     label(for="initScore") Initial score:
                     input(type="text" class="form-control" name="initScore" placeholder="50%" value=goal.initScore)
@@ -23,7 +23,7 @@ block edit
                     input(type="text" class="form-control" name="targScore" placeholder="99%" value=goal.targScore)
                   .form-group.comment
                     label(for="comment") Comment:
-                    input(type="text" class="form-control" name="comment" value=goal.comments)
+                    input(type="text" class="form-control" name="comment" value=goal.comment)
                     input(type="hidden" name="id" value=goal.id)
                   .form-group.save-btn
                     input.btn.btn-default(type="submit" value="Save")

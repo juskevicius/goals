@@ -12,7 +12,7 @@ block myOwn
               .col-xs-12.col-headers
                 .row
                   .col-xs-6
-                    p Approved goals
+                    p Unapproved goals offered to me
                   .col-xs-1 
                     p Initial score
                   .col-xs-1 
@@ -24,7 +24,7 @@ block myOwn
                   .col-xs-2
               .col-xs-12.col-data
                 each goal in goals
-                  if goal.status == "Approved"
+                  if goal.statusOwner == "Pending" && goal.statusApprover == "Approved"
                     .row
                       .col-xs-6 #{goal.name}
                       .col-xs-1 #{goal.initScore}
@@ -32,12 +32,12 @@ block myOwn
                       .col-xs-1 #{goal.targScore}
                       .col-xs-1 #{goal.status}
                       .col-xs-2
-                        a(href="/edit/" + goal.id title="Edit")
-                          i.fa.fa-edit(style="font-size:24px")
-                        a(href="/delete/" + goal.id title="Delete")
+                        a(href="/accept/" + goal.id title="Accept")
+                          i.far.fa-check-square(style="font-size:24px")
+                        a(href="/negotiate/" + goal.id title="Negotiate")
+                          i.far.fa-comment(style="font-size:24px")
+                        a(href="/delete/" + goal.id title="Reject")
                           i.fa.fa-remove(style="font-size:24px")
-                        a(href="/offerTo/" + goal.id title="Ofer to...")
-                          i.fa.fa-share-alt(style="font-size:24px")
             .row
               .col-xs-12.col-headers
                 .row
@@ -70,7 +70,7 @@ block myOwn
               .col-xs-12.col-headers
                 .row
                   .col-xs-6
-                    p Unapproved goals offered to me
+                    p Approved goals
                   .col-xs-1 
                     p Initial score
                   .col-xs-1 
@@ -82,7 +82,7 @@ block myOwn
                   .col-xs-2
               .col-xs-12.col-data
                 each goal in goals
-                  if goal.statusOwner == "Pending" && goal.statusApprover == "Approved"
+                  if goal.status == "Approved"
                     .row
                       .col-xs-6 #{goal.name}
                       .col-xs-1 #{goal.initScore}
@@ -90,15 +90,16 @@ block myOwn
                       .col-xs-1 #{goal.targScore}
                       .col-xs-1 #{goal.status}
                       .col-xs-2
-                        a(href="/accept/" + goal.id title="Accept")
-                          i.far.fa-check-square(style="font-size:24px")
-                        a(href="/negotiate/" + goal.id title="Negotiate")
-                          i.far.fa-comment(style="font-size:24px")
-                        a(href="/delete/" + goal.id title="Reject")
+                        a(href="/edit/" + goal.id title="Edit")
+                          i.fa.fa-edit(style="font-size:24px")
+                        a(href="/delete/" + goal.id title="Delete")
                           i.fa.fa-remove(style="font-size:24px")
+                        a(href="/offerTo/" + goal.id title="Ofer to...")
+                          i.fa.fa-share-alt(style="font-size:24px")
       .col-xs-2
   block edit
   block delete
   block offerTo
   block accept
+  block negotiate
 
