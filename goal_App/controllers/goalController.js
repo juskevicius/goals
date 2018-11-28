@@ -2,7 +2,9 @@ var Goal = require('../models/Goal');
 var hData = require('../models/hData');
 var Unit = require('../models/Unit');
 var async = require('async');
-import each from 'async/each'
+var each = require("async/each");
+const mongoose = require('mongoose');
+//import each from '../node_modules/async/each'
 
 
 const { body,validationResult } = require('express-validator/check');
@@ -253,80 +255,92 @@ exports.goal_offerTo_get = function(req, res) {
 // Handle Goal delete on POST.
 exports.goal_offerTo_post = function(req, res) {
     
-    //create an array for historical data
-    var hDataArr = [];
-    for (let i = 0; i < req.body.owner.length; i++) {
-        if (req.body.owner[i]) {
-            hDataArr.push({
-                data: [{
-                    date: new Date("2019-01-01"),
-                    value: req.body.oInitScore[i] ? req.body.oInitScore[i] : 0
-                }]  
-            });
-        }
-    }
-    //create docs for historical data useing the array
-    hData.create(hDataArr, function(err, hDataDocs){
+    //Detect the unit which is making the offer
+    Unit.
+    findOne({ owner: req.payload.id }).
+    exec( function (err, ownerUnit) {
         if (err) { return err; }
-        //create an array for new goals
-        var goalArr = [];
+        //create an array for offers' historical data
+        var hDataArr = [];
         for (let i = 0; i < req.body.owner.length; i++) {
             if (req.body.owner[i]) {
-                goalArr.push({
-                    name: req.body.name[i],
-                    owner: req.body.owner[i],
-                    initScore: req.body.oInitScore[i],
-                    targScore: req.body.oTargScore[i],
-                    childTo: [req.body.childTo[i]],
-                    //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}], - not relevant in this case
-                    statusOwner: 'Pending',
-                    statusApprover: 'Approved',
-                    history: hDataDocs[i].id,
-                    created: Date(Date.now()),
-                    //updated: Date(Date.now()), - not relevant in this case
-                    comment: req.body.oComment[i],
-                    //offer: {type: Schema.Types.ObjectId, ref: 'goalList'}, - not relevant in this case
-                    weight: req.body.weight[i],
-                });  
+                hDataArr.push({
+                    data: [{
+                        date: new Date("2019-01-01"),
+                        value: req.body.oInitScore[i] ? req.body.oInitScore[i] : 0
+                    }]  
+                });
             }
         }
-        //create docs for new goals
-        Goal.create(goalArr, function(err, goalDocs) {
+        //create docs for historical data from the array
+        hData.
+        create(hDataArr, function(err, hDataDocs){
             if (err) { return err; }
-            //create an array for their ids
-            var parentToGoals = goalDocs.map((goal)=>{ return goal._id; });
-            //and assign it to their parent goal
-           
-           
-            each(goalDocs, function(goalOffer, callback) {
-                let currId = goalOffer.id;
-                goalOffer._id = mongoose.Types.ObjectId();
-                goalOffer.isNew = true;
-                goalOffer.save(function (err, newGoalOffer){
-                    if (err) { return err; }
-                    Goal.
-                    findById(currId).
-                    exec( function(err, goalDoc) {
-                        if (err) { return err; }
-                        goalDoc.set({offer: newGoalOffer.id});
-                        goalDoc.save(function(err, updatedGoalDoc){
-                            if (err) { return err; }
-                            callback();
-                        });    
+            //create an array for offered goals
+            var goalArr = [];
+            for (let i = 0; i < req.body.owner.length; i++) {
+                if (req.body.owner[i]) {
+                    goalArr.push({
+                        name: req.body.name[i],
+                        owner: req.body.owner[i],
+                        initScore: req.body.oInitScore[i],
+                        targScore: req.body.oTargScore[i],
+                        childTo: [req.body.childTo[i]],
+                        //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}], - not relevant in this case
+                        statusOwner: 'Pending',
+                        statusApprover: 'Approved',
+                        history: hDataDocs[i].id,
+                        created: Date(Date.now()),
+                        //updated: Date(Date.now()), - not relevant in this case
+                        comment: req.body.oComment[i],
+                        //offer: {type: Schema.Types.ObjectId, ref: 'goalList'}, - implemented below
+                        weight: req.body.weight[i],
+                    });  
+                }
+            }
+            //create docs for offered goals (goals are owned by recipients)
+            Goal.
+                create(goalArr, function(err, goalDocs) {
+                if (err) { return err; }
+                //create their copies, assign new id and owner (the one who made the offer). Bind to offered goals
+                each(goalDocs, function(goalOffer, callback) {
+                    let currId = goalOffer.id;
+                    goalOffer.set({
+                        _id: mongoose.Types.ObjectId(),
+                        owner: ownerUnit,
+                        statusOwner: "Pending", //this way it will not appear owner's in goal list
+                        statusApprover: "Pending" //this way it will not appear owner's in goal list
                     });
-                });
-            }, 
-            
-            function(err){    
-                Goal.
-                findById(req.body.childTo[0]).
-                exec( function(err, goalDoc){
-                    if (err) { return err; }
-                    goalDoc.parentTo = parentToGoals;
-                    goalDoc.save(function(err, updatedGoal) {
-                        if (err) { return err; }              
-                        res.redirect('/myOwn');
-                    }); 
+                    goalOffer.isNew = true;
+                    goalOffer.save(function (err, newGoalOffer){
+                        if (err) { return err; }
+                        //assign offer's id to the original goal
+                        Goal.
+                        findById(currId).
+                        exec( function(err, goalDoc) {
+                            if (err) { return err; }
+                            goalDoc.set({offer: newGoalOffer.id});
+                            goalDoc.save(function(err, updatedGoalDoc){
+                                if (err) { return err; }
+                                callback();
+                            });    
+                        });
+                    });
+                }, 
+                function(err){    
+                    Goal.
+                    findById(req.body.childTo[0]).
+                    exec( function(err, goalDoc){
+                        if (err) { return err; }
+                        //create an array for offered goal ids
+                        let parentToGoals = goalDocs.map((goal)=>{ return goal._id; });
+                        //and assign it to their parent goal
+                        goalDoc.parentTo = parentToGoals;
+                        goalDoc.save(function(err, updatedGoal) {
+                            if (err) { return err; }              
+                            res.redirect('/myOwn');
+                        }); 
+                    });
                 });
             });
         });
@@ -381,6 +395,40 @@ exports.goal_accept_post = [
         });       
     }
 ];
+
+
+// Display Goal negotiate form on GET.
+exports.goal_negotiate_get = function(req, res) {
+    Unit.
+    findOne({ owner: req.payload.id }).
+    populate("parentTo").
+    exec( function (err, ownerUnit) {
+        if (err) { return err; }
+        Goal.
+        find({ owner: ownerUnit.id}).
+        populate("childTo").
+        populate("parentTo").
+        populate("history").
+        populate("offer").
+        exec( function (err, ownerGoals) {
+            if (err) { return err; }
+            Goal.
+            findById(req.params.id).
+            populate({ path: "offer", populate: { path: "owner", populate: { path: "owner"}}}).
+            exec( function(err, goalToNegotiate) {
+                if(err) { return err; }
+                res.render('f_myOwn_negotiate', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToNegotiate});
+            });
+        }); 
+    });
+};
+
+// Handle Goal negotiate on POST.
+exports.goal_negotiate_post = function(req, res) {
+    res.send('NOT IMPLEMENTED: Goal update POST---------');
+};
+
+
 
 
 

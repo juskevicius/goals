@@ -41,7 +41,11 @@ router.get('/accept/:id', auth.required, goalController.goal_accept_get);
 /* POST accept */
 router.post('/accept', auth.required, goalController.goal_accept_post);
 
+/* GET negotiate */
+router.get('/negotiate/:id', auth.required, goalController.goal_negotiate_get);
 
+/* POST negotiate */
+router.post('/negotiate', auth.required, goalController.goal_negotiate_post);
 
 
 /* GET goalView */

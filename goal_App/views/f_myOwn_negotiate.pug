@@ -6,23 +6,39 @@ block negotiate
       .col-xs-4
       .col-xs-4
         .row
-          .col-xs-12.form-header Accept a goal
+          .col-xs-12.form-header Negotiate a goal
         .row
           .col-xs-12.form-body
             .row
-              form(action="/accept" method="post" href="")
-                .form-group
-                  label(for="name") Goal:
-                  input(type="text" class="form-control" value=goal.name readonly) 
-                .form-group.i-score
-                  label(for="initScore") Initial score:
-                  input(type="text" class="form-control" value=goal.initScore readonly)
-                .form-group.t-score
-                  label(for="targScore") Target score:
-                  input(type="text" class="form-control" value=goal.targScore readonly)
-                .form-group.comment
-                  label(for="comment") Comment:
-                  input(type="text" class="form-control" value=goal.comment readonly)
-                  input(type="hidden" name="id" value=goal.id)
-                .form-group.save-btn
-                    input.btn.btn-default(type="submit" value="Accept")
+              p= "An offer from " + goal.offer.owner.owner.name + " (" + goal.offer.owner.name + ")"
+              .form-group
+                label(for="name") Goal:
+                input(type="text" class="form-control" value=goal.offer.name readonly) 
+              .form-group.i-score
+                label(for="initScore") Initial score:
+                input(type="text" class="form-control" value=goal.offer.initScore readonly)
+              .form-group.t-score
+                label(for="targScore") Target score:
+                input(type="text" class="form-control" value=goal.offer.targScore readonly)
+              .form-group.comment
+                label(for="comment") Comment:
+                input(type="text" class="form-control" value=goal.offer.comment readonly)
+            .row
+              form(action="/negotiate" method="post" href="")
+                .col-xs-12.add-group
+                  p My response:
+                  .form-group
+                    label(for="name") Goal:
+                    input(type="text" class="form-control" name="name" value=goal.name) 
+                  .form-group.i-score
+                    label(for="initScore") Initial score:
+                    input(type="text" class="form-control" name="initScore" placeholder="50%" value=goal.initScore)
+                  .form-group.t-score
+                    label(for="targScore") Target score:
+                    input(type="text" class="form-control" name="targScore" placeholder="99%" value=goal.targScore)
+                  .form-group.comment
+                    label(for="comment") Comment:
+                    input(type="text" class="form-control" name="comment" value=goal.comment)
+                    input(type="hidden" name="id" value=goal.id)
+                  .form-group.save-btn
+                    input.btn.btn-default(type="submit" value="Submit my response")
