@@ -1,0 +1,80 @@
+extends a_primary.pug
+block others
+  a.overlay2(href="/")
+  .container-fluid.all-goals
+    .row
+      .col-xs-2
+      .col-xs-8
+        .row
+          .col-xs-12.form-header Unapproved others' goals
+          .col-xs-12.form-body
+            .row
+              .col-xs-12.col-headers
+                .row
+                  .col-xs-12
+                    p Offered by me:
+                .row
+                  .col-xs-5
+                    p Goal
+                  .col-xs-2 
+                    p Owner
+                  .col-xs-1 
+                    p Initial score
+                  .col-xs-1 
+                    p Target score
+                  .col-xs-1 
+                    p Status
+                  .col-xs-2
+              .col-xs-12.col-data
+                each goal in goals
+                  if goal.statusOwner == "Pending" && goal.statusApprover == "Approved"
+                    .row
+                      .col-xs-5 #{goal.offer.name}
+                      .col-xs-2 #{goal.owner.name}
+                      .col-xs-1 #{goal.offer.initScore}
+                      .col-xs-1 #{goal.offer.targScore}
+                      .col-xs-1 #{goal.status}
+                      .col-xs-2
+                        a(href="/negotiateMyOffered/" + goal.id title="Negotiate")
+                          i.far.fa-comment(style="font-size:24px")
+                        a(href="/delete/" + goal.id title="Reject")
+                          i.fa.fa-remove(style="font-size:24px")
+            .row
+              .col-xs-12.col-headers
+                .row
+                  .col-xs-12
+                    p Created by others
+                .row
+                  .col-xs-5
+                    p Goal
+                  .col-xs-2
+                    p Owner
+                  .col-xs-1 
+                    p Initial score
+                  .col-xs-1 
+                    p Target score
+                  .col-xs-1 
+                    p Status
+                  .col-xs-2
+              .col-xs-12.col-data
+                each goal in goals
+                  if goal.statusOwner == "Approved" && goal.statusApprover == "Pending"
+                    .row
+                      .col-xs-5 #{goal.name}
+                      .col-xs-2 #{goal.owner.name}
+                      .col-xs-1 #{goal.initScore}
+                      .col-xs-1 #{goal.targScore}
+                      .col-xs-1 #{goal.status}
+                      .col-xs-2
+                        a(href="/accept/" + goal.id title="Accept")
+                          i.far.fa-check-square(style="font-size:24px")
+                        a(href="/negotiateTheirOwn/" + goal.id title="Negotiate")
+                          i.far.fa-comment(style="font-size:24px")
+                        a(href="/delete/" + goal.id title="Reject")
+                          i.fa.fa-remove(style="font-size:24px")
+      .col-xs-2
+  block delete
+  block accept
+  block negotiateMyOffered
+  block negotiateTheirOwn
+

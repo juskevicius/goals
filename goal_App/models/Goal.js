@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 const Schema = mongoose.Schema;
 
@@ -29,6 +30,19 @@ GoalSchema.virtual('status').get(function() {
     } else {
         return 'Pending';
     }
+});
+
+GoalSchema.virtual('created_formatted').get(function() {
+    return moment(this.created).format('YYYY-MM-DD HH:mm');
+});
+
+GoalSchema.virtual('updated_formatted').get(function() {
+    if (this.updated) {
+        return moment(this.updated).format('YYYY-MM-DD HH:mm');
+    } else {
+        return '';
+    }
+    
 });
 
 module.exports = mongoose.model('Goal', GoalSchema);

@@ -116,6 +116,12 @@ select {
   margin: 10px 0 0 20px;
 }
 
+/* Styling Negotiate form*/
+
+.negotiate .row:nth-child(2) {
+  border-top: 1px solid black;
+}
+
 /* Styling offer-group */
 
 .offer-group {

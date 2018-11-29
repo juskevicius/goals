@@ -1,4 +1,4 @@
-extends f_myOwn.pug
+extends f_myOwn_.pug
 block delete
   a.overlay3(href="/myOwn")
   .container-fluid.form_level2
@@ -11,7 +11,7 @@ block delete
           .col-xs-12.form-body
             .row
               form(action="/delete" method="post" href="")
-                .col-xs-12.add-group
+                .col-xs-12
                   .form-group
                     label(for="name") Are you sure you want to delete this goal?
                     input(type="text" class="form-control" name="name" value=goal.name readonly) 

@@ -26,15 +26,15 @@ block myOwn
                 each goal in goals
                   if goal.statusOwner == "Pending" && goal.statusApprover == "Approved"
                     .row
-                      .col-xs-6 #{goal.name}
-                      .col-xs-1 #{goal.initScore}
-                      .col-xs-1 #{goal.history ? goal.history.data[goal.history.data.length - 1].value : ""}
-                      .col-xs-1 #{goal.targScore}
+                      .col-xs-6 #{goal.offer.name}
+                      .col-xs-1 #{goal.offer.initScore}
+                      .col-xs-1 -
+                      .col-xs-1 #{goal.offer.targScore}
                       .col-xs-1 #{goal.status}
                       .col-xs-2
                         a(href="/accept/" + goal.id title="Accept")
                           i.far.fa-check-square(style="font-size:24px")
-                        a(href="/negotiate/" + goal.id title="Negotiate")
+                        a(href="/negotiateOffered/" + goal.id title="Negotiate")
                           i.far.fa-comment(style="font-size:24px")
                         a(href="/delete/" + goal.id title="Reject")
                           i.fa.fa-remove(style="font-size:24px")
@@ -62,7 +62,7 @@ block myOwn
                       .col-xs-1 #{goal.targScore}
                       .col-xs-1 #{goal.status}
                       .col-xs-2
-                        a(href="/negotiate/" + goal.id title="Negotiate")
+                        a(href="/negotiateOwn/" + goal.id title="Negotiate")
                           i.far.fa-comment(style="font-size:24px")
                         a(href="/delete/" + goal.id title="Reject")
                           i.fa.fa-remove(style="font-size:24px")
@@ -101,5 +101,6 @@ block myOwn
   block delete
   block offerTo
   block accept
-  block negotiate
+  block negotiateOffered
+  block negotiateOwn
 
