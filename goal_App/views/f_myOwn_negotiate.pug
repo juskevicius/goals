@@ -10,23 +10,24 @@ block negotiate
         .row
           .col-xs-12.form-body
             .row
-              p= "An offer from " + goal.offer.owner.owner.name + " (" + goal.offer.owner.name + ")"
-              .form-group
-                label(for="name") Goal:
-                input(type="text" class="form-control" value=goal.offer.name readonly) 
-              .form-group.i-score
-                label(for="initScore") Initial score:
-                input(type="text" class="form-control" value=goal.offer.initScore readonly)
-              .form-group.t-score
-                label(for="targScore") Target score:
-                input(type="text" class="form-control" value=goal.offer.targScore readonly)
-              .form-group.comment
-                label(for="comment") Comment:
-                input(type="text" class="form-control" value=goal.offer.comment readonly)
+              .col-xs-12.add-group
+                .form-group-header= "An offer from " + goal.offer.owner.owner.name + " (" + goal.offer.owner.name + "):"
+                .form-group
+                  label(for="name") Goal:
+                  input(type="text" class="form-control" value=goal.offer.name readonly) 
+                .form-group.i-score
+                  label(for="initScore") Initial score:
+                  input(type="text" class="form-control" value=goal.offer.initScore readonly)
+                .form-group.t-score
+                  label(for="targScore") Target score:
+                  input(type="text" class="form-control" value=goal.offer.targScore readonly)
+                .form-group.comment
+                  label(for="comment") Comment:
+                  input(type="text" class="form-control" value=goal.offer.comment readonly)
             .row
               form(action="/negotiate" method="post" href="")
                 .col-xs-12.add-group
-                  p My response:
+                  .form-group-header My response:
                   .form-group
                     label(for="name") Goal:
                     input(type="text" class="form-control" name="name" value=goal.name) 

@@ -88,6 +88,16 @@ select {
 
 /* Styling form buttons and labels */
 
+.form-group-header {
+  margin: 30px 0 30px 0;
+  font-weight: bold;
+  font-size: 120%;
+}
+
+.form-group-header:nth-child(0) {
+  margin: 0 0 30px 0;
+}
+
 .form-group input, .form-group input:focus, .form-group input:active, .form-group input:read-only, .login-form button, .btn-group button, .btn-group button:focus {
   border: none;
   border-bottom: 1px solid rgb(235, 235, 235);
