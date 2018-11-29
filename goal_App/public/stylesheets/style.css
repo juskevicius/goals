@@ -171,6 +171,11 @@ select {
   vertical-align: middle;
 }
 
+.col-headers .row:nth-child(1) p {
+  font-size: 23px;
+  text-decoration: underline;
+}
+
 .col-data {
   padding-bottom: 5%;
 }

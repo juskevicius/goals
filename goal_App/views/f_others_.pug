@@ -66,7 +66,7 @@ block others
                       .col-xs-1 #{goal.targScore}
                       .col-xs-1 #{goal.status}
                       .col-xs-2
-                        a(href="/accept/" + goal.id title="Accept")
+                        a(href="/approve/" + goal.id title="Accept")
                           i.far.fa-check-square(style="font-size:24px")
                         a(href="/negotiateTheirOwn/" + goal.id title="Negotiate")
                           i.far.fa-comment(style="font-size:24px")
@@ -74,7 +74,7 @@ block others
                           i.fa.fa-remove(style="font-size:24px")
       .col-xs-2
   block delete
-  block accept
+  block approve
   block negotiateMyOffered
   block negotiateTheirOwn
 

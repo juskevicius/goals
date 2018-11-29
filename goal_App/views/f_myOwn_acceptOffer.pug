@@ -1,5 +1,5 @@
 extends f_myOwn_.pug
-block accept
+block acceptOffer
   a.overlay3(href="/myOwn")
   .container-fluid.form_level2
     .row
@@ -10,7 +10,7 @@ block accept
         .row
           .col-xs-12.form-body
             .row
-              form(action="/accept" method="post" href="")
+              form(action="/acceptOffer" method="post" href="")
                 .form-group
                   label(for="name") Goal:
                   input(type="text" class="form-control" value=goal.offer.name readonly) 

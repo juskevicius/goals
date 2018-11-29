@@ -36,10 +36,10 @@ router.get('/offerTo/:id', auth.required, goalController.goal_offerTo_get);
 router.post('/offerTo', auth.required, goalController.goal_offerTo_post);
 
 /* GET accept */
-router.get('/accept/:id', auth.required, goalController.goal_accept_get);
+router.get('/acceptOffer/:id', auth.required, goalController.goal_acceptOffer_get);
 
 /* POST accept */
-router.post('/accept', auth.required, goalController.goal_accept_post);
+router.post('/acceptOffer', auth.required, goalController.goal_acceptOffer_post);
 
 /* GET negotiate offered */
 router.get('/negotiateOffered/:id', auth.required, goalController.goal_negotiateOffered_get);
@@ -50,6 +50,10 @@ router.get('/negotiateOwn/:id', auth.required, goalController.goal_negotiateOwn_
 /* POST negotiate my own goals */
 router.post('/negotiate', auth.required, goalController.goal_negotiate_post);
 
+
+/* GET others */
+router.get('/others', auth.required, goalController.goal_others_get);
+
 /* GET negotiate my offered */
 router.get('/negotiateMyOffered/:id', auth.required, goalController.goal_negotiateMyOffered_get);
 
@@ -59,10 +63,14 @@ router.get('/negotiateTheirOwn/:id', auth.required, goalController.goal_negotiat
 /* POST negotiate others' goals*/
 router.post('/negotiateOthers', auth.required, goalController.goal_negotiateOthers_post);
 
+/* GET approve */
+router.get('/approve/:id', auth.required, goalController.goal_approve_get);
+
+/* POST approve */
+router.post('/approve', auth.required, goalController.goal_approve_post);
 
 
-/* GET others */
-router.get('/others', auth.required, goalController.goal_others_get);
+
 
 
 module.exports = router;

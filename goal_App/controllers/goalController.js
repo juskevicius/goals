@@ -374,8 +374,8 @@ exports.goal_offerTo_post = function(req, res) {
 };
 
 
-// Handle Goal accept on GET.
-exports.goal_accept_get = function(req, res) {
+// Handle Goal accept offer on GET.
+exports.goal_acceptOffer_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
     populate('parentTo').
@@ -394,14 +394,14 @@ exports.goal_accept_get = function(req, res) {
             populate('offer').
             exec( function(err, goalToAccept) {
                 if(err) { return err; }
-                res.render('f_myOwn_accept', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToAccept});
+                res.render('f_myOwn_acceptOffer', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToAccept});
             });
         }); 
     });
 }
 
-// Handle Goal accept on POST.
-exports.goal_accept_post = [
+// Handle Goal accept offer on POST.
+exports.goal_acceptOffer_post = [
     
     sanitizeBody('*').trim().escape(),
 
@@ -608,7 +608,7 @@ exports.goal_negotiateOthers_post = function(req, res) {
         } else {
             //if my offer doesn't match the original goal, then update the offer
             Goal.
-            findById(goal.offer._id).
+            findById(goal.offer.id).
             exec( function(err, offerToUpdate) {
                 if (err) { return err; }
                 offerToUpdate.set({
@@ -622,9 +622,57 @@ exports.goal_negotiateOthers_post = function(req, res) {
                     if (err) { return err; }
                     res.redirect('/others');
                 });
-            
-
             });
         }
     });
 };
+
+
+// Handle Goal approve on GET.
+exports.goal_approve_get = function(req, res) {
+    Unit.
+    findOne({ owner: req.payload.id }).
+    populate('parentTo').
+    exec( function (err, ownerUnit) {
+        if (err) { return err; }
+        Goal.
+        find({ owner: ownerUnit.id}).
+        populate('childTo').
+        populate('parentTo').
+        populate('history').
+        populate('offer').
+        exec( function (err, ownerGoals) {
+            if (err) { return err; }
+            Goal.
+            findById(req.params.id).
+            populate('offer').
+            exec( function(err, goalToApprove) {
+                if(err) { return err; }
+                res.render('f_others_approve', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToApprove});
+            });
+        }); 
+    });
+}
+
+// Handle Goal approve on POST.
+exports.goal_approve_post = [
+    
+    sanitizeBody('*').trim().escape(),
+
+    (req, res, next) => {
+
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        Goal.
+        findById(req.body.id).
+        exec( function(err, goal) {
+            if(err) { return err; } 
+            goal.set({statusApprover: 'Approved'});
+            goal.save( function (err, goalAccepted) {
+                if (err) { return err; }
+                res.redirect('/others');
+            });
+        });       
+    }
+];
