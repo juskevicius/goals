@@ -8,24 +8,24 @@ block myOwn
         .row
           .col-xs-12.form-header My goals
           .col-xs-12.form-body
-            .row
-              .col-xs-12.col-headers
-                .row
-                  .col-xs-12
-                    p Goals offered to me
-                .row
-                  .col-xs-4
-                    p Goal
-                  .col-xs-2 
-                    p Initial score
-                  .col-xs-2 
-                    p Target score
-                  .col-xs-2 
-                    p Status
-                  .col-xs-2
-              .col-xs-12.col-data
-                each goal in goals
-                  if goal.statusOwner == "Pending" && goal.statusApprover == "Approved"
+            if offeredToMe.length > 0
+              .row
+                .col-xs-12.col-headers
+                  .row
+                    .col-xs-12
+                      p Goals offered to me
+                  .row
+                    .col-xs-4
+                      p Goal
+                    .col-xs-2 
+                      p Initial score
+                    .col-xs-2 
+                      p Target score
+                    .col-xs-2 
+                      p Status
+                    .col-xs-2
+                .col-xs-12.col-data
+                  each goal in offeredToMe
                     .row
                       .col-xs-4 #{goal.offer.name}
                       .col-xs-2 #{goal.offer.initScore}
@@ -38,24 +38,25 @@ block myOwn
                           i.far.fa-comment(style="font-size:24px")
                         a(href="/delete/" + goal.id title="Reject")
                           i.fa.fa-remove(style="font-size:24px")
-            .row
-              .col-xs-12.col-headers
-                .row
-                  .col-xs-12
-                    p Goals created by me
-                .row
-                  .col-xs-4
-                    p Goal
-                  .col-xs-2
-                    p Initial score
-                  .col-xs-2 
-                    p Target score
-                  .col-xs-2 
-                    p Status
-                  .col-xs-2
-              .col-xs-12.col-data
-                each goal in goals
-                  if goal.statusOwner == "Approved" && goal.statusApprover == "Pending"
+            if createdByMe.length > 0
+              .row
+                .col-xs-12.col-headers
+                  .row
+                    .col-xs-12
+                      p Goals created by me
+                  .row
+                    .col-xs-4
+                      p Goal
+                    .col-xs-2
+                      p Initial score
+                    .col-xs-2 
+                      p Target score
+                    .col-xs-2 
+                      p Status
+                    .col-xs-2
+                      p Actions
+                .col-xs-12.col-data
+                  each goal in createdByMe
                     .row
                       .col-xs-4 #{goal.name}
                       .col-xs-2 #{goal.initScore}
@@ -66,26 +67,28 @@ block myOwn
                           i.far.fa-comment(style="font-size:24px")
                         a(href="/delete/" + goal.id title="Reject")
                           i.fa.fa-remove(style="font-size:24px")
-            .row
-              .col-xs-12.col-headers
-                .row
-                  .col-xs-12
-                    p Approved goals
-                .row
-                  .col-xs-4
-                    p Goal
-                  .col-xs-2 
-                    p Initial score
-                  .col-xs-2 
-                    p Target score
-                  .col-xs-2
-                    p Status
-                  .col-xs-2
-              .col-xs-12.col-data
-                each goal in goals
-                  if goal.status == "Approved"
+            if myApproved.length > 0
+              .row
+                .col-xs-12.col-headers
+                  .row
+                    .col-xs-12
+                      p Approved goals
+                  .row
+                    .col-xs-4
+                      p Goal
+                    .col-xs-2 
+                      p Initial score
+                    .col-xs-2 
+                      p Target score
+                    .col-xs-2
+                      p Status
+                    .col-xs-2
+                      p Actions
+                .col-xs-12.col-data
+                  each goal in myApproved
                     .row
-                      .col-xs-4 #{goal.name}
+                      .col-xs-4 
+                        a(href="/details/" + goal.id) #{goal.name}
                       .col-xs-2 #{goal.initScore}
                       .col-xs-2 #{goal.targScore}
                       .col-xs-2 #{goal.status}
@@ -96,6 +99,10 @@ block myOwn
                           i.fa.fa-remove(style="font-size:24px")
                         a(href="/offerTo/" + goal.id title="Ofer to...")
                           i.fa.fa-share-alt(style="font-size:24px")
+            if offeredToMe.length == 0 && createdByMe.length == 0 && myApproved.length == 0
+              .row
+                .col-xs-12.col-headers
+                  p You don't have any goals to display
       .col-xs-2
   block edit
   block delete

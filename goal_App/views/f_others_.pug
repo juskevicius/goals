@@ -8,26 +8,27 @@ block others
         .row
           .col-xs-12.form-header Unapproved others' goals
           .col-xs-12.form-body
-            .row
-              .col-xs-12.col-headers
-                .row
-                  .col-xs-12
-                    p Offered by me:
-                .row
-                  .col-xs-5
-                    p Goal
-                  .col-xs-2 
-                    p Owner
-                  .col-xs-1 
-                    p Initial score
-                  .col-xs-1 
-                    p Target score
-                  .col-xs-1 
-                    p Status
-                  .col-xs-2
-              .col-xs-12.col-data
-                each goal in goals
-                  if goal.statusOwner == "Pending" && goal.statusApprover == "Approved"
+            if offeredByMe.length > 0
+              .row
+                .col-xs-12.col-headers
+                  .row
+                    .col-xs-12
+                      p Offered by me:
+                  .row
+                    .col-xs-5
+                      p Goal
+                    .col-xs-2 
+                      p Offered to
+                    .col-xs-1 
+                      p Initial score
+                    .col-xs-1 
+                      p Target score
+                    .col-xs-1 
+                      p Status
+                    .col-xs-2
+                      p Actions
+                .col-xs-12.col-data
+                  each goal in offeredByMe
                     .row
                       .col-xs-5 #{goal.offer.name}
                       .col-xs-2 #{goal.owner.name}
@@ -37,28 +38,29 @@ block others
                       .col-xs-2
                         a(href="/negotiateMyOffered/" + goal.id title="Negotiate")
                           i.far.fa-comment(style="font-size:24px")
-                        a(href="/delete/" + goal.id title="Reject")
+                        a(href="/reject/" + goal.id title="Reject")
                           i.fa.fa-remove(style="font-size:24px")
-            .row
-              .col-xs-12.col-headers
-                .row
-                  .col-xs-12
-                    p Created by others
-                .row
-                  .col-xs-5
-                    p Goal
-                  .col-xs-2
-                    p Owner
-                  .col-xs-1 
-                    p Initial score
-                  .col-xs-1 
-                    p Target score
-                  .col-xs-1 
-                    p Status
-                  .col-xs-2
-              .col-xs-12.col-data
-                each goal in goals
-                  if goal.statusOwner == "Approved" && goal.statusApprover == "Pending"
+            if createdByOthers.length > 0
+              .row
+                .col-xs-12.col-headers
+                  .row
+                    .col-xs-12
+                      p Created by others
+                  .row
+                    .col-xs-5
+                      p Goal
+                    .col-xs-2
+                      p Created by
+                    .col-xs-1 
+                      p Initial score
+                    .col-xs-1 
+                      p Target score
+                    .col-xs-1 
+                      p Status
+                    .col-xs-2
+                      p Actions
+                .col-xs-12.col-data
+                  each goal in createdByOthers
                     .row
                       .col-xs-5 #{goal.name}
                       .col-xs-2 #{goal.owner.name}
@@ -70,10 +72,14 @@ block others
                           i.far.fa-check-square(style="font-size:24px")
                         a(href="/negotiateTheirOwn/" + goal.id title="Negotiate")
                           i.far.fa-comment(style="font-size:24px")
-                        a(href="/delete/" + goal.id title="Reject")
+                        a(href="/reject/" + goal.id title="Reject")
                           i.fa.fa-remove(style="font-size:24px")
+            if createdByOthers.length == 0 && offeredByMe.length == 0
+              .row
+                .col-xs-12.col-headers
+                  p There are no others' unapproved goals to display
       .col-xs-2
-  block delete
+  block reject
   block approve
   block negotiateMyOffered
   block negotiateTheirOwn

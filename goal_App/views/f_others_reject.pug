@@ -1,0 +1,20 @@
+extends f_others_.pug
+block reject
+  a.overlay3(href="/others")
+  .container-fluid.form_level2
+    .row
+      .col-xs-4
+      .col-xs-4
+        .row
+          .col-xs-12.form-header Reject a goal
+        .row
+          .col-xs-12.form-body
+            .row
+              form(action="/reject" method="post" href="")
+                .col-xs-12
+                  .form-group
+                    label(for="name") Are you sure you want to reject this goal?
+                    input(type="text" class="form-control" name="name" value=goalName readonly) 
+                    input(type="hidden" name="id" value=goal.id)
+                  .form-group.save-btn
+                    input.btn.btn-default(type="submit" value="Reject")

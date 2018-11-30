@@ -14,6 +14,8 @@ Gets displayed when clicked. Gets hidden when submitted or clicked on the backgr
 /* POST add */
 router.post('/add', auth.required, goalController.goal_add_post);
 
+
+
 /* GET myOwn */
 router.get('/myOwn', auth.required, goalController.goal_myOwn_get);
 
@@ -51,6 +53,7 @@ router.get('/negotiateOwn/:id', auth.required, goalController.goal_negotiateOwn_
 router.post('/negotiate', auth.required, goalController.goal_negotiate_post);
 
 
+
 /* GET others */
 router.get('/others', auth.required, goalController.goal_others_get);
 
@@ -69,8 +72,15 @@ router.get('/approve/:id', auth.required, goalController.goal_approve_get);
 /* POST approve */
 router.post('/approve', auth.required, goalController.goal_approve_post);
 
+/* GET reject */
+router.get('/reject/:id', auth.required, goalController.goal_reject_get);
+
+/* POST reject */
+router.post('/reject', auth.required, goalController.goal_reject_post);
 
 
 
+/* GET details */
+router.get('/details/:id', auth.required, goalController.goal_details_get);
 
 module.exports = router;

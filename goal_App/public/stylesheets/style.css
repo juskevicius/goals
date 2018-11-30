@@ -189,11 +189,13 @@ select {
   margin-bottom: 10px;
 }
 
-.col-data a, .col-data a:hover {
-  float: left;
-  margin-left: 10px;
-  text-decoration: none;
+.col-data a {
   color: rgb(80, 80, 80);
+  text-decoration: underline;
+}
+
+.col-data i, .col-data i:hover {
+  margin-left: 10px;
 }
 
 /* Styling the pending goal list */

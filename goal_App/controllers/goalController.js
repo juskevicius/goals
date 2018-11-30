@@ -125,7 +125,10 @@ exports.goal_myOwn_get = function(req, res) {
         populate('offer').
         exec( function (err, ownerGoals) {
             if (err) { return err; }
-            res.render('f_myOwn_', {children: ownerUnit.parentTo, goals: ownerGoals});
+            let offeredToMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Pending' && goal.statusApprover == 'Approved';});
+            let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
+            let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});
+            res.render('f_myOwn_', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved});
         }); 
     });
 };
@@ -145,11 +148,14 @@ exports.goal_edit_get = function(req, res) {
         populate('offer').
         exec( function (err, ownerGoals) {
             if (err) { return err; }
+            let offeredToMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Pending' && goal.statusApprover == 'Approved';});
+            let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
+            let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});
             Goal.
             findById(req.params.id).
             exec( function(err, goalToEdit) {
                 if(err) { return err; }
-                res.render('f_myOwn_edit', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToEdit});
+                res.render('f_myOwn_edit', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToEdit});
             });
         }); 
     });
@@ -232,11 +238,14 @@ exports.goal_delete_get = function(req, res) {
         populate('offer').
         exec( function (err, ownerGoals) {
             if (err) { return err; }
+            let offeredToMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Pending' && goal.statusApprover == 'Approved';});
+            let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
+            let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});            
             Goal.
             findById(req.params.id).
             exec( function(err, goalToDelete) {
                 if(err) { return err; }
-                res.render('f_myOwn_delete', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToDelete});
+                res.render('f_myOwn_delete', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToDelete});
             });
         }); 
     });
@@ -267,11 +276,14 @@ exports.goal_offerTo_get = function(req, res) {
         populate('offer').
         exec( function (err, ownerGoals) {
             if (err) { return err; }
+            let offeredToMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Pending' && goal.statusApprover == 'Approved';});
+            let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
+            let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});                       
             Goal.
             findById(req.params.id).
-            exec( function(err, goalToEdit) {
+            exec( function(err, goalToOffer) {
                 if(err) { return err; }
-                res.render('f_myOwn_offerTo', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToEdit});
+                res.render('f_myOwn_offerTo', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToOffer});
             });
         }); 
     });
@@ -328,6 +340,7 @@ exports.goal_offerTo_post = function(req, res) {
             Goal.
                 create(goalArr, function(err, goalDocs) {
                 if (err) { return err; }
+                let offeredGoals = goalDocs;
                 //create their copies, assign new id and owner (the one who made the offer). Bind to offered goals
                 each(goalDocs, function(goalOffer, callback) {
                     let currId = goalOffer.id;
@@ -348,25 +361,24 @@ exports.goal_offerTo_post = function(req, res) {
                             goalDoc.set({offer: newGoalOffer.id});
                             goalDoc.save(function(err, updatedGoalDoc){
                                 if (err) { return err; }
-                                callback();
+                                //make original goal a child to the parent goal 
+                                Goal.
+                                findById(req.body.childTo[0]).
+                                exec( function(err, parentGoal){
+                                    if (err) { return err; }
+                                    parentGoal.parentTo.push(updatedGoalDoc.id);
+                                    parentGoal.save(function(err, updatedParentGoal) {
+                                        if (err) { return err; }
+                                        callback();          
+                                    }); 
+                                });
                             });    
                         });
                     });
                 }, 
-                function(err){    
-                    Goal.
-                    findById(req.body.childTo[0]).
-                    exec( function(err, goalDoc){
-                        if (err) { return err; }
-                        //create an array for offered goal ids
-                        let parentToGoals = goalDocs.map((goal)=>{ return goal._id; });
-                        //and assign it to their parent goal
-                        goalDoc.parentTo = parentToGoals;
-                        goalDoc.save(function(err, updatedGoal) {
-                            if (err) { return err; }              
-                            res.redirect('/myOwn');
-                        }); 
-                    });
+                function(err){
+                    if (err) { return err; }
+                    res.redirect('/myOwn');
                 });
             });
         });
@@ -389,12 +401,15 @@ exports.goal_acceptOffer_get = function(req, res) {
         populate('offer').
         exec( function (err, ownerGoals) {
             if (err) { return err; }
+            let offeredToMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Pending' && goal.statusApprover == 'Approved';});
+            let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
+            let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});                       
             Goal.
             findById(req.params.id).
             populate('offer').
             exec( function(err, goalToAccept) {
                 if(err) { return err; }
-                res.render('f_myOwn_acceptOffer', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToAccept});
+                res.render('f_myOwn_acceptOffer', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToAccept});
             });
         }); 
     });
@@ -446,12 +461,15 @@ exports.goal_negotiateOffered_get = function(req, res) {
         populate('offer').
         exec( function (err, ownerGoals) {
             if (err) { return err; }
+            let offeredToMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Pending' && goal.statusApprover == 'Approved';});
+            let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
+            let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});                       
             Goal.
             findById(req.params.id).
             populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner'}}}).
             exec( function(err, goalToNegotiate) {
                 if(err) { return err; }
-                res.render('f_myOwn_negotiateOffered', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToNegotiate});
+                res.render('f_myOwn_negotiateOffered', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToNegotiate});
             });
         }); 
     });
@@ -472,12 +490,15 @@ exports.goal_negotiateOwn_get = function(req, res) {
         populate('offer').
         exec( function (err, ownerGoals) {
             if (err) { return err; }
+            let offeredToMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Pending' && goal.statusApprover == 'Approved';});
+            let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
+            let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});                       
             Goal.
             findById(req.params.id).
             populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner'}}}).
             exec( function(err, goalToNegotiate) {
                 if(err) { return err; }
-                res.render('f_myOwn_negotiateOwn', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToNegotiate});
+                res.render('f_myOwn_negotiateOwn', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToNegotiate});
             });
         }); 
     });
@@ -532,7 +553,9 @@ exports.goal_others_get = function(req, res) {
             .populate('offer')
             .exec( function (err, childrenGoals) {
             if (err) { return err; }
-            res.render('f_others_', {children: ownerUnit.parentTo, goals: childrenGoals});
+            let offeredByMe = childrenGoals.filter((goal) => { return goal.statusOwner == "Pending" && goal.statusApprover == "Approved";});
+            let createdByOthers = childrenGoals.filter((goal) => { return goal.statusOwner == "Approved" && goal.statusApprover == "Pending";});
+            res.render('f_others_', {children: ownerUnit.parentTo, offeredByMe, createdByOthers});
         });  
     });
 };
@@ -544,23 +567,24 @@ exports.goal_negotiateMyOffered_get = function(req, res) {
     populate('parentTo').
     exec( function (err, ownerUnit) {
         if (err) { return err; }
-        Goal.
-        find({ owner: ownerUnit.id}).
-        populate('childTo').
-        populate('parentTo').
-        populate('history').
-        populate('offer').
-        exec( function (err, ownerGoals) {
+        Goal.find()
+            .where('owner')
+            .in(ownerUnit.parentTo)
+            .populate('owner')
+            .populate('offer')
+            .exec( function (err, childrenGoals) {
             if (err) { return err; }
+            let offeredByMe = childrenGoals.filter((goal) => { return goal.statusOwner == "Pending" && goal.statusApprover == "Approved";});
+            let createdByOthers = childrenGoals.filter((goal) => { return goal.statusOwner == "Approved" && goal.statusApprover == "Pending";});    
             Goal.
             findById(req.params.id).
             populate({ path: 'owner', populate: { path: 'owner'}}).
             populate('offer').
             exec( function(err, goalToNegotiate) {
                 if(err) { return err; }
-                res.render('f_others_negotiateMyOffered', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToNegotiate});
+                res.render('f_others_negotiateMyOffered', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToNegotiate});
             });
-        }); 
+        });  
     });
 };
 
@@ -571,23 +595,24 @@ exports.goal_negotiateTheirOwn_get = function(req, res) {
     populate('parentTo').
     exec( function (err, ownerUnit) {
         if (err) { return err; }
-        Goal.
-        find({ owner: ownerUnit.id}).
-        populate('childTo').
-        populate('parentTo').
-        populate('history').
-        populate('offer').
-        exec( function (err, ownerGoals) {
+        Goal.find()
+            .where('owner')
+            .in(ownerUnit.parentTo)
+            .populate('owner')
+            .populate('offer')
+            .exec( function (err, childrenGoals) {
             if (err) { return err; }
+            let offeredByMe = childrenGoals.filter((goal) => { return goal.statusOwner == "Pending" && goal.statusApprover == "Approved";});
+            let createdByOthers = childrenGoals.filter((goal) => { return goal.statusOwner == "Approved" && goal.statusApprover == "Pending";});    
             Goal.
             findById(req.params.id).
             populate({ path: 'owner', populate: { path: 'owner'}}).
             populate('offer').
             exec( function(err, goalToNegotiate) {
                 if(err) { return err; }
-                res.render('f_others_negotiateTheirOwn', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToNegotiate});
+                res.render('f_others_negotiateTheirOwn', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToNegotiate});
             });
-        }); 
+        });  
     });
 };
 
@@ -627,7 +652,6 @@ exports.goal_negotiateOthers_post = function(req, res) {
     });
 };
 
-
 // Handle Goal approve on GET.
 exports.goal_approve_get = function(req, res) {
     Unit.
@@ -635,22 +659,24 @@ exports.goal_approve_get = function(req, res) {
     populate('parentTo').
     exec( function (err, ownerUnit) {
         if (err) { return err; }
-        Goal.
-        find({ owner: ownerUnit.id}).
-        populate('childTo').
-        populate('parentTo').
-        populate('history').
-        populate('offer').
-        exec( function (err, ownerGoals) {
+        Goal.find()
+            .where('owner')
+            .in(ownerUnit.parentTo)
+            .populate('owner')
+            .populate('offer')
+            .exec( function (err, childrenGoals) {
             if (err) { return err; }
+            let offeredByMe = childrenGoals.filter((goal) => { return goal.statusOwner == "Pending" && goal.statusApprover == "Approved";});
+            let createdByOthers = childrenGoals.filter((goal) => { return goal.statusOwner == "Approved" && goal.statusApprover == "Pending";});    
             Goal.
             findById(req.params.id).
+            populate({ path: 'owner', populate: { path: 'owner'}}).
             populate('offer').
             exec( function(err, goalToApprove) {
                 if(err) { return err; }
-                res.render('f_others_approve', {children: ownerUnit.parentTo, goals: ownerGoals, goal: goalToApprove});
+                res.render('f_others_approve', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToApprove});
             });
-        }); 
+        });  
     });
 }
 
@@ -676,3 +702,77 @@ exports.goal_approve_post = [
         });       
     }
 ];
+
+// Handle Goal reject on GET.
+exports.goal_reject_get = function(req, res) {
+    Unit.
+    findOne({ owner: req.payload.id }).
+    populate('parentTo').
+    exec( function (err, ownerUnit) {
+        if (err) { return err; }
+        Goal.find()
+            .where('owner')
+            .in(ownerUnit.parentTo)
+            .populate('owner')
+            .populate('offer')
+            .exec( function (err, childrenGoals) {
+            if (err) { return err; }
+            let offeredByMe = childrenGoals.filter((goal) => { return goal.statusOwner == "Pending" && goal.statusApprover == "Approved";});
+            let createdByOthers = childrenGoals.filter((goal) => { return goal.statusOwner == "Approved" && goal.statusApprover == "Pending";});    
+            Goal.
+            findById(req.params.id).
+            populate({ path: 'owner', populate: { path: 'owner'}}).
+            populate('offer').
+            exec( function(err, goalToReject) {
+                if(err) { return err; }
+                if (goalToReject.statusOwner == "Pending" && goalToReject.statusApprover == "Approved") {
+                    //Rejet a goal that is offered by me:
+                    res.render('f_others_reject', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToReject, goalName: goalToReject.offer.name});
+                } else {
+                    //Rejet a goal that is created by others:
+                    res.render('f_others_reject', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToReject, goalName: goalToReject.name});
+                }
+            });
+        });  
+    });
+}
+
+// Handle Goal reject on POST.
+exports.goal_reject_post = [
+    
+    sanitizeBody('*').trim().escape(),
+
+    (req, res, next) => {
+
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        Goal.
+        findById(req.body.id).
+        exec( function(err, goal) {
+            if(err) { return err; } 
+            goal.set({statusApprover: 'Rejected'});
+            goal.save( function (err, goalRejected) {
+                if (err) { return err; }
+                res.redirect('/others');
+            });
+        });       
+    }
+];
+
+
+/////////////////////////////////////////// GOAL DETAILS:
+
+// Handle Goal details on GET.
+exports.goal_details_get = function(req, res) {
+    Goal.
+    findById(req.params.id).
+    populate({path: 'owner', populate: { path: 'owner'}}).
+    populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner' }}}).
+    populate({path: 'parentTo', populate: { path: 'owner' }}).
+    exec( function(err, goal) {
+        if (err) { return err; }
+        res.render('b_body', {goal});
+    });
+    
+}
