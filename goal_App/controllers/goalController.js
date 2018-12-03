@@ -1,11 +1,8 @@
 var Goal = require('../models/Goal');
 var hData = require('../models/hData');
 var Unit = require('../models/Unit');
-var async = require('async');
 var each = require('async/each');
 const mongoose = require('mongoose');
-//import each from '../node_modules/async/each'
-
 
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
@@ -16,7 +13,7 @@ exports.index = function(req, res) {
     populate('parentTo').
     exec( function (err, ownerUnit) {
         if (err) { return err; }
-        res.render('a_primary', {children: ownerUnit.parentTo, displayAddForm: false});
+        res.render('a_primary.pug', {children: ownerUnit.parentTo, displayAddForm: false});
     });
 };
 
@@ -128,7 +125,7 @@ exports.goal_myOwn_get = function(req, res) {
             let offeredToMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Pending' && goal.statusApprover == 'Approved';});
             let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
             let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});
-            res.render('f_myOwn_', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved});
+            res.render('f_myOwn_.pug', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved});
         }); 
     });
 };
@@ -155,7 +152,7 @@ exports.goal_edit_get = function(req, res) {
             findById(req.params.id).
             exec( function(err, goalToEdit) {
                 if(err) { return err; }
-                res.render('f_myOwn_edit', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToEdit});
+                res.render('f_myOwn_edit.pug', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToEdit});
             });
         }); 
     });
@@ -212,10 +209,9 @@ exports.goal_edit_post = [
                             hDataToUpdate.data[0].value = req.body.initScore ? req.body.initScore : 0;
                             hDataToUpdate._id = goalUpdated.history.id;
                             hDataToUpdate.save(function(err, hdataUpdated) {
+                                if (err) { return err; }
                                 res.redirect('/myOwn');  
                             });
-                            //res.redirect('/all');
-                            //res.send(goalUpdated);
                         });
                     });
                 });
@@ -245,7 +241,7 @@ exports.goal_delete_get = function(req, res) {
             findById(req.params.id).
             exec( function(err, goalToDelete) {
                 if(err) { return err; }
-                res.render('f_myOwn_delete', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToDelete});
+                res.render('f_myOwn_delete.pug', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToDelete});
             });
         }); 
     });
@@ -283,12 +279,11 @@ exports.goal_offerTo_get = function(req, res) {
             findById(req.params.id).
             exec( function(err, goalToOffer) {
                 if(err) { return err; }
-                res.render('f_myOwn_offerTo', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToOffer});
+                res.render('f_myOwn_offerTo.pug', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToOffer});
             });
         }); 
     });
 };
-
 
 // Handle Goal delete on POST.
 exports.goal_offerTo_post = function(req, res) {
@@ -385,7 +380,6 @@ exports.goal_offerTo_post = function(req, res) {
     });
 };
 
-
 // Handle Goal accept offer on GET.
 exports.goal_acceptOffer_get = function(req, res) {
     Unit.
@@ -409,7 +403,7 @@ exports.goal_acceptOffer_get = function(req, res) {
             populate('offer').
             exec( function(err, goalToAccept) {
                 if(err) { return err; }
-                res.render('f_myOwn_acceptOffer', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToAccept});
+                res.render('f_myOwn_acceptOffer.pug', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToAccept});
             });
         }); 
     });
@@ -428,6 +422,7 @@ exports.goal_acceptOffer_post = [
         Goal.
         findById(req.body.id).
         populate('offer').
+        populate('history').
         exec( function(err, goal) {
             if(err) { return err; } 
             goal.set({
@@ -439,12 +434,21 @@ exports.goal_acceptOffer_post = [
             });
             goal.save( function (err, goalAccepted) {
                 if (err) { return err; }
-                res.redirect('/myOwn');
+                hData. 
+                findById(goalAccepted.history._id).
+                exec( function(err, hDataToUpdate) {
+                    if (err) { return err; }
+                    hDataToUpdate.data[0].value = goal.offer.initScore ? goal.offer.initScore : 0;
+                    hDataToUpdate._id = goalAccepted.history.id;
+                    hDataToUpdate.save(function(err, hdataUpdated) {
+                        if (err) { return err; }
+                        res.redirect('/myOwn');  
+                    });
+                });
             });
-        });       
+        });     
     }
 ];
-
 
 // Display Goal negotiate offered form on GET.
 exports.goal_negotiateOffered_get = function(req, res) {
@@ -469,7 +473,7 @@ exports.goal_negotiateOffered_get = function(req, res) {
             populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner'}}}).
             exec( function(err, goalToNegotiate) {
                 if(err) { return err; }
-                res.render('f_myOwn_negotiateOffered', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToNegotiate});
+                res.render('f_myOwn_negotiateOffered.pug', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToNegotiate});
             });
         }); 
     });
@@ -498,7 +502,7 @@ exports.goal_negotiateOwn_get = function(req, res) {
             populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner'}}}).
             exec( function(err, goalToNegotiate) {
                 if(err) { return err; }
-                res.render('f_myOwn_negotiateOwn', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToNegotiate});
+                res.render('f_myOwn_negotiateOwn.pug', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved, goal: goalToNegotiate});
             });
         }); 
     });
@@ -516,7 +520,16 @@ exports.goal_negotiate_post = function(req, res) {
             goal.set({statusOwner: 'Approved'});
             goal.save(function(err, goalUpdated) {
                 if (err) { return err; }
-                res.redirect('/myOwn');
+                hData. 
+                findById(goalUpdated.history.id).
+                exec( function(err, hDataToUpdate) {
+                    if (err) { return err; }
+                    hDataToUpdate.data[0].value = goal.offer.initScore ? goal.offer.initScore : 0;
+                    hDataToUpdate._id = goalUpdated.history.id;
+                    hDataToUpdate.save(function(err, hdataUpdated) {
+                        res.redirect('/myOwn');  
+                    });
+                });
             });
         } else {
             //if my response doesn't match the offer, then update the goal
@@ -555,7 +568,7 @@ exports.goal_others_get = function(req, res) {
             if (err) { return err; }
             let offeredByMe = childrenGoals.filter((goal) => { return goal.statusOwner == "Pending" && goal.statusApprover == "Approved";});
             let createdByOthers = childrenGoals.filter((goal) => { return goal.statusOwner == "Approved" && goal.statusApprover == "Pending";});
-            res.render('f_others_', {children: ownerUnit.parentTo, offeredByMe, createdByOthers});
+            res.render('f_others_.pug', {children: ownerUnit.parentTo, offeredByMe, createdByOthers});
         });  
     });
 };
@@ -582,7 +595,7 @@ exports.goal_negotiateMyOffered_get = function(req, res) {
             populate('offer').
             exec( function(err, goalToNegotiate) {
                 if(err) { return err; }
-                res.render('f_others_negotiateMyOffered', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToNegotiate});
+                res.render('f_others_negotiateMyOffered.pug', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToNegotiate});
             });
         });  
     });
@@ -610,7 +623,7 @@ exports.goal_negotiateTheirOwn_get = function(req, res) {
             populate('offer').
             exec( function(err, goalToNegotiate) {
                 if(err) { return err; }
-                res.render('f_others_negotiateTheirOwn', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToNegotiate});
+                res.render('f_others_negotiateTheirOwn.pug', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToNegotiate});
             });
         });  
     });
@@ -621,6 +634,7 @@ exports.goal_negotiateOthers_post = function(req, res) {
     Goal.
     findById(req.body.id).
     populate('offer').
+    populate('history').    
     exec(function(err, goal) {
         if (err) { return err; }
         //if my offer matches the original goal, then Approve the offer
@@ -628,7 +642,17 @@ exports.goal_negotiateOthers_post = function(req, res) {
             goal.set({statusApprover: 'Approved'});
             goal.save(function(err, goalUpdated) {
                 if (err) { return err; }
-                res.redirect('/others');
+                hData. 
+                findById(goalUpdated.history.id).
+                exec( function(err, hDataToUpdate) {
+                    if (err) { return err; }
+                    hDataToUpdate.data[0].value = req.body.initScore ? req.body.initScore : 0;
+                    hDataToUpdate._id = goalUpdated.history.id;
+                    hDataToUpdate.save(function(err, hdataUpdated) {
+                        if (err) { return err; }
+                        res.redirect('/others');  
+                    });
+                });
             });
         } else {
             //if my offer doesn't match the original goal, then update the offer
@@ -674,7 +698,7 @@ exports.goal_approve_get = function(req, res) {
             populate('offer').
             exec( function(err, goalToApprove) {
                 if(err) { return err; }
-                res.render('f_others_approve', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToApprove});
+                res.render('f_others_approve.pug', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToApprove});
             });
         });  
     });
@@ -686,18 +710,32 @@ exports.goal_approve_post = [
     sanitizeBody('*').trim().escape(),
 
     (req, res, next) => {
-
+        
         // Extract the validation errors from a request.
         const errors = validationResult(req);
 
         Goal.
         findById(req.body.id).
+        populate('history').
         exec( function(err, goal) {
             if(err) { return err; } 
-            goal.set({statusApprover: 'Approved'});
+            goal.set({
+                statusApprover: 'Approved',
+                statusOwner: 'Approved'
+            });
             goal.save( function (err, goalAccepted) {
                 if (err) { return err; }
-                res.redirect('/others');
+                hData. 
+                findById(goalAccepted.history.id).
+                exec( function(err, hDataToUpdate) {
+                    if (err) { return err; }
+                    hDataToUpdate.data[0].value = goalAccepted.initScore ? goalAccepted.initScore : 0;
+                    hDataToUpdate._id = goalAccepted.history.id;
+                    hDataToUpdate.save(function(err, hdataUpdated) {
+                        if (err) { return err; }
+                        res.redirect('/others');  
+                    });
+                });
             });
         });       
     }
@@ -727,10 +765,10 @@ exports.goal_reject_get = function(req, res) {
                 if(err) { return err; }
                 if (goalToReject.statusOwner == "Pending" && goalToReject.statusApprover == "Approved") {
                     //Rejet a goal that is offered by me:
-                    res.render('f_others_reject', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToReject, goalName: goalToReject.offer.name});
+                    res.render('f_others_reject.pug', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToReject, goalName: goalToReject.offer.name});
                 } else {
                     //Rejet a goal that is created by others:
-                    res.render('f_others_reject', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToReject, goalName: goalToReject.name});
+                    res.render('f_others_reject.pug', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToReject, goalName: goalToReject.name});
                 }
             });
         });  
@@ -770,9 +808,15 @@ exports.goal_details_get = function(req, res) {
     populate({path: 'owner', populate: { path: 'owner'}}).
     populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner' }}}).
     populate({path: 'parentTo', populate: { path: 'owner' }}).
+    populate('history').
     exec( function(err, goal) {
         if (err) { return err; }
-        res.render('b_body', {goal});
+        res.render('b_body.pug', {goal});
     });
     
 }
+
+exports.goal_react_get = function(req, res) {
+    res.render('b_body.jsx', { name: "John"});    
+}
+

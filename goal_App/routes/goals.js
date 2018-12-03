@@ -83,4 +83,9 @@ router.post('/reject', auth.required, goalController.goal_reject_post);
 /* GET details */
 router.get('/details/:id', auth.required, goalController.goal_details_get);
 
+
+/* GET react view */
+router.get('/react', goalController.goal_react_get);
+
+
 module.exports = router;

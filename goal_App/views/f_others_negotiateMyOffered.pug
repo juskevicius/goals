@@ -27,7 +27,7 @@ block negotiateMyOffered
                     input(type="text" class="form-control" value=goal.comment readonly)
             .row
               .col-xs-12
-                 form(action="/negotiateOthers" method="post" href="")
+                form(action="/negotiateOthers" method="post" href="")
                   .form-group-header= "My offer " + (goal.offer.updated_formatted ? goal.offer.updated_formatted : goal.offer.created_formatted) + ":" 
                   .form-group
                     label(for="name") Goal:
@@ -44,3 +44,8 @@ block negotiateMyOffered
                     input(type="hidden" name="id" value=goal.id)
                   .form-group.save-btn
                     input.btn.btn-default(type="submit" value="Submit a new offer")
+                if goal.updated_formatted
+                  form(action="/approve" method="post" href="")
+                    input(type="hidden" name="id" value=goal.id)
+                    .form-group.save-btn
+                      input.btn.btn-default(type="submit" value="Accept the response from " + goal.owner.owner.name)

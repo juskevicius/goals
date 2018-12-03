@@ -255,6 +255,10 @@ nav ul {
   padding-top: 5px;
 }
 
+.nav > li a {
+  margin-top: 12px;
+}
+
 .nav ul {
     position: absolute;
     white-space: nowrap;
@@ -271,8 +275,8 @@ nav ul {
     background-color: #4574a0;
 }
 
-.nav > li:last-child > a {
-    height: 44px;
+.nav > li {
+    height: 55px;
 }
 
 .fa-sign-out, .fa-sign-out:hover {
