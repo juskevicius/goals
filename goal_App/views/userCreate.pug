@@ -56,7 +56,7 @@ body.login-screen
       .col-xs-5
     each user in users
       p User:
-      form(action="http://127.0.0.1:3000/usersUpdate", method="post", href="#", enctype='application/json')
+      form(action="/usersUpdate", method="post", href="#", enctype='application/json')
         label(for="id") Id:
         <br/>
         input(type="text" name="id" value=user.id readonly)
@@ -81,7 +81,7 @@ body.login-screen
         button.btn.btn-default(type="submit") update
         <br/>
         <br/>
-        button.btn.btn-default(type="submit" formaction="http://127.0.0.1:3000/usersDelete") delete
+        button.btn.btn-default(type="submit" formaction="/usersDelete") delete
       <br/>
       <br/>
       <br/>

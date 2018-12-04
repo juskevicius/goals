@@ -63,56 +63,227 @@ body
           
           .form-group.save-btn
             input.btn.btn-default(type="submit" value="Save")
-
-P ---------- Countries:
-p .
-each unit in units
-  if unit.unitType == "Country" 
-    p <strong> #{unit.unitType} : </strong>
-    p= unit.name
-    p <strong>Owner:</strong>
-    p= unit.owner.name
-    if unit.childTo.length > 0
-      p <strong>Parents:</strong>
-      each parent in unit.childTo
-        p= parent.name
-    if unit.parentTo.length > 0
-      p <strong>Children:</strong>
-      each child in unit.parentTo
-        p= child.name
-p .
-P ---------- Departments:
-p .
-each unit in units
-  if unit.unitType == "Department" 
-    p <strong> #{unit.unitType} : </strong>
-    p= unit.name
-    p <strong>Owner:</strong>
-    p= unit.owner.name
-    if unit.childTo.length > 0
-      p <strong>Parents:</strong>
-      each parent in unit.childTo
-        p= parent.name
-    if unit.parentTo.length > 0
-      p <strong>Children:</strong>
-      each child in unit.parentTo
-        p= child.name
-    p .
-p .
-P ---------- Groups:
-p.
-each unit in units
-  if unit.unitType == "Group" 
-    p <strong> #{unit.unitType} : </strong>
-    p= unit.name
-    p <strong>Owner:</strong>
-    p= unit.owner.name
-    if unit.childTo.length > 0
-      p <strong>Parents:</strong>
-      each parent in unit.childTo
-        p= parent.name
-    if unit.parentTo.length > 0
-      p <strong>Children:</strong>
-      each child in unit.parentTo
-        p= child.name
-    p .
+  
+  .fontainer-fluid
+    .row
+      .col-xs-1
+      .col-xs-4
+        P //////////////////////////////// COUNTRIES:
+        each unit in units
+          if unit.unitType == "Country"
+            form(action="/unitsUpdate", method="post", href="#", enctype='application/json')
+              <br/>
+              <br/>
+              .form-group
+                label(for="name") Name:
+                <br/>
+                input(type="text" name="name" value=unit.name)
+              
+              .form-group
+                label(for="id") Id:
+                <br/>
+                input(type="text" name="id" value=unit.id readonly)
+              
+              .form-group
+                label(for="owner") Owner:
+                  select.form-control(name="owner")
+                    each owner in owners
+                      if owner._id == unit.owner.id
+                        option(value=owner._id selected) #{owner.name}
+                      else
+                        option(value=owner._id) #{owner.name}
+              
+              .form-group
+                label(for="childTo") Edit parents:
+                <br/>
+                each val in units
+                  if val.unitType == "Country"
+                    |  #{val.name}
+                    input(type="checkbox" name="childTo" value=val._id)
+                <br/>
+                each val in units
+                  if val.unitType == "Department"
+                    |  #{val.name}
+                    input(type="checkbox" name="childTo" value=val._id)
+                <br/>
+                each val in units
+                  if val.unitType == "Group"
+                    |  #{val.name}
+                    input(type="checkbox" name="childTo" value=val._id)
+              if unit.childTo.length > 0
+                p <strong>Current parents:</strong>
+                each parent in unit.childTo
+                  p= parent.name
+               
+              .form-group
+                label(for="parentTo") Edit Children:
+                <br/>
+                each val in units
+                  if val.unitType == "Country"
+                    |  #{val.name}
+                    input(type="checkbox" name="parentTo" value=val._id)
+                <br/>
+                each val in units
+                  if val.unitType == "Department"
+                    |  #{val.name}
+                    input(type="checkbox" name="parentTo" value=val._id)
+                <br/>
+                each val in units
+                  if val.unitType == "Group"
+                    |  #{val.name}
+                    input(type="checkbox" name="parentTo" value=val._id)
+              if unit.parentTo.length > 0
+                p <strong>Current children:</strong>
+                each child in unit.parentTo
+                  p= child.name
+              button.btn.btn-default(type="submit") update
+              button.btn.btn-default(type="submit" formaction="/unitsDelete") delete
+            p _________________________________________________
+        <br/>
+        <br/>
+        <br/>
+        P //////////////////////////////// DEPARTMENTS:
+        each unit in units
+          if unit.unitType == "Department"
+            form(action="/unitsUpdate", method="post", href="#", enctype='application/json')
+              <br/>
+              <br/>
+              .form-group
+                label(for="name") Name:
+                <br/>
+                input(type="text" name="name" value=unit.name)
+              
+              .form-group
+                label(for="id") Id:
+                <br/>
+                input(type="text" name="id" value=unit.id readonly)
+              
+              .form-group
+                label(for="owner") Owner:
+                  select.form-control(name="owner")
+                    each owner in owners
+                      if owner._id == unit.owner.id
+                        option(value=owner._id selected) #{owner.name}
+                      else
+                        option(value=owner._id) #{owner.name}
+              
+              .form-group
+                label(for="childTo") Edit parents:
+                <br/>
+                each val in units
+                  if val.unitType == "Country"
+                    |  #{val.name}
+                    input(type="checkbox" name="childTo" value=val._id)
+                <br/>
+                each val in units
+                  if val.unitType == "Department"
+                    |  #{val.name}
+                    input(type="checkbox" name="childTo" value=val._id)
+                <br/>
+                each val in units
+                  if val.unitType == "Group"
+                    |  #{val.name}
+                    input(type="checkbox" name="childTo" value=val._id)
+              if unit.childTo.length > 0
+                p <strong>Current parents:</strong>
+                each parent in unit.childTo
+                  p= parent.name
+               
+              .form-group
+                label(for="parentTo") Edit Children:
+                <br/>
+                each val in units
+                  if val.unitType == "Country"
+                    |  #{val.name}
+                    input(type="checkbox" name="parentTo" value=val._id)
+                <br/>
+                each val in units
+                  if val.unitType == "Department"
+                    |  #{val.name}
+                    input(type="checkbox" name="parentTo" value=val._id)
+                <br/>
+                each val in units
+                  if val.unitType == "Group"
+                    |  #{val.name}
+                    input(type="checkbox" name="parentTo" value=val._id)
+              if unit.parentTo.length > 0
+                p <strong>Current children:</strong>
+                each child in unit.parentTo
+                  p= child.name
+              button.btn.btn-default(type="submit") update
+              button.btn.btn-default(type="submit" formaction="/unitsDelete") delete
+            p _________________________________________________
+        <br/>
+        <br/>
+        <br/>
+        P //////////////////////////////// GROUPS:
+        each unit in units
+          if unit.unitType == "Group"
+            form(action="/unitsUpdate", method="post", href="#", enctype='application/json')
+              <br/>
+              <br/>
+              .form-group
+                label(for="name") Name:
+                <br/>
+                input(type="text" name="name" value=unit.name)
+              
+              .form-group
+                label(for="id") Id:
+                <br/>
+                input(type="text" name="id" value=unit.id readonly)
+              
+              .form-group
+                label(for="owner") Owner:
+                  select.form-control(name="owner")
+                    each owner in owners
+                      if owner._id == unit.owner.id
+                        option(value=owner._id selected) #{owner.name}
+                      else
+                        option(value=owner._id) #{owner.name}
+              
+              .form-group
+                label(for="childTo") Edit parents:
+                <br/>
+                each val in units
+                  if val.unitType == "Country"
+                    |  #{val.name}
+                    input(type="checkbox" name="childTo" value=val._id)
+                <br/>
+                each val in units
+                  if val.unitType == "Department"
+                    |  #{val.name}
+                    input(type="checkbox" name="childTo" value=val._id)
+                <br/>
+                each val in units
+                  if val.unitType == "Group"
+                    |  #{val.name}
+                    input(type="checkbox" name="childTo" value=val._id)
+              if unit.childTo.length > 0
+                p <strong>Current parents:</strong>
+                each parent in unit.childTo
+                  p= parent.name
+               
+              .form-group
+                label(for="parentTo") Edit Children:
+                <br/>
+                each val in units
+                  if val.unitType == "Country"
+                    |  #{val.name}
+                    input(type="checkbox" name="parentTo" value=val._id)
+                <br/>
+                each val in units
+                  if val.unitType == "Department"
+                    |  #{val.name}
+                    input(type="checkbox" name="parentTo" value=val._id)
+                <br/>
+                each val in units
+                  if val.unitType == "Group"
+                    |  #{val.name}
+                    input(type="checkbox" name="parentTo" value=val._id)
+              if unit.parentTo.length > 0
+                p <strong>Current children:</strong>
+                each child in unit.parentTo
+                  p= child.name
+              button.btn.btn-default(type="submit") update
+              button.btn.btn-default(type="submit" formaction="/unitsDelete") delete
+            p _________________________________________________

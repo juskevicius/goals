@@ -183,42 +183,40 @@ exports.unit_create_get = function(req, res) {
 
 exports.unit_create_post = function(req, res) {
     
-    Unit.findOne({name: req.body.name}, function (err, unit) {
-        if (err) { return next(err); }
-        if (unit.length > 0) {
-            
-            /* Update existing user */
-            unit.name = req.body.name ? req.body.name : unit.name;
-            unit.owner = req.body.owner ? req.body.owner : unit.owner;
-            unit.unitType = req.body.unitType ? req.body.unitType : unit.unitType;
-            unit.parentTo = req.body.parentTo ? req.body.parentTo : unit.parentTo;
-            unit.childTo = req.body.childTo ? req.body.childTo : unit.childTo;
-
-            unit.save(
-                function (err) {
-                    if (err) { return next(err); }
-                    res.redirect('/units');
-                }
-            );
-            
-        } else {
-
-            /* Create a new user */
-            var unit = new Unit({
-                name: req.body.name,
-                owner: req.body.owner,
-                unitType: req.body.unitType,
-                parentTo: req.body.parentTo,
-                childTo: req.body.childTo,
-            });
-            unit.save(
-                function (err) {
-                    if (err) { return next(err); }
-                    res.redirect('/units');
-                }
-            );
-
+    /* Create a new user */
+    var newUnit = new Unit({
+        name: req.body.name,
+        owner: req.body.owner,
+        unitType: req.body.unitType,
+        parentTo: req.body.parentTo,
+        childTo: req.body.childTo,
+    });
+    newUnit.save(
+        function (err) {
+            if (err) { return next(err); }
+            res.redirect('/units');
         }
+    );
+};
+
+exports.unit_update_post = function(req, res) {
+    
+    Unit.findById(req.body.id, function (err, unit) {
+        if (err) { return next(err); }
+        
+        /* Update existing unit */
+        unit.name = req.body.name ? req.body.name : unit.name;
+        unit.owner = req.body.owner ? req.body.owner : unit.owner;
+        unit.unitType = req.body.unitType ? req.body.unitType : unit.unitType;
+        unit.parentTo = req.body.parentTo ? req.body.parentTo : unit.parentTo;
+        unit.childTo = req.body.childTo ? req.body.childTo : unit.childTo;
+
+        unit.save(
+            function (err) {
+                if (err) { return next(err); }
+                res.redirect('/units');
+            }
+        );
     })
 };
 
@@ -226,4 +224,12 @@ exports.logout_get = function(req, res) {
     req.logout();
     res.cookie("Token", "", { expires: new Date(0)});
     res.redirect("/login");
+};
+
+exports.unit_delete_post = function(req, res) {
+    
+    Unit.findByIdAndRemove(req.body.id, function(err, unit) {
+        if (err) return err;
+        res.redirect('/units');
+    });
 };

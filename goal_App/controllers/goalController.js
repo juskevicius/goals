@@ -817,6 +817,10 @@ exports.goal_details_get = function(req, res) {
 }
 
 exports.goal_react_get = function(req, res) {
-    res.render('b_body.jsx', { name: "John"});    
+    Unit.findOne({name: 'Lithuania'}).
+    populate({ path: 'parentTo', populate: { path: 'parentTo' }}).
+    exec( function (err, unit) {
+        res.render('b_body.jsx', { chart: unit});
+    });   
 }
 

@@ -27,8 +27,15 @@ router.post('/login', auth.optional, userController.user_login_post);
 /* GET unit management */
 router.get('/units', cookieController.validate_cookie, auth.required, authorization.restrict_to_admin, userController.unit_create_get);
 
-/* POST unit management */
+/* POST create unit */
 router.post('/units', cookieController.validate_cookie, auth.required, authorization.restrict_to_admin, userController.unit_create_post);
+
+/* POST update unit */
+router.post('/unitsUpdate', cookieController.validate_cookie, auth.required, authorization.restrict_to_admin, userController.unit_update_post);
+
+//POST delete unit
+router.post('/unitsDelete', cookieController.validate_cookie, auth.required, authorization.restrict_to_admin, userController.unit_delete_post);
+
 
 /* POST unit management */
 router.get('/logout', cookieController.validate_cookie, auth.required, userController.logout_get);
