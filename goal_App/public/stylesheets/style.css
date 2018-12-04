@@ -221,6 +221,11 @@ select {
 
 .navbar {
   padding: 0;
+  position: absolute;
+}
+
+nav {
+  position: relative;
 }
 
 nav ul {
@@ -236,6 +241,7 @@ nav ul {
     color: #ffffff;
     font-family: 'Open Sans', sans-serif; 
   }
+
 
 .nav {  
     display: inline-block;
@@ -326,4 +332,56 @@ nav ul {
   font-size: 18px;
   line-height: 36px;
   padding: 40px;
+}
+
+/*
+.item1 { grid-area: margin; }
+.item2 { grid-area: main; }
+.item3 { grid-area: main; }
+.item4 { grid-area: main; }
+.item5 { grid-area: main; }
+.item6 { grid-area: margin; }
+
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    'margin main main main main margin'
+  grid-gap: 10px;
+  background-color: #2196F3;
+  padding: 10px;
+}
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 30px;
+}*/
+
+
+.l-margin { grid-area: l-margin; }
+.r-margin { grid-area: r-margin; }
+.header { grid-area: header; }
+.l-main1 { grid-area: l-main1; }
+.r-main1 { grid-area: r-main1; }
+.l-main2 { grid-area: l-main2; }
+.r-main2 { grid-area: r-main2; }
+
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    'l-margin header header header header r-margin'
+    'l-margin l-main1 l-main1 r-main1 r-main1 r-margin'
+    'l-margin l-main2 l-main2 r-main2 r-main2 r-margin';
+  grid-gap: 30px;
+}
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 30px;
+}
+
+.r-margin, .l-margin {
+  background-color: rgb(240, 239, 239)!important;
+  padding: 0!important;
 }
