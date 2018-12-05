@@ -802,6 +802,8 @@ exports.goal_reject_post = [
 /////////////////////////////////////////// GOAL DETAILS:
 
 // Handle Goal details on GET.
+// PUG:
+/*
 exports.goal_details_get = function(req, res) {
     Goal.
     findById(req.params.id).
@@ -813,8 +815,29 @@ exports.goal_details_get = function(req, res) {
         if (err) { return err; }
         res.render('b_body.pug', {goal});
     });
-    
 }
+*/
+
+// Handle Goal details on GET.
+// REACT:
+exports.goal_details_get = function(req, res) {
+    Goal.
+    findById(req.params.id).
+    populate({path: 'owner', populate: { path: 'owner'}}).
+    populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner' }}}).
+    populate({path: 'parentTo', populate: { path: 'owner' }}).
+    populate('history').
+    exec( function(err, goal) {
+        if (err) { return err; }
+        Unit.findOne({name: 'Lithuania'}).
+            populate({ path: 'parentTo', populate: { path: 'parentTo' }}).
+            exec( function (err, unit) {
+                res.render('b_body.jsx', {goal, chart: unit});
+            });
+    });
+}
+
+
 
 exports.goal_react_get = function(req, res) {
     Unit.findOne({name: 'Lithuania'}).

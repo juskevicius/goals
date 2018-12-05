@@ -25,9 +25,10 @@ main {
 
 /* General form styling. Forms: Add a goal, Accepted goals, My pending goals, My offered pending goals */
 
+/*
 .overlay {
   display: none;
-}
+}*/
 
 .overlay, .overlay2, .overlay3 {
   position: fixed;
@@ -46,9 +47,10 @@ main {
   z-index: 4;
 }
 
+/*
 .add-form, .offer-btn {
   display: none;
-}
+}*/
 
 .add-form, .acc-goals, .pnd-goals, .off-pnd-goals, .all-goals, .form_level2 {
   position: absolute;
@@ -308,9 +310,6 @@ nav ul {
   padding: 0;
 }
 
-.gauge-chart {
-  margin-right: 20px;
-}
 .line-chart {
   margin-left: 20px;
 }
@@ -384,4 +383,69 @@ nav ul {
 .r-margin, .l-margin {
   background-color: rgb(240, 239, 239)!important;
   padding: 0!important;
+}
+
+.form-add {
+  margin: 5% 30% 0% 30%;
+  cursor: default;
+  z-index: 10;
+}
+
+.form-header, .form-body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.form-body {
+  padding-bottom: 15%;
+}
+
+.form-add label, .form-add input  {
+  width: 100%;
+  font-size: 14px;
+  margin: 15px 0;
+}
+
+.form-add label {
+  font-weight: bold;
+  color: rgb(88, 88, 88);
+}
+
+.form-add input {
+  border: none;
+  border-bottom: 1px solid rgb(235, 235, 235);
+  padding: 5px;
+}
+
+.r-overlay {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.7);
+  z-index: 2;
+  cursor: pointer;
+}
+
+.form-btn {
+  background-color: white;
+  border: 1px solid rgb(88, 88, 88)!important;
+  width: auto!important;
+  padding: 10px!important;
+  float: right;
+  clear: both;
+  cursor: pointer;
+}
+
+.gauge-chart {
+  border: 1px solid red;
+  padding: 0px!important;
+}
+
+svg {
+  border: 1px solid green;
+  margin: 0px!important;
 }
