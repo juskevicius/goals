@@ -99,5 +99,5 @@ var middleCount = svg.append('text')
         return function(t) { that.text( d3.format(".0%")(i(t))); };
     });
 
-    document.getElementsByClassName("l-main1")[0].style.height = document.getElementsByClassName("gauge-chart")[0].offsetHeight + "px";
+    document.getElementsByClassName("l-main1")[0].style.height = height + "px";
   });

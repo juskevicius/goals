@@ -823,9 +823,9 @@ exports.goal_details_get = function(req, res) {
 exports.goal_details_get = function(req, res) {
     Goal.
     findById(req.params.id).
-    populate({path: 'owner', populate: { path: 'owner'}}).
+    populate({ path: 'owner', populate: { path: 'owner' }}).
     populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner' }}}).
-    populate({path: 'parentTo', populate: { path: 'owner' }}).
+    populate({ path: 'parentTo', populate: { path: 'owner' }}).
     populate('history').
     exec( function(err, goal) {
         if (err) { return err; }

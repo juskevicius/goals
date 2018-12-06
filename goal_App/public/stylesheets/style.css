@@ -385,13 +385,17 @@ nav ul {
   padding: 0!important;
 }
 
+.l-main1 {
+  padding: 0!important;
+}
+
 /*
 .l-main2 div {
   text-align: left;
   padding: 60px;
 }*/
 
-.form-add {
+.form-add, .form-current {
   margin: 5% 30% 0% 30%;
   cursor: default;
   z-index: 10;
@@ -405,18 +409,18 @@ nav ul {
   padding-bottom: 15%;
 }
 
-.form-add label, .form-add input  {
+.form-add label, .form-add input, .form-current label, .form-current input  {
   width: 100%;
   font-size: 14px;
   margin: 15px 0;
 }
 
-.form-add label {
+.form-add label, .form-current label {
   font-weight: bold;
   color: rgb(88, 88, 88);
 }
 
-.form-add input {
+.form-add input, .form-current input {
   border: none;
   border-bottom: 1px solid rgb(235, 235, 235);
   padding: 5px;
@@ -448,6 +452,7 @@ nav ul {
 
 .gauge-chart {
   padding: 0px!important;
+  margin: 0px!important;
   position: absolute;
 }
 

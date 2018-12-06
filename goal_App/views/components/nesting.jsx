@@ -2,12 +2,14 @@ import React from 'react';
 
 export default class Nesting extends React.Component {
   render() {
+    const parents = this.props.goal.childTo.map((parent) => {return <p>{parent.owner.name}</p>;});
+    const children = this.props.goal.parentTo.map((child) => {return <p>{child.owner.name}</p>;});
     return (
       <div>
-        {this.props.info.childTo.length > 0 && <p>Child to:</p>}
-        <p>{this.props.info.childTo.length}</p>
-        {this.props.info.parentTo.length > 0 && <p>Parent to:</p>}
-        <p>{this.props.info.parentTo.length}</p>
+        {parents.length > 0 && <p>Child to:</p>}
+        {parents}
+        {children.length > 0 && <p>Parent to:</p>}
+        {children}
       </div>
     )
   }

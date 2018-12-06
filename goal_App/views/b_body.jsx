@@ -2,6 +2,7 @@ import React from 'react';
 import Head from './components/head.jsx';
 import Navbar from './components/navbar.jsx';
 import FormAdd from './components/form_add.jsx';
+import FormCurrent from './components/form_current.jsx';
 import GoalInfo from './components/goal_info.jsx';
 import Nesting from './components/nesting.jsx';
 
@@ -28,14 +29,15 @@ class Content extends React.Component {
               </div>
               <div className="r-main1">r-main1</div>
               <div className="l-main2">
-                <GoalInfo info={this.props.goal}/>
+                <GoalInfo goal={this.props.goal}/>
               </div>
               <div className="r-main2">
-                <Nesting info={this.props.goal}/>
+                <Nesting goal={this.props.goal}/>
               </div>
             </div>
             <FormAdd />
-            <script src="/scripts/form-add.js"></script>
+            <FormCurrent goal={this.props.goal}/>
+            <script src="/scripts/form-control.js"></script>
           </main>
         </body>
       </html>
