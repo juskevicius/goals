@@ -1,8 +1,8 @@
 window.addEventListener('load', function() {
 
-var perc = 0.75;
-var targetVal = 0.85;
-var width = document.getElementsByClassName("l-main1")[0].offsetWidth - 20 - 4;
+var perc = document.getElementsByClassName("gauge-chart")[0].getAttribute("current") / 100;
+var targetVal = document.getElementsByClassName("gauge-chart")[0].getAttribute("targscore") / 100;
+var width = document.getElementsByClassName("l-main1")[0].offsetWidth - 4;
 var height = width * 0.65;
 var fontSize = width * 0.064;
 var deg180 = 0.5 * Math.PI;
@@ -16,10 +16,6 @@ var theTarget = d3.arc()
     .endAngle((2 * targetVal - 1) * deg180 + 0.04)
     .innerRadius(width / 2 * 0.48)
     .outerRadius(width / 2 * 0.72);
-    
-    console.log(document.getElementsByClassName("l-main1")[0].offsetWidth);
-    console.log(document.getElementsByClassName("r-main1")[0].offsetWidth);
-
 var svg = d3.select(".gauge-chart").append("svg")
     .attr("width", width)
     .attr("height", height)
@@ -27,10 +23,6 @@ var svg = d3.select(".gauge-chart").append("svg")
     .append("g")
     .attr("transform", "translate(" + width / 2 + ", " + (height * 0.9) + ")");
     //add labels on the top-right and top-left corners
-
-    console.log(document.getElementsByClassName("l-main1")[0].offsetWidth);
-    console.log(document.getElementsByClassName("r-main1")[0].offsetWidth);
-    
     svg.append('text')
     .attr("x", -width * 0.8 / 2)
     .attr("y", -height * 0.8 + fontSize)
@@ -48,7 +40,7 @@ var svg = d3.select(".gauge-chart").append("svg")
     .duration(750)
     .text(Math.round(perc * 100) + "%");
     svg.append('text')
-    .attr("x", width * 0.8 / 2 - fontSize * 3.5)
+    .attr("x", width * 0.8 / 2 - fontSize * 3)
     .attr("y", -height * 0.8 + fontSize)
     .attr("font-size", fontSize)
     .style("fill", "#606060")
@@ -106,4 +98,6 @@ var middleCount = svg.append('text')
             i = d3.interpolateNumber(0, perc);
         return function(t) { that.text( d3.format(".0%")(i(t))); };
     });
+
+    document.getElementsByClassName("l-main1")[0].style.height = document.getElementsByClassName("gauge-chart")[0].offsetHeight + "px";
   });
