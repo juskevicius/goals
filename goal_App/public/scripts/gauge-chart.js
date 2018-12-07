@@ -2,7 +2,9 @@ window.addEventListener('load', function() {
 
 var perc = document.getElementsByClassName("gauge-chart")[0].getAttribute("current") / 100;
 var targetVal = document.getElementsByClassName("gauge-chart")[0].getAttribute("targscore") / 100;
-var width = document.getElementsByClassName("l-main1")[0].offsetWidth - 4;
+
+var width = document.getElementsByClassName("l-main1")[0].offsetWidth;
+
 var height = width * 0.65;
 var fontSize = width * 0.064;
 var deg180 = 0.5 * Math.PI;
@@ -99,5 +101,8 @@ var middleCount = svg.append('text')
         return function(t) { that.text( d3.format(".0%")(i(t))); };
     });
 
+    /*
     document.getElementsByClassName("l-main1")[0].style.height = height + "px";
+    document.getElementsByClassName("l-main1")[0].style.width = width + "px";
+    document.getElementsByClassName("l-main2")[0].style.width = width + "px";*/
   });

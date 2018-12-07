@@ -78,10 +78,12 @@ router.get('/reject/:id', auth.required, goalController.goal_reject_get);
 /* POST reject */
 router.post('/reject', auth.required, goalController.goal_reject_post);
 
-
-
 /* GET details */
 router.get('/details/:id', auth.required, goalController.goal_details_get);
+
+/* POST add current score */
+router.post('/addCurrentScore', auth.required, goalController.goal_addCurrentScore_post);
+
 
 
 /* GET react view */

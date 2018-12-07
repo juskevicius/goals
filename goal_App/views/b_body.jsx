@@ -6,8 +6,15 @@ import FormCurrent from './components/form_current.jsx';
 import GoalInfo from './components/goal_info.jsx';
 import Nesting from './components/nesting.jsx';
 
-class Content extends React.Component {
+class Content extends React.Component {  
   render() {
+    let sortedHistory = this.props.goal.history.data.sort((a, b) => { return a.date - b.date; });
+    let currentScore = sortedHistory[sortedHistory.length - 1].value;
+
+    let sortedDates = sortedHistory.map((entry) => { return entry.date});
+    let sortedValues = sortedHistory.map((entry) => { return entry.value});
+    
+
     return (
       <html>
         <head>
@@ -21,19 +28,20 @@ class Content extends React.Component {
               </div>
               <div className="r-margin"></div>
               <div className="header">
-                {this.props.goal.name}
+                <h1>
+                  {this.props.goal.name}
+                </h1>
               </div>  
               <div className="l-main1">
-                <div className="gauge-chart" targscore={this.props.goal.targScore} current={this.props.goal.history.data[this.props.goal.history.data.length - 1].value}></div>
+                <div className="gauge-chart" targscore={this.props.goal.targScore} current={currentScore}></div>
                 <script src="/scripts/gauge-chart.js"></script>
               </div>
-              <div className="r-main1">r-main1</div>
-              <div className="l-main2">
-                <GoalInfo goal={this.props.goal}/>
+              <div className="r-main1">
+                <div className="line-chart" targscore={this.props.goal.targScore} dates={sortedDates} values={sortedValues}></div>
+                <script src="/scripts/line-chart.js"></script>
               </div>
-              <div className="r-main2">
-                <Nesting goal={this.props.goal}/>
-              </div>
+              <GoalInfo goal={this.props.goal}/>
+              <Nesting goal={this.props.goal}/>
             </div>
             <FormAdd />
             <FormCurrent goal={this.props.goal}/>

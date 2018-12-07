@@ -15,7 +15,8 @@ export default class FormCurrent extends React.Component {
               <input type="text" name="value"></input>
               <label>Date:</label>
               <input id="date-picker" type="date" name="date"></input>
-              <input className="form-btn" type="submit" value="Save"></input>
+              <input type="hidden" name="id" value={this.props.goal.history.id}></input>
+              <input className="form-btn" type="submit" value="Add"></input>
             </form>
           </div>
         </div>

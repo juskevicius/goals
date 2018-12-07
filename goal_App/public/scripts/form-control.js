@@ -56,5 +56,23 @@ setTimeout(
   }, 
   1100);
 
+setTimeout(
+  () => {
+    document.getElementsByClassName("gauge-chart")[0].getElementsByTagName("text")[0].addEventListener('click', 
+    () => {
+      document.getElementsByClassName("r-overlay")[1].style.display = 'initial';
+    });
+  }, 
+  1100);
+
+setTimeout(
+  () => {
+    document.getElementsByClassName("gauge-chart")[0].getElementsByTagName("text")[1].addEventListener('click', 
+    () => {
+      document.getElementsByClassName("r-overlay")[1].style.display = 'initial';
+    });
+  }, 
+  1100);
+
 //Current-form. Set default date value
 setTimeout( () => { document.getElementById('date-picker').valueAsDate = new Date(); }, 1000);

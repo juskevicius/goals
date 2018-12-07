@@ -837,6 +837,37 @@ exports.goal_details_get = function(req, res) {
     });
 }
 
+exports.goal_addCurrentScore_post = [
+    
+    sanitizeBody('*').trim().escape(),
+
+    (req, res, next) => {
+        
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        hData.
+        findById(req.body.id).
+        exec( function(err, history) {
+            if(err) { return err; } 
+            history.data.push({
+                date: req.body.date,
+                value: req.body.value
+            });
+            history.save( function (err, historyUpdated) {
+                if (err) { return err; }
+                
+                Goal. 
+                findOne({ history: historyUpdated.id}).
+                exec( function(err, goal) {
+                    if (err) { return err; }
+                        res.redirect('/details/' + goal.id);  
+                });
+            });
+        });       
+    }
+];
+
 
 
 exports.goal_react_get = function(req, res) {
