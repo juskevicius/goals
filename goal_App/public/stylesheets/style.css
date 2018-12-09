@@ -2,222 +2,89 @@ body {
   background-color: rgb(240, 239, 239);
 }
 
-.login-screen {
-  background-color: white;
-}
+/*Styling the dashboard*/
 
-main {
-  position: relative;
-}
-
-.logo {
-  margin-top: 10%;
-  margin-bottom: 5%;
-  width: 33%;
-}
-
-.logo img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  overflow: hidden;
-}
-
-/* General form styling. Forms: Add a goal, Accepted goals, My pending goals, My offered pending goals */
-
-/*
-.overlay {
-  display: none;
-}*/
-
-.overlay, .overlay2, .overlay3 {
-  position: fixed;
+.grid-container {
+  display: grid;
   width: 100%;
   height: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.7);
-  z-index: 2;
+  grid-template-areas:
+    'l-margin header header header header r-margin'
+    'l-margin l-main1 l-main1 r-main1 r-main1 r-margin'
+    'l-margin l-main2 l-main2 r-main2 r-main2 r-margin';
+  grid-gap: 2%;
+  grid-template-columns: 15% 15% 15% 15% 15% 15%;
+}
+
+.l-margin { grid-area: l-margin; }
+.r-margin { grid-area: r-margin; }
+.header { grid-area: header; }
+.l-main1 { grid-area: l-main1; }
+.r-main1 { grid-area: r-main1; }
+.l-main2 { grid-area: l-main2; }
+.r-main2 { grid-area: r-main2; }
+
+
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  font-family: 'Open Sans', sans-serif;
+}
+
+.header {
+  text-align: center;
+}
+
+.r-margin, .l-margin {
+  background-color: rgb(240, 239, 239)!important;
+  padding: 0!important;
+}
+
+.l-main1, .r-main1 {
+  padding: 0!important;
+}
+
+.gauge-chart text:nth-child(1), .gauge-chart text:nth-child(2), .middle-text {
   cursor: pointer;
 }
 
-.overlay3 {
-  z-index: 4;
+.l-main2 {
+  padding: 50px;
 }
 
-/*
-.add-form, .offer-btn {
-  display: none;
-}*/
-
-.add-form, .acc-goals, .pnd-goals, .off-pnd-goals, .all-goals, .form_level2 {
-  position: absolute;
-  top: 0;
-  margin-top: 10%;
+.r-main2 {
+  display: grid;
   width: 100%;
-}
-
-.all-goals {
-  margin-top: 5%;
-}
-
-.form-header, .acc-goals-header, .pnd-goals-header {
-  background-color: #515ad8;
-  padding: 4% 10%;
-  color: white;
-  font-size: 28px;
-  z-index: 3;
-}
-
-.form-body, .acc-goals-body, .pnd-goals-body {
-  background-color: white;
-  padding: 10%;
-  z-index: 3;
-}
-
-.form_level2 .form-body, .form_level2 .form-header {
-  z-index: 5;
-}
-
-select {
-  border: none;
-  border-bottom: 1px solid rgb(235, 235, 235);
-  padding: 5px;
-  width: 100%;
-}
-
-/* Styling form buttons and labels */
-
-.form-group-header {
-  margin: 30px 0 30px 0;
-  font-weight: bold;
-  font-size: 120%;
-}
-
-.form-group-header:nth-child(0) {
-  margin: 0 0 30px 0;
-}
-
-.form-group input, .form-group input:focus, .form-group input:active, .form-group input:read-only, .login-form button, .btn-group button, .btn-group button:focus {
-  border: none;
-  border-bottom: 1px solid rgb(235, 235, 235);
-  box-shadow: none;
-  border-radius: 0px;
-  background-color: white;
-}
-
-.form-group label, .acc-goals-body .headers {
-  color: rgb(88, 88, 88);
-}
-
-.offer-btn, .save-btn, .make-offer-btn, .accept-btn, .negotiate-btn, .reject-btn, .login-btn {
-  float: right;
-  border: 1px solid rgb(88, 88, 88);
-  margin: 10px 0 0 20px;
-}
-
-/* Styling Negotiate form*/
-
-.negotiate .row:nth-child(2) {
-  border-top: 1px solid black;
-}
-
-/* Styling offer-group */
-
-.offer-group {
-  margin: 40px 0 0 0;
-}
-
-.offer-elm {
-  margin: 20px 0;
-}
-
-.offer-list {
-  padding-top: 4px;
-  width: 100%;
-}
-
-.offer-list button {
-  text-align: left;
-  width: 100%;
-  height: 30px;
-}
-
-.offer-comment {
-  border-bottom: 1px solid rgb(82, 82, 82);
-}
-
-/* Styling the accepted goals list */
-
-.acc-goals-body .headers, .col-headers {
-  font-size: 20px;
-  font-weight: bold;
+  height: 100%;
+  grid-template-areas:
+    'main2-l-margin r-main2-header1 r-main2-header2 r-main2-header3 r-main2-header4 r-main2-header5 main2-r-margin'
+    'main2-l-margin parent-to init-score curr-score targ-score score-weight main2-r-margin';
+  grid-gap: 2%;
+  grid-template-columns: 7% 15% 15% 15% 15% 15% 6%;
+  grid-template-rows: 50px auto;
   text-align: center;
 }
 
-.acc-goal-data, .col-data {
-  padding-top: 15px;
+.r-main2 ul {
+  padding: 0;
 }
 
-.col-headers > div > div {
-  line-height: 50px;
-  height: 50px;
-  text-align: center;
+.r-main2 li {
+  list-style-type: none;
 }
 
-.col-headers > div > div > p {
-  line-height: 25px;
-  display: inline-block;
-  vertical-align: middle;
-}
+.r-main2-header1 { grid-area: r-main2-header1; }
+.r-main2-header2 { grid-area: r-main2-header2; }
+.r-main2-header3 { grid-area: r-main2-header3; }
+.r-main2-header4 { grid-area: r-main2-header4; }
+.r-main2-header5 { grid-area: r-main2-header5; }
 
-.col-headers .row:nth-child(1) p {
-  font-size: 23px;
-  text-decoration: underline;
-}
-
-.col-data {
-  padding-bottom: 5%;
-}
-
-.acc-goal-data div, .col-data div {
-  text-align: center;
-  font-size: 16px;
-}
-
-.col-data .row {
-  margin-bottom: 10px;
-}
-
-.col-data a {
-  color: rgb(80, 80, 80);
-  text-decoration: underline;
-}
-
-.col-data i, .col-data i:hover {
-  margin-left: 10px;
-}
-
-/* Styling the pending goal list */
-
-.pnd-label {
-  font-weight: bold;
-  margin: 10px 0 40px 0;
-  font-size: 16px;
-}
-
-.pnd-my-response, .pnd-my-offer {
-  display: none;
-  margin: 40px 0;
-  padding-bottom: 25px;
-  border-bottom: 1px solid black;
-}
-
-.pnd-goals .offer-comment, .off-pnd-goals .offer-comment {
-  border-bottom: none;
-}
+.main2-l-margin { grid-area: main2-l-margin;  }
+.parent-to { grid-area: parent-to; }
+.init-score { grid-area: init-score; }
+.curr-score { grid-area: curr-score; }
+.targ-score { grid-area: targ-score; }
+.score-weight { grid-area: score-weight; }
+.main2-r-margin { grid-area: main2-r-margin; }
 
 /* Styling the navbar */
 
@@ -287,129 +154,47 @@ nav ul {
     height: 55px;
 }
 
-.fa-sign-out, .fa-sign-out:hover {
-  text-decoration: none;
-  color: #0e2f4d;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
 
-/* Styling the dashboard */
-
-.dashboard .header {
-  font-size: 46px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 40px;
-  padding: 20px;
-  background-color: white;
-}
-
-.dashboard .col-xs-4 {
-  padding: 0;
-}
-
-.dashboard .other {
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
-.dashboard .summary {
-  margin-right: 20px;
-}
-.dashboard .children {
-  margin-left: 20px;
-}
-
-.dashboard .summary, .dashboard .children {
-  background-color: white;
-  font-size: 18px;
-  line-height: 36px;
-  padding: 40px;
-}
-
-
-
-
-
-.l-margin { grid-area: l-margin; }
-.r-margin { grid-area: r-margin; }
-.header { grid-area: header; }
-.l-main1 { grid-area: l-main1; }
-.r-main1 { grid-area: r-main1; }
-.l-main2 { grid-area: l-main2; }
-.r-main2 { grid-area: r-main2; }
-
-.grid-container {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  grid-template-areas:
-    'l-margin header header header header r-margin'
-    'l-margin l-main1 l-main1 r-main1 r-main1 r-margin'
-    'l-margin l-main2 l-main2 r-main2 r-main2 r-margin';
-  grid-gap: 2%;
-  grid-template-columns: 15% 15% 15% 15% 15% 15%;
-}
-
-.grid-container > div {
-  background-color: rgba(255, 255, 255, 0.8);
-  font-family: 'Open Sans', sans-serif;
-}
-
-.header {
-  text-align: center;
-}
-
-.r-margin, .l-margin {
-  background-color: rgb(240, 239, 239)!important;
-  padding: 0!important;
-}
-
-.l-main1, .r-main1 {
-  padding: 0!important;
-}
-
-.l-main2 {
-  padding: 50px;
-}
-
-.r-main2 {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  grid-template-areas:
-    'main2-l-margin parent-child init-score curr-score targ-score score-weight main2-r-margin';
-  grid-gap: 2%;
-  grid-template-columns: 7% 15% 15% 15% 15% 15% 6%;
-  list-style-type: none;
-}
-
-
-.main2-l-margin { grid-area: main2-l-margin; }
-.parent-child { grid-area: parent-child; }
-.init-score { grid-area: init-score; }
-.curr-score { grid-area: curr-score; }
-.targ-score { grid-area: targ-score; }
-.score-weight { grid-area: score-weight; }
-.main2-r-margin { grid-area: main2-r-margin; }
-
-
-
+/*Styling the forms*/
 
 .form-add, .form-current {
   margin: 5% 30% 0% 30%;
   cursor: default;
-  z-index: 10;
+  z-index: 2;
+}
+
+.form-myOwn {
+  margin: 5% 20% 0% 20%;
+  cursor: default;
+  z-index: 2;
 }
 
 .form-header, .form-body {
   font-family: 'Open Sans', sans-serif;
 }
 
+.form-header {
+  background-color: #515ad8;
+  padding: 4% 10%;
+  color: white;
+  font-size: 28px;
+}
+
 .form-body {
+  background-color: white;
+  padding: 10%;
   padding-bottom: 15%;
+}
+
+.form-myOwn-body {
+  padding: 8%;
+}
+
+.section-header {
+  font-size: 23px;
+  text-decoration: underline;
+  text-align: center;
+  font-weight: bold;
 }
 
 .form-add label, .form-add input, .form-current label, .form-current input  {
@@ -439,7 +224,7 @@ nav ul {
   right: 0;
   bottom: 0;
   background-color: rgba(0,0,0,0.7);
-  z-index: 2;
+  z-index: 1;
   cursor: pointer;
 }
 
@@ -453,6 +238,60 @@ nav ul {
   cursor: pointer;
 }
 
-.gauge-chart text:nth-child(1), .gauge-chart text:nth-child(2), .middle-text {
-  cursor: pointer;
+/* Styling the my goals form*/
+
+
+.form-myOwn-body {
+  padding: 0;
 }
+
+.offeredToMe, .myOffered, .myApproved { width: 100%; background-color: white;}
+
+.section-header { width: 100%; background-color: white; padding: 40px 0;}
+
+.col-header1 { width: 28%; }
+.col-header2 { width: 18%; }
+.col-header3 { width: 18%; }
+.col-header4 { width: 18%; }
+.col-header5 { width: 18%; }
+
+.col-data1 { width: 28%; }
+.col-data2 { width: 18%; }
+.col-data3 { width: 18%; }
+.col-data4 { width: 18%; }
+.col-data5 { width: 18%; }
+
+.col-header {
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  float: left;
+  background-color: white;
+  padding-bottom: 20px;
+}
+
+.col-data {
+  text-align: center;
+  float: left;
+  background-color: white;
+  padding-bottom: 50px;
+}
+
+.form-body ul {
+  padding: 0;
+  margin: 0;
+  
+}
+
+.form-body li {
+  list-style-type: none;
+}
+
+.form-body a {
+  color: rgb(80, 80, 80);
+}
+
+.form-body i, .form-body i:hover {
+  margin-left: 10px;
+}
+

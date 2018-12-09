@@ -1,0 +1,248 @@
+
+.login-screen {
+  background-color: white;
+}
+
+main {
+  position: relative;
+}
+
+.logo {
+  margin-top: 10%;
+  margin-bottom: 5%;
+  width: 33%;
+}
+
+.logo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  overflow: hidden;
+}
+
+/* General form styling. Forms: Add a goal, Accepted goals, My pending goals, My offered pending goals */
+
+/*
+.overlay {
+  display: none;
+}*/
+
+.overlay, .overlay2, .overlay3 {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.7);
+  z-index: 2;
+  cursor: pointer;
+}
+
+.overlay3 {
+  z-index: 4;
+}
+
+/*
+.add-form, .offer-btn {
+  display: none;
+}*/
+
+.add-form, .acc-goals, .pnd-goals, .off-pnd-goals, .all-goals, .form_level2 {
+  position: absolute;
+  top: 0;
+  margin-top: 10%;
+  width: 100%;
+}
+
+.all-goals {
+  margin-top: 5%;
+}
+
+
+
+.form_level2 .form-body, .form_level2 .form-header {
+  z-index: 5;
+}
+
+select {
+  border: none;
+  border-bottom: 1px solid rgb(235, 235, 235);
+  padding: 5px;
+  width: 100%;
+}
+
+/* Styling form buttons and labels */
+
+.form-group-header {
+  margin: 30px 0 30px 0;
+  font-weight: bold;
+  font-size: 120%;
+}
+
+.form-group-header:nth-child(0) {
+  margin: 0 0 30px 0;
+}
+
+.form-group input, .form-group input:focus, .form-group input:active, .form-group input:read-only, .login-form button, .btn-group button, .btn-group button:focus {
+  border: none;
+  border-bottom: 1px solid rgb(235, 235, 235);
+  box-shadow: none;
+  border-radius: 0px;
+  background-color: white;
+}
+
+.form-group label, .acc-goals-body .headers {
+  color: rgb(88, 88, 88);
+}
+
+.offer-btn, .save-btn, .make-offer-btn, .accept-btn, .negotiate-btn, .reject-btn, .login-btn {
+  float: right;
+  border: 1px solid rgb(88, 88, 88);
+  margin: 10px 0 0 20px;
+}
+
+/* Styling Negotiate form*/
+
+.negotiate .row:nth-child(2) {
+  border-top: 1px solid black;
+}
+
+/* Styling offer-group */
+
+.offer-group {
+  margin: 40px 0 0 0;
+}
+
+.offer-elm {
+  margin: 20px 0;
+}
+
+.offer-list {
+  padding-top: 4px;
+  width: 100%;
+}
+
+.offer-list button {
+  text-align: left;
+  width: 100%;
+  height: 30px;
+}
+
+.offer-comment {
+  border-bottom: 1px solid rgb(82, 82, 82);
+}
+
+/* Styling the accepted goals list */
+
+.acc-goals-body .headers, .col-headers {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.acc-goal-data, .col-data {
+  padding-top: 15px;
+}
+
+.col-headers > div > div {
+  line-height: 50px;
+  height: 50px;
+  text-align: center;
+}
+
+.col-headers > div > div > p {
+  line-height: 25px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.col-headers .row:nth-child(1) p {
+  font-size: 23px;
+  text-decoration: underline;
+}
+
+.col-data {
+  padding-bottom: 5%;
+}
+
+.acc-goal-data div, .col-data div {
+  text-align: center;
+  font-size: 16px;
+}
+
+.col-data .row {
+  margin-bottom: 10px;
+}
+
+.col-data a {
+  color: rgb(80, 80, 80);
+  text-decoration: underline;
+}
+
+
+
+/* Styling the pending goal list */
+
+.pnd-label {
+  font-weight: bold;
+  margin: 10px 0 40px 0;
+  font-size: 16px;
+}
+
+.pnd-my-response, .pnd-my-offer {
+  display: none;
+  margin: 40px 0;
+  padding-bottom: 25px;
+  border-bottom: 1px solid black;
+}
+
+.pnd-goals .offer-comment, .off-pnd-goals .offer-comment {
+  border-bottom: none;
+}
+
+
+
+.fa-sign-out, .fa-sign-out:hover {
+  text-decoration: none;
+  color: #0e2f4d;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+/* Styling the dashboard */
+
+.dashboard .header {
+  font-size: 46px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 20px;
+  background-color: white;
+}
+
+.dashboard .col-xs-4 {
+  padding: 0;
+}
+
+.dashboard .other {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.dashboard .summary {
+  margin-right: 20px;
+}
+.dashboard .children {
+  margin-left: 20px;
+}
+
+.dashboard .summary, .dashboard .children {
+  background-color: white;
+  font-size: 18px;
+  line-height: 36px;
+  padding: 40px;
+}
+

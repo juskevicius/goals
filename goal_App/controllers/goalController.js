@@ -821,6 +821,7 @@ exports.goal_details_get = function(req, res) {
 // Handle Goal details on GET.
 // REACT:
 exports.goal_details_get = function(req, res) {
+    
     Goal.
     findById(req.params.id).
     populate({ path: 'owner', populate: { path: 'owner' }}).
@@ -830,10 +831,24 @@ exports.goal_details_get = function(req, res) {
     exec( function(err, goal) {
         if (err) { return err; }
         Unit.findOne({name: 'Lithuania'}).
-            populate({ path: 'parentTo', populate: { path: 'parentTo' }}).
-            exec( function (err, unit) {
-                res.render('b_body.jsx', {goal, chart: unit});
+        populate({ path: 'parentTo', populate: { path: 'parentTo' }}).
+        exec( function (err, orgChart) {
+            if (err) { return err; }
+            Unit.
+            findOne({ owner: req.payload.id }).
+            exec( function (err, ownerUnit) {
+                if (err) { return err; }
+                Goal.
+                find({ owner: ownerUnit.id}).
+                exec( function (err, ownerGoals) {
+                    if (err) { return err; }
+                    let offeredToMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Pending' && goal.statusApprover == 'Approved';});
+                    let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
+                    let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});
+                    res.render('b_body.jsx', {goal, chart: orgChart, offeredToMe, createdByMe, myApproved});
+                }); 
             });
+        });
     });
 }
 

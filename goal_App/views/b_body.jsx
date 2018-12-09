@@ -2,6 +2,7 @@ import React from 'react';
 import Head from './components/head.jsx';
 import Navbar from './components/navbar.jsx';
 import FormAdd from './components/form_add.jsx';
+import FormMyOwn from './components/form_myOwn.jsx';
 import FormCurrent from './components/form_current.jsx';
 import GoalInfo from './components/goal_info.jsx';
 import Nesting from './components/nesting.jsx';
@@ -44,6 +45,7 @@ class Content extends React.Component {
               <Nesting goal={this.props.goal}/>
             </div>
             <FormAdd />
+            <FormMyOwn offeredToMe={this.props.offeredToMe} createdByMe={this.props.createdByMe} myApproved={this.props.myApproved}/>
             <FormCurrent goal={this.props.goal}/>
             <script src="/scripts/form-control.js"></script>
           </main>

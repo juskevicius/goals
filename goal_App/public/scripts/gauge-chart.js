@@ -3,7 +3,7 @@ window.addEventListener('load', function() {
 var perc = document.getElementsByClassName("gauge-chart")[0].getAttribute("current") / 100;
 var targetVal = document.getElementsByClassName("gauge-chart")[0].getAttribute("targscore") / 100;
 
-var width = document.getElementsByClassName("l-main1")[0].offsetWidth;
+var width = document.getElementsByClassName("l-main1")[0].offsetWidth - 6;
 
 var height = width * 0.65;
 var fontSize = width * 0.064;
