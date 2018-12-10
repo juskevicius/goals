@@ -8,6 +8,8 @@ import GoalInfo from './components/goal_info.jsx';
 import Nesting from './components/nesting.jsx';
 
 class Content extends React.Component {  
+
+  
   render() {
     let sortedHistory = this.props.goal.history.data.sort((a, b) => { return a.date - b.date; });
     let currentScore = sortedHistory[sortedHistory.length - 1].value;
@@ -27,7 +29,9 @@ class Content extends React.Component {
               <div className="l-margin">
                 <Navbar chart={this.props.chart}/>
               </div>
-              <div className="r-margin"></div>
+              <div className="r-margin">
+                <a href="/logout"><i className="fa fa-sign-out" style={{fontSize:54 + "px"}}></i></a>
+              </div>
               <div className="header">
                 <h1>
                   {this.props.goal.name}

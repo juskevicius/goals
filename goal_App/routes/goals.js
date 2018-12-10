@@ -84,7 +84,8 @@ router.get('/details/:id', auth.required, goalController.goal_details_get);
 /* POST add current score */
 router.post('/addCurrentScore', auth.required, goalController.goal_addCurrentScore_post);
 
-
+/* POST edit weight */
+router.post('/editWeight', auth.required, goalController.goal_editWeight_post);
 
 /* GET react view */
 router.get('/react', goalController.goal_react_get);

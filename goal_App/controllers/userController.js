@@ -125,7 +125,7 @@ exports.user_delete_post = [
 // Handle user login on GET
 
 exports.user_login_get = function(req, res, next) {
-    res.render('login.pug');
+    res.render('login.jsx');
 };
 
 // Handle user login on POST

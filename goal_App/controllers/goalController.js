@@ -827,6 +827,8 @@ exports.goal_details_get = function(req, res) {
     populate({ path: 'owner', populate: { path: 'owner' }}).
     populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner' }}}).
     populate({ path: 'parentTo', populate: { path: 'owner' }}).
+    populate({ path: 'parentTo', populate: { path: 'history' }}).
+    populate({ path: 'childTo', populate: { path: 'owner' }}).
     populate('history').
     exec( function(err, goal) {
         if (err) { return err; }
@@ -874,6 +876,34 @@ exports.goal_addCurrentScore_post = [
                 
                 Goal. 
                 findOne({ history: historyUpdated.id}).
+                exec( function(err, goal) {
+                    if (err) { return err; }
+                        res.redirect('/details/' + goal.id);  
+                });
+            });
+        });       
+    }
+];
+
+exports.goal_editWeight_post = [
+    
+    sanitizeBody('*').trim().escape(),
+
+    (req, res, next) => {
+        
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+        Goal.
+        findById(req.body.id).
+        exec( function(err, goal) {
+            if(err) { return err; } 
+            goal.set({
+                weight: req.body.weight
+            });
+            goal.save( function (err, goalUpdated) {
+                if (err) { return err; }
+                Goal. 
+                findOne({ parentTo: goalUpdated.id}).
                 exec( function(err, goal) {
                     if (err) { return err; }
                         res.redirect('/details/' + goal.id);  
