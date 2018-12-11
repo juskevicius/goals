@@ -231,14 +231,8 @@ nav ul {
 
 /*Styling the forms*/
 
-.form-add, .form-current {
+.form-add, .form-current, .form-remove, .form-acceptOffer, .form-negotiateOffered, .form-negotiateOwn, .form-edit {
   margin: 5% 30% 0% 30%;
-  cursor: default;
-  z-index: 2;
-}
-
-.form-myOwn {
-  margin: 5% 20% 0% 20%;
   cursor: default;
   z-index: 2;
 }
@@ -260,10 +254,6 @@ nav ul {
   padding-bottom: 15%;
 }
 
-.form-myOwn-body {
-  padding: 8%;
-}
-
 .section-header {
   font-size: 23px;
   text-decoration: underline;
@@ -271,18 +261,19 @@ nav ul {
   font-weight: bold;
 }
 
-.form-add label, .form-add input, .form-current label, .form-current input  {
+.form-body label, .form-body input  {
   width: 100%;
   font-size: 14px;
   margin: 15px 0;
+  text-align: left;
 }
 
-.form-add label, .form-current label {
+.form-body label {
   font-weight: bold;
   color: rgb(88, 88, 88);
 }
 
-.form-add input, .form-current input {
+.form-body input {
   border: none;
   border-bottom: 1px solid rgb(235, 235, 235);
   padding: 5px;
@@ -314,50 +305,42 @@ nav ul {
 
 /* Styling the form for my goals */
 
-.form-myOwn-body {
-  padding: 0;
+.form-myOwn {
+  margin: 5% 20% 0% 20%;
+  cursor: default;
+  z-index: 2;
 }
 
-.offeredToMe, .myOffered, .myApproved { width: 100%; background-color: white;}
+.form-myOwn-body {
+  padding: 7%;
+}
 
-.section-header { width: 100%; background-color: white; padding: 40px 0;}
+.offeredToMe, .myOffered, .myApproved { width: 100%; }
 
-.col-header1 { width: 28%; }
-.col-header2 { width: 18%; }
-.col-header3 { width: 18%; }
-.col-header4 { width: 18%; }
-.col-header5 { width: 18%; }
-
-.col-data1 { width: 28%; }
-.col-data2 { width: 18%; }
-.col-data3 { width: 18%; }
-.col-data4 { width: 18%; }
-.col-data5 { width: 18%; }
+.section-header { 
+  width: 86%; 
+  padding: 35px;
+}
 
 .col-header {
+  width: 18%;
   text-align: center;
   font-weight: bold;
   font-size: 18px;
-  float: left;
-  background-color: white;
   padding-bottom: 20px;
+  display: inline-block;
 }
+
+.col-header-goal-name { width: 28%; }
 
 .col-data {
+  width: 18%;
   text-align: center;
-  float: left;
-  background-color: white;
-  padding-bottom: 50px;
+  min-height: 5px;
+  display: inline-block;
 }
 
-.form-body ul {
-  padding: 0;
-  margin: 0;
-}
-
-.form-body li {
-  list-style-type: none;
-}
+.col-data-goal-name { width: 28%; }
 
 .form-body a {
   color: rgb(80, 80, 80);
@@ -365,5 +348,34 @@ nav ul {
 
 .form-body i, .form-body i:hover {
   margin-left: 10px;
+}
+
+
+/* Styling the form to remove a goal */
+
+.form-remove {
+  z-index: 3;
+}
+
+.overlay2 {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.7);
+  z-index: 1;
+  cursor: pointer;
+  overflow-y: scroll;
+}
+
+/* Styling the form for negotiateOffered */
+
+.form-negotiateOffered form {
+  padding-top: 30px;
+  border-top: 1px solid rgb(187, 187, 187);
 }
 

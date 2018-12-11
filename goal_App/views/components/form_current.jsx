@@ -2,7 +2,6 @@ import React from 'react';
 
 export default class FormCurrent extends React.Component {
   render() {
-    const currDate = Date(Date.now());
     return (
       <div className="r-overlay">
         <div className="form-current">

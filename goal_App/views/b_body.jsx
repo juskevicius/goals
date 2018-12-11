@@ -2,7 +2,7 @@ import React from 'react';
 import Head from './components/head.jsx';
 import Navbar from './components/navbar.jsx';
 import FormAdd from './components/form_add.jsx';
-import FormMyOwn from './components/form_myOwn.jsx';
+import FormMyOwn from './components/form_myOwn_.jsx';
 import FormCurrent from './components/form_current.jsx';
 import GoalInfo from './components/goal_info.jsx';
 import Nesting from './components/nesting.jsx';

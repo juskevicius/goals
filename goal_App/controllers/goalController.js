@@ -842,6 +842,7 @@ exports.goal_details_get = function(req, res) {
                 if (err) { return err; }
                 Goal.
                 find({ owner: ownerUnit.id}).
+                populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner' }}}).
                 exec( function (err, ownerGoals) {
                     if (err) { return err; }
                     let offeredToMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Pending' && goal.statusApprover == 'Approved';});

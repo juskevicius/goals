@@ -3,18 +3,8 @@ import React from 'react';
 export default class Nesting extends React.Component {
   render() {
 
-
-    /*const childName = this.props.goal.parentTo.map((child) => {return <li key={child.owner.id}>{child.owner.name}</li>;});
-    const childInit = this.props.goal.parentTo.map((child) => {return <li key={child.owner.id}>{child.initScore}</li>;});
-    const childCurr = this.props.goal.parentTo.map((child) => {return <li key={child.owner.id}>{child.history.data[child.history.data.length - 1].value}</li>;});
-    const childTarg = this.props.goal.parentTo.map((child) => {return <li key={child.owner.id}>{child.targScore}</li>;});
-    const childWeight = this.props.goal.parentTo.map((child) => {return <div key={child.owner.id}>{child.weight}</div>;});*/
-  
-
-    const parents = this.props.goal.childTo.map((parent) => {return <li key={parent.owner.id}>{parent.owner.name}</li>;});
-    
     const children = () => {
-      const childrenArr = this.props.goal.parentTo.map((child) => { return  <div className="col-data-row"><div className="col-data">{child.owner.name}</div><div className="col-data">{child.initScore}</div><div className="col-data">{child.history.data[child.history.data.length - 1].value}</div><div className="col-data">{child.targScore}</div><div className="col-data"><form action={"/editWeight"} method="post"><div><input type="text" name="weight" value={child.weight}></input><input type="hidden" name="id" value={child.id}></input><button type="submit"><i className="fas fa-save"/></button></div></form></div></div>;});
+      const childrenArr = this.props.goal.parentTo.map((child) => { return  <div className="col-data-row"><div className="col-data">{child.owner.name}</div><div className="col-data">{child.initScore}</div><div className="col-data">{child.history.data[child.history.data.length - 1].value}</div><div className="col-data">{child.targScore}</div><div className="col-data"><form action={"/editWeight"} method="post"><div><input type="text" name="weight" value={child.weight}></input><input type="hidden" name="id" value={child.id} readOnly></input><button type="submit"><i className="fas fa-save"/></button></div></form></div></div>;});
       return childrenArr;
     }
 
