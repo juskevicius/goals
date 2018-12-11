@@ -10,7 +10,7 @@ export default class FormRemove extends React.Component {
             <form action="/delete" method="post" href="">
               <label>Do you really want to remove this goal?</label>
               <input type="text" name="name" value={this.props.goal.name} readOnly></input>
-              <input type="hidden" name="id" value={this.props.goal.id}></input>
+              <input type="hidden" name="id" value={this.props.goal.id} readOnly></input>
               <input className="form-btn" type="submit" value="Remove"></input>
             </form>
           </div>

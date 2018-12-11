@@ -11,26 +11,26 @@ export default class FormNegotiateOffered extends React.Component {
             <br/>
             <br/>
             <label>Goal:</label>
-            <input type="text" value={this.props.goal.offer.name} readOnly></input>
+            <input type="text" defaultValue={this.props.goal.offer.name} readOnly></input>
             <label>Initial score:</label>
-            <input type="text" value={this.props.goal.offer.initScore} readOnly></input>
+            <input type="text" defaultValue={this.props.goal.offer.initScore} readOnly></input>
             <label>Target score:</label>
-            <input type="text" value={this.props.goal.offer.targScore} readOnly></input>
+            <input type="text" defaultValue={this.props.goal.offer.targScore} readOnly></input>
             <label>Comment:</label>
-            <input type="text" value={this.props.goal.offer.comment} readOnly></input>
+            <input type="text" defaultValue={this.props.goal.offer.comment} readOnly></input>
             <form action="/negotiate" method="post" href="">
               <label>My response{this.props.goal.updated_formatted ? ', ' + this.props.goal.updated_formatted : ''}:</label>
               <br/>
               <br/>
               <label>Goal:</label>
-              <input type="text" value={this.props.goal.name}></input>
+              <input type="text" defaultValue={this.props.goal.name}></input>
               <label>Initial score:</label>
-              <input type="text" value={this.props.goal.initScore}></input>
+              <input type="text" defaultValue={this.props.goal.initScore}></input>
               <label>Target score:</label>
-              <input type="text" value={this.props.goal.targScore}></input>
+              <input type="text" defaultValue={this.props.goal.targScore}></input>
               <label>Comment:</label>
-              <input type="text" value={this.props.goal.comment}></input>
-              <input type="hidden" name="id" value={this.props.goal.id}></input>
+              <input type="text" defaultValue={this.props.goal.comment}></input>
+              <input type="hidden" name="id" value={this.props.goal.id} readOnly></input>
               <input className="form-btn" type="submit" value="Submit my response"></input>
             </form>
           </div>

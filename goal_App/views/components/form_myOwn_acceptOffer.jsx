@@ -16,7 +16,7 @@ export default class FormAcceptOffer extends React.Component {
               <input type="text" value={this.props.goal.offer.targScore} readOnly></input>
               <label>Comment:</label>
               <input type="text" value={this.props.goal.offer.comment} readOnly></input>
-              <input type="hidden" name="id" value={this.props.goal.id}></input>
+              <input type="hidden" name="id" value={this.props.goal.id} readOnly></input>
               <input className="form-btn" type="submit" value="Accept"></input>
             </form>
           </div>

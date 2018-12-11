@@ -13,17 +13,17 @@ export default class FormMyOwn extends React.Component {
     }
 
     const goalsOfferedToMe = () => {
-      let goals = this.props.offeredToMe.map((goal) => { return  <div className="col-data-row"><div className="col-data col-data-goal-name">{goal.name}</div><div className="col-data">{goal.initScore}</div><div className="col-data">{goal.targScore}</div><div className="col-data">{goal.status}</div><div className="col-data"><i className="far fa-check-square triggerAccept" title="Accept"></i><i className="far fa-comment triggerNegotiateOffered" title="Negotiate"></i><i className="fa fa-remove triggerRemove" title="Reject"></i></div><FormRemove goal={goal}/><FormAcceptOffer goal={goal}/><FormNegotiateOffered goal={goal}/></div>;});
+      let goals = this.props.offeredToMe.map((goal) => { return  <div className="col-data-row" key={goal.id}><div className="col-data col-data-goal-name">{goal.name}</div><div className="col-data">{goal.initScore}</div><div className="col-data">{goal.targScore}</div><div className="col-data">{goal.status}</div><div className="col-data"><i className="far fa-check-square triggerAccept" title="Accept"></i><i className="far fa-comment triggerNegotiateOffered" title="Negotiate"></i><i className="fa fa-remove triggerRemove" title="Reject"></i></div><FormRemove goal={goal}/><FormAcceptOffer goal={goal}/><FormNegotiateOffered goal={goal}/></div>;});
       return goals;
     }
 
     const goalsCreatedByMe = () => {
-      let goals = this.props.createdByMe.map((goal) => { return  <div className="col-data-row"><div className="col-data col-data-goal-name">{goal.name}</div><div className="col-data">{goal.initScore}</div><div className="col-data">{goal.targScore}</div><div className="col-data">{goal.status}</div><div className="col-data"><i className="far fa-comment triggerNegotiateOwn" title="Negotiate"></i><i className="fa fa-remove triggerRemove" title="Reject"></i></div><FormRemove goal={goal}/><FormNegotiateOwn goal={goal}/></div>;});
+      let goals = this.props.createdByMe.map((goal) => { return  <div className="col-data-row" key={goal.id}><div className="col-data col-data-goal-name">{goal.name}</div><div className="col-data">{goal.initScore}</div><div className="col-data">{goal.targScore}</div><div className="col-data">{goal.status}</div><div className="col-data"><i className="far fa-comment triggerNegotiateOwn" title="Negotiate"></i><i className="fa fa-remove triggerRemove" title="Reject"></i></div><FormRemove goal={goal}/><FormNegotiateOwn goal={goal}/></div>;});
       return goals;
     }
 
     const myApprovedGoals = () => {
-      let goals = this.props.myApproved.map((goal) => { return  <div className="col-data-row"><div className="col-data col-data-goal-name">{goal.name}</div><div className="col-data">{goal.initScore}</div><div className="col-data">{goal.targScore}</div><div className="col-data">{goal.status}</div><div className="col-data"><i className="fa fa-edit triggerEdit" title="Edit"></i><i className="fa fa-remove triggerRemove" title="Delete"></i><i className="fa fa-share-alt" title="Ofer to..."></i></div><FormRemove goal={goal}/><FormEdit goal={goal}/></div>;});
+      let goals = this.props.myApproved.map((goal) => { return  <div className="col-data-row" key={goal.id}><div className="col-data col-data-goal-name">{goal.name}</div><div className="col-data">{goal.initScore}</div><div className="col-data">{goal.targScore}</div><div className="col-data">{goal.status}</div><div className="col-data"><i className="fa fa-edit triggerEdit" title="Edit"></i><i className="fa fa-remove triggerRemove" title="Delete"></i><i className="fa fa-share-alt" title="Ofer to..."></i></div><FormRemove goal={goal}/><FormEdit goal={goal}/></div>;});
       return goals;
     }
 

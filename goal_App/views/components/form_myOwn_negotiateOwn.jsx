@@ -24,14 +24,14 @@ export default class FormNegotiateOwn extends React.Component {
               <br/>
               <br/>
               <label>Goal:</label>
-              <input type="text" value={this.props.goal.name}></input>
+              <input type="text" defaultValue={this.props.goal.name}></input>
               <label>Initial score:</label>
-              <input type="text" value={this.props.goal.initScore}></input>
+              <input type="text" defaultValue={this.props.goal.initScore}></input>
               <label>Target score:</label>
-              <input type="text" value={this.props.goal.targScore}></input>
+              <input type="text" defaultValue={this.props.goal.targScore}></input>
               <label>Comment:</label>
-              <input type="text" value={this.props.goal.comment}></input>
-              <input type="hidden" name="id" value={this.props.goal.id}></input>
+              <input type="text" defaultValue={this.props.goal.comment}></input>
+              <input type="hidden" name="id" value={this.props.goal.id} readOnly></input>
               <input className="form-btn" type="submit" value="Submit a new response"></input>
             </form>
           </div>
