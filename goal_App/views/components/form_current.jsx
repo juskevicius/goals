@@ -3,7 +3,7 @@ import React from 'react';
 export default class FormCurrent extends React.Component {
   render() {
     return (
-      <div className="r-overlay">
+      <div className="r-overlay form-current-overlay">
         <div className="form-current">
           <div className="form-header">Add current score</div>
           <div className="form-body">

@@ -23,7 +23,7 @@ export default class Navbar extends React.Component {
                   <a href="#" id="showMyOwnForm">My goals</a>
                 </li>
                 <li>
-                  <a href="/others">Others'</a>
+                  <a href="#" id="showOthersForm">Others'</a>
                 </li>
                 <li>
                   <a href="#">Rejected</a>

@@ -4,6 +4,7 @@ import FormAcceptOffer from './form_myOwn_acceptOffer.jsx';
 import FormNegotiateOffered from './form_myOwn_negotiateOffered.jsx';
 import FormNegotiateOwn from './form_myOwn_negotiateOwn.jsx';
 import FormEdit from './form_myOwn_edit.jsx';
+import FormOfferTo from './form_myOwn_offerTo.jsx';
 export default class FormMyOwn extends React.Component {
   
   render() {
@@ -23,12 +24,12 @@ export default class FormMyOwn extends React.Component {
     }
 
     const myApprovedGoals = () => {
-      let goals = this.props.myApproved.map((goal) => { return  <div className="col-data-row" key={goal.id}><div className="col-data col-data-goal-name">{goal.name}</div><div className="col-data">{goal.initScore}</div><div className="col-data">{goal.targScore}</div><div className="col-data">{goal.status}</div><div className="col-data"><i className="fa fa-edit triggerEdit" title="Edit"></i><i className="fa fa-remove triggerRemove" title="Delete"></i><i className="fa fa-share-alt" title="Ofer to..."></i></div><FormRemove goal={goal}/><FormEdit goal={goal}/></div>;});
+      let goals = this.props.myApproved.map((goal) => { return  <div className="col-data-row" key={goal.id}><div className="col-data col-data-goal-name">{goal.name}</div><div className="col-data">{goal.initScore}</div><div className="col-data">{goal.targScore}</div><div className="col-data">{goal.status}</div><div className="col-data"><i className="fa fa-edit triggerEdit" title="Edit"></i><i className="fa fa-remove triggerRemove" title="Delete"></i><i className="fa fa-share-alt triggerOfferTo" title="Ofer to..."></i></div><FormRemove goal={goal}/><FormEdit goal={goal}/><FormOfferTo goal={goal} children={this.props.currentGoal.owner.parentTo}/></div>;});
       return goals;
     }
 
     return (
-      <div className="r-overlay">
+      <div className="r-overlay form-myOwn-overlay">
         <div className="form-myOwn">
           <div className="form-header">My goals</div>
           <div className="form-body form-myOwn-body">

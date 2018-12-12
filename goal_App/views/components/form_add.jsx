@@ -3,7 +3,7 @@ import React from 'react';
 export default class FormAdd extends React.Component {
   render() {
     return (
-      <div className="r-overlay">
+      <div className="r-overlay form-add-overlay">
         <div className="form-add">
           <div className="form-header">Add a new goal</div>
           <div className="form-body">

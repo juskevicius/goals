@@ -3,6 +3,7 @@ import Head from './components/head.jsx';
 import Navbar from './components/navbar.jsx';
 import FormAdd from './components/form_add.jsx';
 import FormMyOwn from './components/form_myOwn_.jsx';
+import FormOthers from './components/form_others_.jsx';
 import FormCurrent from './components/form_current.jsx';
 import GoalInfo from './components/goal_info.jsx';
 import Nesting from './components/nesting.jsx';
@@ -17,7 +18,6 @@ class Content extends React.Component {
     let sortedDates = sortedHistory.map((entry) => { return entry.date});
     let sortedValues = sortedHistory.map((entry) => { return entry.value});
     
-
     return (
       <html>
         <head>
@@ -49,11 +49,12 @@ class Content extends React.Component {
               <Nesting goal={this.props.goal}/>
             </div>
             <FormAdd />
-            <FormMyOwn offeredToMe={this.props.offeredToMe} createdByMe={this.props.createdByMe} myApproved={this.props.myApproved}/>
+            <FormMyOwn currentGoal={this.props.goal} offeredToMe={this.props.offeredToMe} createdByMe={this.props.createdByMe} myApproved={this.props.myApproved}/>
+            <FormOthers offeredByMe={this.props.offeredByMe} createdByOthers={this.props.createdByOthers}/>
             <FormCurrent goal={this.props.goal}/>
-            <script src="/scripts/form-control.js"></script>
           </main>
         </body>
+        <script src="/scripts/form-control.js"></script>
       </html>
     )
   }

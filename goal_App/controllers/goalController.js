@@ -822,9 +822,9 @@ exports.goal_details_get = function(req, res) {
 // REACT:
 exports.goal_details_get = function(req, res) {
     
-    Goal.
+    Goal. /* find details about the current goal */
     findById(req.params.id).
-    populate({ path: 'owner', populate: { path: 'owner' }}).
+    populate({ path: 'owner', populate: { path: 'owner parentTo' }}).
     populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner' }}}).
     populate({ path: 'parentTo', populate: { path: 'owner' }}).
     populate({ path: 'parentTo', populate: { path: 'history' }}).
@@ -832,25 +832,38 @@ exports.goal_details_get = function(req, res) {
     populate('history').
     exec( function(err, goal) {
         if (err) { return err; }
-        Unit.findOne({name: 'Lithuania'}).
+        
+        Unit. /* extract the whole org. chart structure */
+        findOne({name: 'Lithuania'}). 
         populate({ path: 'parentTo', populate: { path: 'parentTo' }}).
         exec( function (err, orgChart) {
             if (err) { return err; }
-            Unit.
-            findOne({ owner: req.payload.id }).
-            exec( function (err, ownerUnit) {
+            
+            Goal. /* find owner's goals */
+            find({ owner: goal.owner}).
+            populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner' }}}).
+            exec( function (err, ownerGoals) {
                 if (err) { return err; }
-                Goal.
-                find({ owner: ownerUnit.id}).
-                populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner' }}}).
-                exec( function (err, ownerGoals) {
-                    if (err) { return err; }
+                
+                Goal. /* find children's goals */
+                find().
+                where('owner').
+                in(goal.owner.parentTo).
+                populate('owner offer').
+                exec( function (err, childrenGoals) {
+                if (err) { return err; }
+
+                    let offeredByMe = childrenGoals.filter((goal) => { return goal.statusOwner == "Pending" && goal.statusApprover == "Approved";});
+                    let createdByOthers = childrenGoals.filter((goal) => { return goal.statusOwner == "Approved" && goal.statusApprover == "Pending";});
+                    
                     let offeredToMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Pending' && goal.statusApprover == 'Approved';});
                     let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
                     let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});
-                    res.render('b_body.jsx', {goal, chart: orgChart, offeredToMe, createdByMe, myApproved});
-                }); 
-            });
+                    res.render('b_body.jsx', {goal, chart: orgChart, offeredToMe, createdByMe, myApproved, offeredByMe, createdByOthers});
+
+                    /*res.render('f_others_.pug', {children: goal.owner.parentTo, offeredByMe, createdByOthers});*/
+                });  
+            }); 
         });
     });
 }

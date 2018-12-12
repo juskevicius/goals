@@ -231,7 +231,7 @@ nav ul {
 
 /*Styling the forms*/
 
-.form-add, .form-current, .form-remove, .form-acceptOffer, .form-negotiateOffered, .form-negotiateOwn, .form-edit {
+.form-add, .form-current, .form-remove, .form-acceptOffer, .form-negotiateOffered, .form-negotiateOwn, .form-edit, .form-offerTo, .form-myOwn, .form-others, .form-reject, .form-approve, .form-negotiateMyOffered, .form-negotiateTheirOwn {
   margin: 5% 30% 0% 30%;
   cursor: default;
   z-index: 2;
@@ -273,7 +273,7 @@ nav ul {
   color: rgb(88, 88, 88);
 }
 
-.form-body input {
+.form-body input, .form-body select {
   border: none;
   border-bottom: 1px solid rgb(235, 235, 235);
   padding: 5px;
@@ -291,6 +291,7 @@ nav ul {
   background-color: rgba(0,0,0,0.7);
   z-index: 1;
   cursor: pointer;
+  overflow-y: scroll;
 }
 
 .form-btn {
@@ -307,8 +308,6 @@ nav ul {
 
 .form-myOwn {
   margin: 5% 20% 0% 20%;
-  cursor: default;
-  z-index: 2;
 }
 
 .form-myOwn-body {
@@ -342,12 +341,9 @@ nav ul {
 
 .col-data-goal-name { width: 28%; }
 
-.form-body a {
-  color: rgb(80, 80, 80);
-}
-
-.form-body i, .form-body i:hover {
+.form-body i {
   margin-left: 10px;
+  color: rgb(80, 80, 80);
 }
 
 
@@ -379,3 +375,52 @@ nav ul {
   border-top: 1px solid rgb(187, 187, 187);
 }
 
+
+/* Styling the form Offer To... */
+
+.offer-group {
+  margin-top: 70px;
+  width: 100%;
+}
+
+.offer-elm label, .offer-elm input, .offer-elm select {
+  width: 45%;
+  display: inline-block;
+}
+
+.offer-elm input {
+  padding: 1%;
+  width: 43%;
+}
+
+.offer-elm label:nth-child(1), .offer-elm select, .offer-elm label:nth-child(5), .offer-elm input:nth-child(7)  {
+  margin-right: 10%;
+}
+
+.offer-elm label:nth-child(9), .offer-elm input:nth-child(10) {
+  width: 100%;
+}
+
+/* Styling the form for others' goals */
+
+.form-others { margin: 5% 15% 0% 15%; }
+
+.form-others-body { padding: 7%; }
+
+.offeredByMe, .createdByOthers { width: 100%; }
+
+.form-others .col-header { width: 15%; }
+
+.form-others .col-data { width: 15%; }
+
+.form-others .col-header-goal-name { width: 25%; }
+  
+.form-others .col-data-goal-name { width: 25%; }
+
+
+/* Styling the form negotiateTheirOwn*/
+
+.form-negotiateTheirOwn form {
+  padding-top: 30px;
+  border-top: 1px solid rgb(187, 187, 187);
+}

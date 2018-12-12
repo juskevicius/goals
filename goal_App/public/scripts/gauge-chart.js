@@ -100,9 +100,4 @@ var middleCount = svg.append('text')
             i = d3.interpolateNumber(0, perc);
         return function(t) { that.text( d3.format(".0%")(i(t))); };
     });
-
-    /*
-    document.getElementsByClassName("l-main1")[0].style.height = height + "px";
-    document.getElementsByClassName("l-main1")[0].style.width = width + "px";
-    document.getElementsByClassName("l-main2")[0].style.width = width + "px";*/
   });
