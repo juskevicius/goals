@@ -8,17 +8,21 @@ export default class FormNegotiateOwn extends React.Component {
           <div className="form-header">Negotiate my submitted goal</div>
           <div className="form-body">
             {this.props.goal.offer.updated_formatted &&
-            <div><label>An offer from {this.props.goal.offer.owner.owner.name} ({this.props.goal.offer.owner.name}) {this.props.goal.offer.updated_formatted}:</label>
-            <br/>
-            <br/>
-            <label>Goal:</label>
-            <input type="text" value={this.props.goal.offer.name} readOnly></input>
-            <label>Initial score:</label>
-            <input type="text" value={this.props.goal.offer.initScore} readOnly></input>
-            <label>Target score:</label>
-            <input type="text" value={this.props.goal.offer.targScore} readOnly></input>
-            <label>Comment:</label>
-            <input type="text" value={this.props.goal.offer.comment} readOnly></input></div>}
+            <form action="/acceptOffer" method="post" href="" style={{paddingBottom: 15 + "%"}}>
+              <label>An offer from {this.props.goal.offer.owner.owner.name} ({this.props.goal.offer.owner.name}) {this.props.goal.offer.updated_formatted}:</label>
+              <br/>
+              <br/>
+              <label>Goal:</label>
+              <input type="text" value={this.props.goal.offer.name} readOnly></input>
+              <label>Initial score:</label>
+              <input type="text" value={this.props.goal.offer.initScore} readOnly></input>
+              <label>Target score:</label>
+              <input type="text" value={this.props.goal.offer.targScore} readOnly></input>
+              <label>Comment:</label>
+              <input type="text" value={this.props.goal.offer.comment} readOnly></input>
+              <input type="hidden" name="id" value={this.props.goal.id} readOnly></input>
+              <input className="form-btn" type="submit" value="Accept the offer"></input>
+            </form>}
             <form action="/negotiate" method="post" href="">
               <label>My goal{this.props.goal.updated_formatted ? ', ' + this.props.goal.updated_formatted : ''}:</label>
               <br/>

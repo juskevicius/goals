@@ -12,11 +12,12 @@ class Content extends React.Component {
 
   
   render() {
-    let sortedHistory = this.props.goal.history.data.sort((a, b) => { return a.date - b.date; });
-    let currentScore = sortedHistory[sortedHistory.length - 1].value;
-
-    let sortedDates = sortedHistory.map((entry) => { return entry.date});
-    let sortedValues = sortedHistory.map((entry) => { return entry.value});
+    if (this.props.goal) {
+      let sortedHistory = this.props.goal.history.data.sort((a, b) => { return a.date - b.date; });
+      var currentScore = sortedHistory[sortedHistory.length - 1].value;
+      var sortedDates = sortedHistory.map((entry) => { return entry.date});
+      var sortedValues = sortedHistory.map((entry) => { return entry.value});
+    }
     
     return (
       <html>
@@ -34,24 +35,26 @@ class Content extends React.Component {
               </div>
               <div className="header">
                 <h1>
-                  {this.props.goal.name}
+                  <a href={"/history/" + this.props.goal.id}>{this.props.goal ? this.props.goal.name : 'Welcome to Norian Grow!'}</a>
                 </h1>
-              </div>  
+              </div>
+              {this.props.goal ?
               <div className="l-main1">
-                <div className="gauge-chart" targscore={this.props.goal.targScore} current={currentScore}></div>
-                <script src="/scripts/gauge-chart.js"></script>
-              </div>
+                <div className="gauge-chart" targscore={this.props.goal ? this.props.goal.targScore : ''} current={currentScore}></div>
+                <script src="/scripts/gauge-chart.js"></script> 
+              </div> : ''}
+              {this.props.goal ?
               <div className="r-main1">
-                <div className="line-chart" targscore={this.props.goal.targScore} dates={sortedDates} values={sortedValues}></div>
+                <div className="line-chart" targscore={this.props.goal ? this.props.goal.targScore : ''} dates={sortedDates} values={sortedValues}></div>
                 <script src="/scripts/line-chart.js"></script>
-              </div>
-              <GoalInfo goal={this.props.goal}/>
-              <Nesting goal={this.props.goal}/>
+              </div> : ''}
+              {this.props.goal && <GoalInfo goal={this.props.goal}/>}
+              {this.props.goal && <Nesting goal={this.props.goal}/>}
             </div>
-            <FormAdd />
-            <FormMyOwn currentGoal={this.props.goal} offeredToMe={this.props.offeredToMe} createdByMe={this.props.createdByMe} myApproved={this.props.myApproved}/>
-            <FormOthers offeredByMe={this.props.offeredByMe} createdByOthers={this.props.createdByOthers}/>
-            <FormCurrent goal={this.props.goal}/>
+            <FormAdd display={this.props.displayAddForm}/>
+            <FormMyOwn display={this.props.displayMyOwnForm} currentGoal={this.props.goal} offeredToMe={this.props.offeredToMe} createdByMe={this.props.createdByMe} myApproved={this.props.myApproved}/>
+            <FormOthers display={this.props.displayOthersForm} offeredByMe={this.props.offeredByMe} createdByOthers={this.props.createdByOthers}/>
+            {this.props.goal && <FormCurrent goal={this.props.goal}/>}
           </main>
         </body>
         <script src="/scripts/form-control.js"></script>

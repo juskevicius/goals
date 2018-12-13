@@ -7,7 +7,7 @@ export default class GoalInfo extends React.Component {
         <h4>Goal:</h4>
         <p>{this.props.goal.name}</p>
         <h4>Owner:</h4>
-        <p>{this.props.goal.owner.name} ({this.props.goal.owner.owner.name})</p>
+        <p>{this.props.goal.owner.name}</p>
         <h4>Initial value:</h4>
         <p>{this.props.goal.initScore}</p>
         <h4>Target value:</h4>

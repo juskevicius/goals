@@ -37,6 +37,7 @@ for(let i = 0; i < document.getElementsByClassName("overlay2").length; i++) {
 
 //3. When clicked on the link, show the form
 
+/*
 document.getElementById("showAddForm").addEventListener('click', 
 () => {
   document.getElementsByClassName("form-add-overlay")[0].style.display = 'initial';
@@ -50,22 +51,28 @@ document.getElementById("showMyOwnForm").addEventListener('click',
 document.getElementById("showOthersForm").addEventListener('click', 
 () => {
   document.getElementsByClassName("form-others-overlay")[0].style.display = 'initial';
-});
+});*/
 
 setTimeout(
   () => {
-    document.getElementsByClassName("middle-text")[0].addEventListener('click', 
+    if (document.getElementsByClassName("middle-text")[0]) {
+      
+      document.getElementsByClassName("middle-text")[0].addEventListener('click', 
       () => {
       document.getElementsByClassName("form-current-overlay")[0].style.display = 'initial';
       });
-    document.getElementsByClassName("gauge-chart")[0].getElementsByTagName("text")[0].addEventListener('click', 
-    () => {
-      document.getElementsByClassName("form-current-overlay")[0].style.display = 'initial';
-    });
-    document.getElementsByClassName("gauge-chart")[0].getElementsByTagName("text")[1].addEventListener('click', 
-    () => {
-      document.getElementsByClassName("form-current-overlay")[0].style.display = 'initial';
-    });
+
+      document.getElementsByClassName("gauge-chart")[0].getElementsByTagName("text")[0].addEventListener('click', 
+      () => {
+        document.getElementsByClassName("form-current-overlay")[0].style.display = 'initial';
+      });
+
+      document.getElementsByClassName("gauge-chart")[0].getElementsByTagName("text")[1].addEventListener('click', 
+      () => {
+        document.getElementsByClassName("form-current-overlay")[0].style.display = 'initial';
+      });
+
+    }
   }, 
 1000);
 
@@ -165,7 +172,10 @@ function addOfferElm(ev) {
 }
 
 //Current-form. Set default date value
-document.getElementById('date-picker').valueAsDate = new Date();
+if (document.getElementById('date-picker')) {
+  document.getElementById('date-picker').valueAsDate = new Date();
+}
+
 
 
 

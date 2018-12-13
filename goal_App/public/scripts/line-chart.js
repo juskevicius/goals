@@ -104,6 +104,8 @@ window.addEventListener('load', function() {
   .attr("y", height * -0.05)
   .attr("x", width * -0.0175)
   .attr("font-size", fontSize * 0.5 + "px");
+  
+  if (LCData.length > 1) {
   // append the rectangle to capture mouse
   svg.append("rect")
   .attr("width", width)
@@ -112,20 +114,22 @@ window.addEventListener('load', function() {
   .style("pointer-events", "all")
   .on("mouseover", function() { focus.style("display", null); })
   .on("mouseout", function() { focus.style("display", "none"); })
-  .on("mousemove", mousemove);
-  function mousemove() {
-      var xPosition = d3.mouse(this)[0] - width * 0.1;
-      xPosition = xPosition > (width * 0.8) ? width * 0.8 : xPosition; 
-      var x0 = x.invert(xPosition),
-      i = bisectDate(LCData, x0, 1),
-      d0 = LCData[i - 1],
-      d1 = LCData[i],
-      d = x0 - d0.date > d1.date - x0 ? d1 : d0;
-      focus.select("circle.y")
-      .attr("transform", "translate(" + (x(d.date) + width * 0.1) + "," + (y(d.value) + height * 0.1) + ")");
-      focus.select("text")
-      .text( () => d.value)
-      .style("fill", "#606060")
-      .attr("transform", "translate(" + (x(d.date) + width * 0.1) + "," + (y(d.value) + height * 0.1) + ")");;
+  .on("mousemove", mousemove);  
+    function mousemove() {
+        var xPosition = d3.mouse(this)[0] - width * 0.1;
+        xPosition = xPosition > (width * 0.8) ? width * 0.8 : xPosition; 
+        var x0 = x.invert(xPosition),
+        i = bisectDate(LCData, x0, 1),
+        d0 = LCData[i - 1],
+        d1 = LCData[i],
+        d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+        focus.select("circle.y")
+        .attr("transform", "translate(" + (x(d.date) + width * 0.1) + "," + (y(d.value) + height * 0.1) + ")");
+        focus.select("text")
+        .text( () => d.value)
+        .style("fill", "#606060")
+        .attr("transform", "translate(" + (x(d.date) + width * 0.1) + "," + (y(d.value) + height * 0.1) + ")");;
+    }
   }
+  
 });

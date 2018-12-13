@@ -8,12 +8,70 @@ const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 exports.index = function(req, res) {
-    Unit.
-    findOne({ owner: req.payload.id }).
-    populate('parentTo').
-    exec( function (err, ownerUnit) {
+    
+    Unit. /* extract the whole org. chart structure */
+    findOne({name: 'Lithuania'}). 
+    populate({ path: 'parentTo', populate: { path: 'parentTo' }}).
+    exec( function (err, orgChart) {
         if (err) { return err; }
-        res.render('a_primary.pug', {children: ownerUnit.parentTo, displayAddForm: false});
+        
+        Unit. /* find owner's unit */
+        findOne({ owner: req.payload.id }).
+        exec( function (err, ownerUnit) {
+            if (err) { return err; }
+            
+            Goal. /* find owner's goals */
+            find({ owner: ownerUnit.id}).
+            populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner' }}}).
+            populate('history owner').
+            populate({ path: 'parentTo', populate: { path: 'owner history' }}).
+            populate({ path: 'childTo', populate: { path: 'owner' }}).
+            populate({ path: 'owner', populate: { path: 'parentTo' }}).
+            exec( function (err, ownerGoals) {
+                if (err) { return err; }
+                
+                Goal. /* find childrens' goals */
+                find().
+                where('owner').
+                in(ownerUnit.parentTo).
+                populate('owner offer').
+                exec( function (err, childrenGoals) {
+                if (err) { return err; }
+
+                    let offeredByMe = childrenGoals.filter((goal) => { return goal.statusOwner == "Pending" && goal.statusApprover == "Approved";});
+                    let createdByOthers = childrenGoals.filter((goal) => { return goal.statusOwner == "Approved" && goal.statusApprover == "Pending";});
+                    
+                    let offeredToMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Pending' && goal.statusApprover == 'Approved';});
+                    let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
+                    let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});
+                    
+                    if (req.url == "/add") {
+                        res.render('b_body.jsx', {goal: myApproved[0], chart: orgChart, offeredToMe, createdByMe, myApproved, offeredByMe, createdByOthers, displayAddForm: true});
+                        return;
+                    }
+
+                    if (req.url == "/myOwn") {
+                        res.render('b_body.jsx', {goal: myApproved[0], chart: orgChart, offeredToMe, createdByMe, myApproved, offeredByMe, createdByOthers, displayMyOwnForm: true});
+                        return;
+                    }
+
+                    if (req.url == "/others") {
+                        res.render('b_body.jsx', {goal: myApproved[0], chart: orgChart, offeredToMe, createdByMe, myApproved, offeredByMe, createdByOthers, displayOthersForm: true});
+                        return;
+                    }
+
+                    /* if the user doesn't have own goals, then load Add form*/
+                    if (offeredToMe.length + createdByMe.length + myApproved.length == 0) {
+                        res.render('b_body.jsx', {goal: myApproved[0], chart: orgChart, offeredToMe, createdByMe, myApproved, offeredByMe, createdByOthers, displayAddForm: true});
+                        return;
+                    }
+                    
+                    /* othervise load the myOwn form*/
+                    res.render('b_body.jsx', {goal: myApproved[0], chart: orgChart, offeredToMe, createdByMe, myApproved, offeredByMe, createdByOthers, displayMyOwnForm: true});
+
+                });  
+            }); 
+        });
     });
 };
 
@@ -108,6 +166,7 @@ exports.goal_add_post = [
 /////////////////////////////////////////// MY OWN GOALS:
 
 // Handle Goal myOwn on GET.
+/*
 exports.goal_myOwn_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -128,9 +187,10 @@ exports.goal_myOwn_get = function(req, res) {
             res.render('f_myOwn_.pug', {children: ownerUnit.parentTo, offeredToMe: offeredToMe, createdByMe: createdByMe, myApproved: myApproved});
         }); 
     });
-};
+};*/
 
 // Handle Goal edit on GET.
+/*
 exports.goal_edit_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -156,7 +216,7 @@ exports.goal_edit_get = function(req, res) {
             });
         }); 
     });
-}
+}*/
 
 // Handle Goal edit on POST.
 exports.goal_edit_post = [
@@ -220,6 +280,7 @@ exports.goal_edit_post = [
 ];
 
 // Handle Goal delete on GET.
+/*
 exports.goal_delete_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -245,7 +306,7 @@ exports.goal_delete_get = function(req, res) {
             });
         }); 
     });
-}
+}*/
 
 // Handle Goal delete on POST.
 exports.goal_delete_post = function(req, res) {
@@ -258,6 +319,7 @@ exports.goal_delete_post = function(req, res) {
 };
 
 // Handle Goal offerTo on GET.
+/*
 exports.goal_offerTo_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -283,7 +345,7 @@ exports.goal_offerTo_get = function(req, res) {
             });
         }); 
     });
-};
+};*/
 
 // Handle Goal delete on POST.
 exports.goal_offerTo_post = function(req, res) {
@@ -381,6 +443,7 @@ exports.goal_offerTo_post = function(req, res) {
 };
 
 // Handle Goal accept offer on GET.
+/*
 exports.goal_acceptOffer_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -407,7 +470,7 @@ exports.goal_acceptOffer_get = function(req, res) {
             });
         }); 
     });
-}
+}*/
 
 // Handle Goal accept offer on POST.
 exports.goal_acceptOffer_post = [
@@ -451,6 +514,7 @@ exports.goal_acceptOffer_post = [
 ];
 
 // Display Goal negotiate offered form on GET.
+/*
 exports.goal_negotiateOffered_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -477,9 +541,10 @@ exports.goal_negotiateOffered_get = function(req, res) {
             });
         }); 
     });
-};
+};*/
 
 // Display Goal negotiate own form on GET.
+/*
 exports.goal_negotiateOwn_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -506,51 +571,33 @@ exports.goal_negotiateOwn_get = function(req, res) {
             });
         }); 
     });
-};
+};*/
 
 // Handle Goal negotiate on POST.
 exports.goal_negotiate_post = function(req, res) {
     Goal.
     findById(req.body.id).
-    populate('offer').
     exec(function(err, goal) {
         if (err) { return err; }
-        //if my response matches the offer, then Approve the offer
-        if (req.body.name == goal.offer.name && req.body.initScore == goal.offer.initScore && req.body.targScore == goal.offer.targScore) {
-            goal.set({statusOwner: 'Approved'});
-            goal.save(function(err, goalUpdated) {
-                if (err) { return err; }
-                hData. 
-                findById(goalUpdated.history.id).
-                exec( function(err, hDataToUpdate) {
-                    if (err) { return err; }
-                    hDataToUpdate.data[0].value = goal.offer.initScore ? goal.offer.initScore : 0;
-                    hDataToUpdate._id = goalUpdated.history.id;
-                    hDataToUpdate.save(function(err, hdataUpdated) {
-                        res.redirect('/myOwn');  
-                    });
-                });
-            });
-        } else {
-            //if my response doesn't match the offer, then update the goal
-            goal.set({
-                name: req.body.name,
-                initScore: req.body.initScore,
-                targScore: req.body.targScore,
-                comment: req.body.comment,
-                updated: Date(Date.now())
-            });
-            goal.save(function(err, goalUpdated) {
-                if (err) { return err; }
-                res.redirect('/myOwn');
-            });
-        }
+        // update the goal
+        goal.set({
+            name: req.body.name,
+            initScore: req.body.initScore,
+            targScore: req.body.targScore,
+            comment: req.body.comment,
+            updated: Date(Date.now())
+        });
+        goal.save(function(err, goalUpdated) {
+            if (err) { return err; }
+            res.redirect('/myOwn');
+        });
     });
 };
 
 /////////////////////////////////////////// OTHERS' GOALS:
 
 // Display others' goals on GET.
+/*
 exports.goal_others_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -571,9 +618,10 @@ exports.goal_others_get = function(req, res) {
             res.render('f_others_.pug', {children: ownerUnit.parentTo, offeredByMe, createdByOthers});
         });  
     });
-};
+};*/
 
 // Display Goal negotiate my offered form on GET.
+/*
 exports.goal_negotiateMyOffered_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -599,9 +647,10 @@ exports.goal_negotiateMyOffered_get = function(req, res) {
             });
         });  
     });
-};
+};*/
 
 // Display Goal negotiate their own form on GET.
+/*
 exports.goal_negotiateTheirOwn_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -627,7 +676,7 @@ exports.goal_negotiateTheirOwn_get = function(req, res) {
             });
         });  
     });
-};
+};*/
 
 // Handle Goal negotiate on POST.
 exports.goal_negotiateOthers_post = function(req, res) {
@@ -637,46 +686,30 @@ exports.goal_negotiateOthers_post = function(req, res) {
     populate('history').    
     exec(function(err, goal) {
         if (err) { return err; }
-        //if my offer matches the original goal, then Approve the offer
-        if (req.body.name == goal.name && req.body.initScore == goal.initScore && req.body.targScore == goal.targScore) {
-            goal.set({statusApprover: 'Approved'});
-            goal.save(function(err, goalUpdated) {
-                if (err) { return err; }
-                hData. 
-                findById(goalUpdated.history.id).
-                exec( function(err, hDataToUpdate) {
-                    if (err) { return err; }
-                    hDataToUpdate.data[0].value = req.body.initScore ? req.body.initScore : 0;
-                    hDataToUpdate._id = goalUpdated.history.id;
-                    hDataToUpdate.save(function(err, hdataUpdated) {
-                        if (err) { return err; }
-                        res.redirect('/others');  
-                    });
-                });
+        
+        //update the offer
+        Goal.
+        findById(goal.offer.id).
+        exec( function(err, offerToUpdate) {
+            if (err) { return err; }
+            offerToUpdate.set({
+                name: req.body.name,
+                initScore: req.body.initScore,
+                targScore: req.body.targScore,
+                comment: req.body.comment,
+                updated: Date(Date.now())
             });
-        } else {
-            //if my offer doesn't match the original goal, then update the offer
-            Goal.
-            findById(goal.offer.id).
-            exec( function(err, offerToUpdate) {
+            offerToUpdate.save(function(err, offerUpdated) {
                 if (err) { return err; }
-                offerToUpdate.set({
-                    name: req.body.name,
-                    initScore: req.body.initScore,
-                    targScore: req.body.targScore,
-                    comment: req.body.comment,
-                    updated: Date(Date.now())
-                });
-                offerToUpdate.save(function(err, offerUpdated) {
-                    if (err) { return err; }
-                    res.redirect('/others');
-                });
+                res.redirect('/others');
             });
-        }
+        });
+    
     });
 };
 
 // Handle Goal approve on GET.
+/*
 exports.goal_approve_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -702,7 +735,7 @@ exports.goal_approve_get = function(req, res) {
             });
         });  
     });
-}
+}*/
 
 // Handle Goal approve on POST.
 exports.goal_approve_post = [
@@ -742,6 +775,7 @@ exports.goal_approve_post = [
 ];
 
 // Handle Goal reject on GET.
+/*
 exports.goal_reject_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -773,7 +807,7 @@ exports.goal_reject_get = function(req, res) {
             });
         });  
     });
-}
+}*/
 
 // Handle Goal reject on POST.
 exports.goal_reject_post = [
@@ -860,8 +894,6 @@ exports.goal_details_get = function(req, res) {
                     let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
                     let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});
                     res.render('b_body.jsx', {goal, chart: orgChart, offeredToMe, createdByMe, myApproved, offeredByMe, createdByOthers});
-
-                    /*res.render('f_others_.pug', {children: goal.owner.parentTo, offeredByMe, createdByOthers});*/
                 });  
             }); 
         });
@@ -927,13 +959,47 @@ exports.goal_editWeight_post = [
     }
 ];
 
+exports.goal_history_get = function (req, res) {
 
+    Goal. /* find details about the current goal */
+    findById(req.params.id).
+    populate({ path: 'parentTo', populate: { path: 'history owner' }}).
+    populate({ path: 'history'}).
+    exec( function(err, goal) {
+        if (err) { return err; }
 
-exports.goal_react_get = function(req, res) {
-    Unit.findOne({name: 'Lithuania'}).
-    populate({ path: 'parentTo', populate: { path: 'parentTo' }}).
-    exec( function (err, unit) {
-        res.render('b_body.jsx', { chart: unit});
-    });   
+        let dates = goal.parentTo.map((child) => { return child.history.data.map((entry) => { return entry.date.getTime();})});
+        let datesArr = dates.reduce((arr, val) => { return arr.concat(val);}).sort((a, b) => { return a - b; });
+        let uniqueDates = datesArr.filter((v, i) => { return datesArr.indexOf(v) === i;});
+        
+        let childData = goal.parentTo.map((child) => { return child.history.data.map((entry) => { return [entry.date.getTime(), entry.value, child.weight];})});
+        let childArr = childData.map((unit) => { return unit.sort((a, b) => { return a[0] - b[0]; });})
+        
+        console.log(uniqueDates);
+        console.log(childArr);
+        let currChildScore = [];
+        for (let j = 0; j < childArr.length; j++) {
+            currChildScore[j] = childArr[j][0][1];       
+        }
+
+        for (let i = 0; i < uniqueDates.length; i++) {
+            let currDate = uniqueDates[i];
+            for (let j = 0; j < childArr.length; j++) {
+                for (let k = 0; k < childArr[j].length; k++) {
+                    if (currDate == childArr[j][k][0]) {
+                        currChildScore[j] = childArr[j][k][1];
+                    } 
+                }
+            }
+            let sum = 0;
+            for (let j = 0; j < childArr.length; j++) {
+                sum = sum + currChildScore[j];
+
+            }
+            console.log(sum);
+        }
+
+        res.render('historyTest.jsx', {goal});
+        
+    });
 }
-

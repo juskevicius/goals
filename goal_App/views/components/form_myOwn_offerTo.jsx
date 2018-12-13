@@ -21,7 +21,6 @@ export default class FormOfferTo extends React.Component {
             <input type="text" value={this.props.goal.targScore} readOnly></input>
             <label>Comment:</label>
             <input type="text" value={this.props.goal.comment} readOnly></input>
-            <input className="form-btn" type="submit" value="Accept"></input>
             <form action="/offerTo" method="post" href="">
               <div className="offer-group">
                 <div className="offer-elm">

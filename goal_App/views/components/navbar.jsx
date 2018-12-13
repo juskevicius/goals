@@ -17,13 +17,13 @@ export default class Navbar extends React.Component {
             <a href="#"><i className="fa fa-bullseye" style={{fontSize: 24 + "px"}}></i> Goals</a>
               <ul>
                 <li>
-                  <a href="#" id="showAddForm">Add</a>
+                  <a href="/add" id="showAddForm">Add</a>
                 </li>
                 <li>
-                  <a href="#" id="showMyOwnForm">My goals</a>
+                  <a href="/myOwn" id="showMyOwnForm">My goals</a>
                 </li>
                 <li>
-                  <a href="#" id="showOthersForm">Others'</a>
+                  <a href="/others" id="showOthersForm">Others'</a>
                 </li>
                 <li>
                   <a href="#">Rejected</a>
