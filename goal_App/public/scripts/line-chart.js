@@ -4,7 +4,7 @@ window.addEventListener('load', function() {
   let values = document.getElementsByClassName("line-chart")[0].getAttribute("values").split(",");
   var width = document.getElementsByClassName("r-main1")[0].offsetWidth;
   var height = width * 0.65;
-  var targetVal = document.getElementsByClassName("line-chart")[0].getAttribute("targscore") / 100;
+  var targetVal = document.getElementsByClassName("line-chart")[0].getAttribute("targscore");
   var fontSize = width * 0.064;
   
   //arrays for modified chart data and target data:
@@ -20,7 +20,7 @@ window.addEventListener('load', function() {
       tData.push(
           {
               date: new Date(dates[i]),
-              value: targetVal * 100 
+              value: +targetVal
           }
       );
   }
@@ -41,6 +41,7 @@ window.addEventListener('load', function() {
       .y(d => y(d.value));
   //detect lowest and highest values and define axis limits
   var maxY = d3.max(LCData, d => +d.value) * 1.1;
+  maxY = maxY < targetVal ? targetVal : maxY;
   var minY = d3.min(LCData, d => +d.value) * 0.9;
   x.domain(d3.extent(LCData, d => d.date));
   y.domain([Math.floor(minY / 10) * 10, Math.ceil(maxY / 10) * 10]);

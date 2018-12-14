@@ -43,6 +43,10 @@ class Content extends React.Component {
             <br />
             <br />
             {JSON.stringify(this.props.goal.history)}
+            <br />
+            <br />
+            <div>Experiment</div>
+            {JSON.stringify(this.props.goal.recalcHistory)}
           </main>
         </body>
       </html>

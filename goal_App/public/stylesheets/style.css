@@ -379,6 +379,10 @@ nav ul {
   width: 100%;
 }
 
+.offer-elm {
+  border-top: 1px solid rgb(80, 80, 80);
+}
+
 .offer-elm label, .offer-elm input, .offer-elm select {
   width: 45%;
   display: inline-block;

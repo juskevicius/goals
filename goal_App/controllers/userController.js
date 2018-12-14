@@ -13,7 +13,7 @@ const { sanitizeBody } = require('express-validator/filter');
 exports.user_create_get = function(req, res, next) {
     User.find({}, function(err, users) {
         if (err) { return next(err); }
-        res.render("userCreate.pug", { users: users});
+        res.render("./pug/userCreate.pug", { users: users});
     });
 };
 
@@ -175,7 +175,7 @@ exports.unit_create_get = function(req, res) {
             if (err) { return err; }
             User.find({}, function(err, users) {
                 if (err) { return err; }
-                res.render("unitCreate.pug", { units: units, owners: users});
+                res.render("./pug/unitCreate.pug", { units: units, owners: users});
             });
 
         });

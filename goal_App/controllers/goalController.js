@@ -19,7 +19,7 @@ exports.index = function(req, res) {
         findOne({ owner: req.payload.id }).
         exec( function (err, ownerUnit) {
             if (err) { return err; }
-            
+
             Goal. /* find owner's goals */
             find({ owner: ownerUnit.id}).
             populate({ path: 'offer', populate: { path: 'owner', populate: { path: 'owner' }}}).
@@ -826,7 +826,22 @@ exports.goal_reject_post = [
             goal.set({statusApprover: 'Rejected'});
             goal.save( function (err, goalRejected) {
                 if (err) { return err; }
-                res.redirect('/others');
+                console.log(goalRejected.childTo);
+                Goal.
+                findById(goalRejected.childTo[0]).
+                exec( function(err, parentGoal) {
+                    if (err) { return err; }
+                    if (parentGoal) {
+                        let index = parentGoal.parentTo.indexOf(goalRejected.id);
+                        if (index > -1) {
+                            parentGoal.parentTo.splice(index, 1);
+                            parentGoal.save( function(err, updatedParentGoal) {
+                                if (err) { return err; }
+                            });
+                        }
+                    }
+                    res.redirect('/others');
+                });
             });
         });       
     }
@@ -893,6 +908,46 @@ exports.goal_details_get = function(req, res) {
                     let offeredToMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Pending' && goal.statusApprover == 'Approved';});
                     let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
                     let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});
+                    
+                    goal.parentTo = goal.parentTo.filter((child) => { return child.status == 'Approved'; });
+
+                    if (goal.parentTo.length > 0) {
+                        let weights = goal.parentTo.filter((childGoal) => { return childGoal.weight > 0;});
+                        if (goal.parentTo.length == weights.length || !weights.length) {
+                            
+                            let dates = goal.parentTo.map((child) => { return child.history.data.map((entry) => { return entry.date.getTime();})}); /* extract all dates from child goals */
+                            let datesArr = dates.reduce((arr, val) => { return arr.concat(val);}).sort((a, b) => { return a - b; }); /* build an array and sort it in ascending order */
+                            let uniqueDates = datesArr.filter((v, i) => { return datesArr.indexOf(v) === i;}); /* remove duplicates */
+                            
+                            let childData = goal.parentTo.map((child) => { return child.history.data.map((entry) => { return [entry.date.getTime(), entry.value, child.weight];})}); /* build ar array of arrays for children data [date, value, weight] */
+                            let childArr = childData.map((unit) => { return unit.sort((a, b) => { return a[0] - b[0]; });}) /* sort children dates in ascending order  */
+                            
+                            let currChildScore = [];
+                            let calcHistData = [];
+
+                            for (let i = 0; i < uniqueDates.length; i++) { /* loop through unique dates */
+                                let sum = 0;
+                                let weight = 0;
+                                for (let j = 0; j < childArr.length; j++) { /* loop through children */
+                                    for (let k = 0; k < childArr[j].length; k++) { /* loop through children array of data [0..n].[date, value, weight] */
+                                        if (uniqueDates[i] == childArr[j][k][0]) { /* if the dates match, then set a new child's current score */
+                                            currChildScore[j] = childArr[j][k][1];
+                                            break;
+                                        } 
+                                    }
+                                    if (currChildScore[j]) { /* if the child has a current score */
+                                        currWeight = childArr[j][0][2] ? childArr[j][0][2] : 1; /* If weight is not defined, then set  it as 1  */
+                                        sum = sum + currChildScore[j] * currWeight; /* multiply the current score by it's weight and add to the sum */
+                                        weight = weight + currWeight; /* calculate the sum of weights*/
+                                    }
+                                }
+                                let dataToAdd = { date: new Date(uniqueDates[i]), value: Math.round(sum/weight) } 
+                                calcHistData.push(dataToAdd);
+                            }
+                            goal.history.data = calcHistData;
+                        }
+                    }
+                    
                     res.render('b_body.jsx', {goal, chart: orgChart, offeredToMe, createdByMe, myApproved, offeredByMe, createdByOthers});
                 });  
             }); 
@@ -912,19 +967,39 @@ exports.goal_addCurrentScore_post = [
         hData.
         findById(req.body.id).
         exec( function(err, history) {
-            if(err) { return err; } 
+            if(err) { return err; }
+            let newDate = new Date(req.body.date);
+            let index = history.data.findIndex(i => i.date.getTime() == newDate.getTime());
+            if (index > -1) {
+                history.data.splice(index, 1);
+            }
             history.data.push({
-                date: req.body.date,
+                date: newDate,
                 value: req.body.value
             });
+            
             history.save( function (err, historyUpdated) {
                 if (err) { return err; }
                 
                 Goal. 
                 findOne({ history: historyUpdated.id}).
+                populate('childTo').
                 exec( function(err, goal) {
                     if (err) { return err; }
-                        res.redirect('/details/' + goal.id);  
+                    
+                    if (goal.childTo.length > 0) {
+
+
+
+
+
+                        
+                    }
+                    
+                    
+                    
+                    
+                    res.redirect('/details/' + goal.id);  
                 });
             });
         });       
@@ -978,27 +1053,32 @@ exports.goal_history_get = function (req, res) {
         console.log(uniqueDates);
         console.log(childArr);
         let currChildScore = [];
-        for (let j = 0; j < childArr.length; j++) {
-            currChildScore[j] = childArr[j][0][1];       
-        }
+        let calcHistory = [];
+        
 
-        for (let i = 0; i < uniqueDates.length; i++) {
-            let currDate = uniqueDates[i];
-            for (let j = 0; j < childArr.length; j++) {
-                for (let k = 0; k < childArr[j].length; k++) {
-                    if (currDate == childArr[j][k][0]) {
+        for (let i = 0; i < uniqueDates.length; i++) { /* loop through unique dates */
+            
+            let sum = 0;
+            let weight = 0;
+            for (let j = 0; j < childArr.length; j++) { /* loop through children */
+                for (let k = 0; k < childArr[j].length; k++) { /* loop through children array of data[0..n].[date, value, weight] */
+                    if (uniqueDates[i] == childArr[j][k][0]) { /* if the dates match, then set a new child's current score */
                         currChildScore[j] = childArr[j][k][1];
+                        break;
                     } 
                 }
+                if (currChildScore[j]) { /* if the child has a current score */
+                    sum = sum + currChildScore[j] * childArr[j][0][2]; /* then multiply it by it's weight and add to the sum */
+                    weight = weight + childArr[j][0][2]; /* calculate the sum of weights */
+                }
             }
-            let sum = 0;
-            for (let j = 0; j < childArr.length; j++) {
-                sum = sum + currChildScore[j];
-
-            }
-            console.log(sum);
+            let dataToAdd = { date: new Date(uniqueDates[i]), value: Math.round(sum/weight) }
+            calcHistory.push(dataToAdd);
         }
 
+        goal.history.data = calcHistory;
+
+        console.log(calcHistory);
         res.render('historyTest.jsx', {goal});
         
     });
