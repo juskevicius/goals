@@ -3,6 +3,7 @@ const router = express.Router();
 
 const auth = require('../controllers/auth');
 const goalController = require('../controllers/goalController');
+const hDataController = require('../controllers/hDataController');
 
 /* GET home page. */
 router.get('/', auth.required, goalController.index);
@@ -28,7 +29,7 @@ router.post('/edit', auth.required, goalController.goal_edit_post);
 //router.get('/delete/:id', auth.required, goalController.goal_delete_get);
 
 /* POST delete */
-router.post('/delete', auth.required, goalController.goal_delete_post);
+router.post('/delete', auth.required, goalController.goal_delete_post, hDataController.hData_update_post);
 
 /* GET offerTo */
 //router.get('/offerTo/:id', auth.required, goalController.goal_offerTo_get);
@@ -81,15 +82,9 @@ router.post('/reject', auth.required, goalController.goal_reject_post);
 router.get('/details/:id', auth.required, goalController.goal_details_get);
 
 /* POST add current score */
-router.post('/addCurrentScore', auth.required, goalController.goal_addCurrentScore_post);
+router.post('/addCurrentScore', auth.required, goalController.goal_addCurrentScore_post, hDataController.hData_update_post);
 
 /* POST edit weight */
-router.post('/editWeight', auth.required, goalController.goal_editWeight_post);
-
-
-
-/* GET history */
-router.get('/history/:id', auth.required, goalController.goal_history_get);
-
+router.post('/editWeight', auth.required, goalController.goal_editWeight_post, hDataController.hData_update_post);
 
 module.exports = router;

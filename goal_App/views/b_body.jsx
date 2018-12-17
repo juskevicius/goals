@@ -35,7 +35,7 @@ class Content extends React.Component {
               </div>
               <div className="header">
                 <h1>
-                  <a href={'/history/' + (this.props.goal ? this.props.goal.id : '')}>{this.props.goal ? this.props.goal.name : 'Welcome to Norian Grow!'}</a>
+                  {this.props.goal ? this.props.goal.name : 'Welcome to Norian Grow!'}
                 </h1>
               </div>
               {this.props.goal ?

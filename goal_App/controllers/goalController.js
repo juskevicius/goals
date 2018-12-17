@@ -270,6 +270,8 @@ exports.goal_edit_post = [
                             hDataToUpdate._id = goalUpdated.history.id;
                             hDataToUpdate.save(function(err, hdataUpdated) {
                                 if (err) { return err; }
+                                res.locals.formToDisplay = "/myOwn";
+                                res.locals.currGoal = goalUpdated.id;
                                 res.redirect('/myOwn');  
                             });
                         });
@@ -309,12 +311,29 @@ exports.goal_delete_get = function(req, res) {
 }*/
 
 // Handle Goal delete on POST.
-exports.goal_delete_post = function(req, res) {
+exports.goal_delete_post = function(req, res, next) {
+    
     Goal.
     findByIdAndDelete(req.body.id).
-    exec( function(err, goalToDelete) {
+    exec( function(err) {
         if(err) { return err; }
-        res.redirect('/myOwn');
+        Goal.
+        findOne({ parentTo: req.body.id }).
+        exec( function(err, goal) {
+            if(err) { return err; }
+            if (goal) {
+                let index = goal.parentTo.indexOf(req.body.id);
+                goal.parentTo.splice(index, 1);
+                goal.save(function (err, updatedGoal) {
+                    if(err) { return err; }
+                    res.locals.parent = updatedGoal.id;
+                    res.locals.formToDisplay = "/myOwn";
+                    next();
+                });
+            } else {
+                res.redirect('/myOwn');
+            }
+        });
     });
 };
 
@@ -909,45 +928,6 @@ exports.goal_details_get = function(req, res) {
                     let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
                     let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});
                     
-                    goal.parentTo = goal.parentTo.filter((child) => { return child.status == 'Approved'; });
-
-                    if (goal.parentTo.length > 0) {
-                        let weights = goal.parentTo.filter((childGoal) => { return childGoal.weight > 0;});
-                        if (goal.parentTo.length == weights.length || !weights.length) {
-                            
-                            let dates = goal.parentTo.map((child) => { return child.history.data.map((entry) => { return entry.date.getTime();})}); /* extract all dates from child goals */
-                            let datesArr = dates.reduce((arr, val) => { return arr.concat(val);}).sort((a, b) => { return a - b; }); /* build an array and sort it in ascending order */
-                            let uniqueDates = datesArr.filter((v, i) => { return datesArr.indexOf(v) === i;}); /* remove duplicates */
-                            
-                            let childData = goal.parentTo.map((child) => { return child.history.data.map((entry) => { return [entry.date.getTime(), entry.value, child.weight];})}); /* build ar array of arrays for children data [date, value, weight] */
-                            let childArr = childData.map((unit) => { return unit.sort((a, b) => { return a[0] - b[0]; });}) /* sort children dates in ascending order  */
-                            
-                            let currChildScore = [];
-                            let calcHistData = [];
-
-                            for (let i = 0; i < uniqueDates.length; i++) { /* loop through unique dates */
-                                let sum = 0;
-                                let weight = 0;
-                                for (let j = 0; j < childArr.length; j++) { /* loop through children */
-                                    for (let k = 0; k < childArr[j].length; k++) { /* loop through children array of data [0..n].[date, value, weight] */
-                                        if (uniqueDates[i] == childArr[j][k][0]) { /* if the dates match, then set a new child's current score */
-                                            currChildScore[j] = childArr[j][k][1];
-                                            break;
-                                        } 
-                                    }
-                                    if (currChildScore[j]) { /* if the child has a current score */
-                                        currWeight = childArr[j][0][2] ? childArr[j][0][2] : 1; /* If weight is not defined, then set  it as 1  */
-                                        sum = sum + currChildScore[j] * currWeight; /* multiply the current score by it's weight and add to the sum */
-                                        weight = weight + currWeight; /* calculate the sum of weights*/
-                                    }
-                                }
-                                let dataToAdd = { date: new Date(uniqueDates[i]), value: Math.round(sum/weight) } 
-                                calcHistData.push(dataToAdd);
-                            }
-                            goal.history.data = calcHistData;
-                        }
-                    }
-                    
                     res.render('b_body.jsx', {goal, chart: orgChart, offeredToMe, createdByMe, myApproved, offeredByMe, createdByOthers});
                 });  
             }); 
@@ -977,29 +957,21 @@ exports.goal_addCurrentScore_post = [
                 date: newDate,
                 value: req.body.value
             });
-            
             history.save( function (err, historyUpdated) {
                 if (err) { return err; }
                 
                 Goal. 
                 findOne({ history: historyUpdated.id}).
-                populate('childTo').
+                populate({path: 'childTo', populate: { path: 'childTo'}}).
                 exec( function(err, goal) {
                     if (err) { return err; }
-                    
-                    if (goal.childTo.length > 0) {
-
-
-
-
-
-                        
+                    if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
+                        res.locals.parent = goal.childTo[0];
+                        res.locals.currGoal = goal.id;
+                        next();
+                    } else {
+                        res.redirect('/details/' + goal.id);
                     }
-                    
-                    
-                    
-                    
-                    res.redirect('/details/' + goal.id);  
                 });
             });
         });       
@@ -1016,70 +988,27 @@ exports.goal_editWeight_post = [
         const errors = validationResult(req);
         Goal.
         findById(req.body.id).
-        exec( function(err, goal) {
+        exec( function(err, goalToUpdate) {
             if(err) { return err; } 
-            goal.set({
+            goalToUpdate.set({
                 weight: req.body.weight
             });
-            goal.save( function (err, goalUpdated) {
+            goalToUpdate.save( function (err, goalUpdated) {
                 if (err) { return err; }
                 Goal. 
                 findOne({ parentTo: goalUpdated.id}).
                 exec( function(err, goal) {
                     if (err) { return err; }
+                    
+                    if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
+                        res.locals.parent = goal.childTo[0];
+                        res.locals.currGoal = goal.id;
+                        next();
+                    } else {
                         res.redirect('/details/' + goal.id);  
+                    }
                 });
             });
         });       
     }
 ];
-
-exports.goal_history_get = function (req, res) {
-
-    Goal. /* find details about the current goal */
-    findById(req.params.id).
-    populate({ path: 'parentTo', populate: { path: 'history owner' }}).
-    populate({ path: 'history'}).
-    exec( function(err, goal) {
-        if (err) { return err; }
-
-        let dates = goal.parentTo.map((child) => { return child.history.data.map((entry) => { return entry.date.getTime();})});
-        let datesArr = dates.reduce((arr, val) => { return arr.concat(val);}).sort((a, b) => { return a - b; });
-        let uniqueDates = datesArr.filter((v, i) => { return datesArr.indexOf(v) === i;});
-        
-        let childData = goal.parentTo.map((child) => { return child.history.data.map((entry) => { return [entry.date.getTime(), entry.value, child.weight];})});
-        let childArr = childData.map((unit) => { return unit.sort((a, b) => { return a[0] - b[0]; });})
-        
-        console.log(uniqueDates);
-        console.log(childArr);
-        let currChildScore = [];
-        let calcHistory = [];
-        
-
-        for (let i = 0; i < uniqueDates.length; i++) { /* loop through unique dates */
-            
-            let sum = 0;
-            let weight = 0;
-            for (let j = 0; j < childArr.length; j++) { /* loop through children */
-                for (let k = 0; k < childArr[j].length; k++) { /* loop through children array of data[0..n].[date, value, weight] */
-                    if (uniqueDates[i] == childArr[j][k][0]) { /* if the dates match, then set a new child's current score */
-                        currChildScore[j] = childArr[j][k][1];
-                        break;
-                    } 
-                }
-                if (currChildScore[j]) { /* if the child has a current score */
-                    sum = sum + currChildScore[j] * childArr[j][0][2]; /* then multiply it by it's weight and add to the sum */
-                    weight = weight + childArr[j][0][2]; /* calculate the sum of weights */
-                }
-            }
-            let dataToAdd = { date: new Date(uniqueDates[i]), value: Math.round(sum/weight) }
-            calcHistory.push(dataToAdd);
-        }
-
-        goal.history.data = calcHistory;
-
-        console.log(calcHistory);
-        res.render('historyTest.jsx', {goal});
-        
-    });
-}

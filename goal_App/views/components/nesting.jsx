@@ -4,7 +4,23 @@ export default class Nesting extends React.Component {
   render() {
 
     const children = () => {
-      const childrenArr = this.props.goal.parentTo.map((child) => { return  <div className="col-data-row" key={child.id}><div className="col-data">{child.owner.name}</div><div className="col-data">{child.initScore}</div><div className="col-data">{child.history.data[child.history.data.length - 1].value}</div><div className="col-data">{child.targScore}</div><div className="col-data"><form action={"/editWeight"} method="post"><div><input type="text" name="weight" defaultValue={child.weight}></input><input type="hidden" name="id" value={child.id} readOnly></input><button type="submit"><i className="fas fa-save"/></button></div></form></div></div>;});
+      const childrenArr = this.props.goal.parentTo.map((child) => { return  (
+        <div className="col-data-row" key={child.id} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(88, 88, 88)'}}>
+          <div className="col-data"><a href={'/details/' + child.id} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(88, 88, 88)'}}>{child.owner.name}</a></div>
+          <div className="col-data">{child.initScore}</div>
+          <div className="col-data">{child.history.data[child.history.data.length - 1].value}</div>
+          <div className="col-data">{child.targScore}</div>
+          <div className="col-data">
+            <form action={"/editWeight"} method="post">
+              <div>
+                <input type="text" name="weight" defaultValue={child.weight} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(88, 88, 88)'}}></input>
+                <input type="hidden" name="id" value={child.id} readOnly></input>
+                <button type="submit"><i className="fas fa-save"/></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );});
       return childrenArr;
     }
 
