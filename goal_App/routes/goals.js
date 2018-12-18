@@ -19,6 +19,9 @@ router.post('/add', auth.required, goalController.goal_add_post);
 /* GET myOwn */
 router.get('/myOwn', auth.required, goalController.index);
 
+/* GET myOwn - goals of others */
+router.get('/myOwn/:id', auth.required, goalController.index);
+
 /* GET edit */
 //router.get('/edit/:id', auth.required, goalController.goal_edit_get);
 

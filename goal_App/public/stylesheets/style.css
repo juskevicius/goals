@@ -254,6 +254,10 @@ nav ul {
   padding-bottom: 15%;
 }
 
+.form-add .form-body {
+  padding-bottom: 5%;
+}
+
 .section-header {
   font-size: 23px;
   text-decoration: underline;
@@ -299,9 +303,25 @@ nav ul {
   border: 1px solid rgb(88, 88, 88)!important;
   width: auto!important;
   padding: 10px!important;
-  float: right;
+  display: inline-block;
+  /*float: right;*/
   clear: both;
   cursor: pointer;
+}
+
+/* Styling the form Add a goal */
+
+.task {
+  display: none;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttons .add-tasks {
+  margin-right: 20px;
 }
 
 /* Styling the form for my goals */

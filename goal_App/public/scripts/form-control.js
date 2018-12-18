@@ -176,6 +176,36 @@ if (document.getElementById('date-picker')) {
   document.getElementById('date-picker').valueAsDate = new Date();
 }
 
+// Add a goal form. If clicked on "Add tasks", show task fields
+document.getElementById("triggerAddTasks").addEventListener('click', 
+  () => {
+    let taskElements = document.getElementsByClassName("task");
+    for (let i = 0; i < taskElements.length; i++) {
+      taskElements[i].style.display = 'initial';
+      taskElements[i].addEventListener('input', addTaskElements );
+    }
+  });
 
-
-
+//When a new task is being entered, add more input fields for new tasks to enter 
+function addTaskElements(ev) {
+  let lastTask = ev.currentTarget.parentElement.childNodes.length - 4;
+  if (ev.currentTarget == ev.currentTarget.parentElement.childNodes[lastTask]) {
+    let nr = (lastTask - 5) / 4;
+    let label1 = ev.currentTarget.parentElement.childNodes[8].cloneNode(true);
+    label1.innerHTML = "Task nr " + (nr + 1) + " description:";
+    let input1 = ev.currentTarget.parentElement.childNodes[9].cloneNode(true);
+    input1.setAttribute('name', 'task[' + (nr + 1) + '][description]');
+    input1.setAttribute('oninput', 'addTaskElements(event)');
+    input1.value= '';
+    let label2 = ev.currentTarget.parentElement.childNodes[10].cloneNode(true);
+    label2.innerHTML = "Task nr " + (nr + 1) + " weight:";
+    let input2 = ev.currentTarget.parentElement.childNodes[11].cloneNode(true);
+    input2.setAttribute('name', 'task[' + (nr + 1) + '][weight]');
+    input2.value= '';
+    let buttonsAtTheBottom =  ev.currentTarget.parentElement.lastChild;
+    ev.currentTarget.parentElement.insertBefore(label1, buttonsAtTheBottom);
+    ev.currentTarget.parentElement.insertBefore(input1, buttonsAtTheBottom);
+    ev.currentTarget.parentElement.insertBefore(label2, buttonsAtTheBottom);
+    ev.currentTarget.parentElement.insertBefore(input2, buttonsAtTheBottom);
+  }
+}

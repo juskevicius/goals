@@ -11,12 +11,12 @@ exports.index = function(req, res) {
     
     Unit. /* extract the whole org. chart structure */
     findOne({name: 'Lithuania'}). 
-    populate({ path: 'parentTo', populate: { path: 'parentTo' }}).
+    populate({ path: 'parentTo owner', populate: { path: 'parentTo owner', populate: { path: 'owner'}}}).
     exec( function (err, orgChart) {
         if (err) { return err; }
-        
+
         Unit. /* find owner's unit */
-        findOne({ owner: req.payload.id }).
+        findOne({ owner: req.params.id || req.payload.id }).
         exec( function (err, ownerUnit) {
             if (err) { return err; }
 
@@ -85,6 +85,8 @@ exports.goal_add_post = [
     body('initScore').trim(),
     body('targScore').trim(),
     body('comment').trim(),
+    body('task[description]').trim(),
+    body('task[weight]').trim(),
 
     sanitizeBody('*').trim().escape(),
 
@@ -94,72 +96,75 @@ exports.goal_add_post = [
         const errors = validationResult(req);
 
         Unit.
-            findOne({ owner: req.payload.id }).
-            populate('parentTo').
-            exec( function (err, ownerUnit) {
-                if (err) { return err; }
-                // Create a Goal object with escaped and trimmed data.
-                        const goal = new Goal(
-                            {
-                                name: req.body.name.replace('&#x27;', '’'),
-                                owner: ownerUnit._id,
-                                initScore: req.body.initScore ? req.body.initScore : '',
-                                targScore: req.body.targScore ? req.body.targScore : '',
-                                //childTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
-                                //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
-                                statusOwner: 'Approved',
-                                statusApprover: ownerUnit.childTo.length ? 'Pending' : 'Approved',
-                                //history: hDataObj._id, - implemented below
-                                created: Date(Date.now()),
-                                //updated: {type: Date},
-                                comment: req.body.comment ? req.body.comment : '',
-                                //offer: {type: Schema.Types.ObjectId, ref: 'goalList'}, - implemented below
-                                //weight: {type: Number, default: 1}
-                            }
-                        );
-                        
-                        //create historical data object
-                        const hdata = new hData(
-                            {
-                                data: [{
-                                    date: new Date('2019-01-01'),
-                                    value: req.body.initScore ? req.body.initScore : 0
-                                }]  
-                            }
-                        );
+        findOne({ owner: req.payload.id }).
+        populate('parentTo').
+        exec( function (err, ownerUnit) {
+            if (err) { return err; }
+            req.body.task = req.body.task.filter((task) => { return task.description; });    
+            
+            // Create a Goal object with escaped and trimmed data.
+            const goal = new Goal(
+                {
+                    name: req.body.name.replace('&#x27;', '’'),
+                    owner: ownerUnit._id,
+                    initScore: req.body.initScore ? req.body.initScore : '',
+                    targScore: req.body.targScore ? req.body.targScore : '',
+                    //childTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
+                    //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
+                    statusOwner: 'Approved',
+                    statusApprover: ownerUnit.childTo.length ? 'Pending' : 'Approved',
+                    //history: hDataObj._id, - implemented below
+                    created: Date(Date.now()),
+                    //updated: {type: Date},
+                    comment: req.body.comment ? req.body.comment : '',
+                    task: req.body.task,
+                    //offer: {type: Schema.Types.ObjectId, ref: 'goalList'}, - implemented below
+                    //weight: {type: Number, default: 1}
+                }
+            );
+                    
+                    //create historical data object
+            const hdata = new hData(
+                {
+                    data: [{
+                        date: new Date('2019-01-01'),
+                        value: req.body.initScore ? req.body.initScore : 0
+                    }]  
+                }
+            );
 
-                        //save historical data object and assign it to the goal
-                        hdata.save( function(err, hdataDoc) {
-                            if (err) { return (err); }
-                            goal.history = hdataDoc.id;
-                            goal.save( function (err, goalDoc) {
-                                if (err) { return (err); }
-                                //create a copy and assign it as an offer to the original goal
-                                let currId = goalDoc.id;
-                                goalDoc.set({
-                                    _id: mongoose.Types.ObjectId(),
-                                    owner: ownerUnit.childTo[0],
-                                    statusOwner: 'Pending', //this way it will not appear owner's in goal list
-                                    statusApprover: 'Pending' //this way it will not appear owner's in goal list
-                                });
-                                goalDoc.isNew = true;
-                                goalDoc.save(function (err, newGoalOffer){
-                                    if (err) { return err; }
-                                    //assign offer's id to the original goal
-                                    Goal.
-                                    findById(currId).
-                                    exec( function(err, goalDoc) {
-                                        if (err) { return err; }
-                                        goalDoc.set({offer: newGoalOffer.id});
-                                        goalDoc.save(function(err, updatedGoalDoc){
-                                            if (err) { return err; }
-                                            return res.redirect('/');
-                                        });    
-                                    });
-                                });
-                            });
+                    //save historical data object and assign it to the goal
+            hdata.save( function(err, hdataDoc) {
+                if (err) { return (err); }
+                goal.history = hdataDoc.id;
+                goal.save( function (err, goalDoc) {
+                    if (err) { return (err); }
+                    //create a copy and assign it as an offer to the original goal
+                    let currId = goalDoc.id;
+                    goalDoc.set({
+                        _id: mongoose.Types.ObjectId(),
+                        owner: ownerUnit.childTo[0],
+                        statusOwner: 'Pending', //this way it will not appear owner's in goal list
+                        statusApprover: 'Pending' //this way it will not appear owner's in goal list
+                    });
+                    goalDoc.isNew = true;
+                    goalDoc.save(function (err, newGoalOffer){
+                        if (err) { return err; }
+                        //assign offer's id to the original goal
+                        Goal.
+                        findById(currId).
+                        exec( function(err, goalDoc) {
+                            if (err) { return err; }
+                            goalDoc.set({offer: newGoalOffer.id});
+                            goalDoc.save(function(err, updatedGoalDoc){
+                                if (err) { return err; }
+                                return res.redirect('/');
+                            });    
                         });
+                    });
+                });
             });
+        });
     }
 ];
 
@@ -407,6 +412,7 @@ exports.goal_offerTo_post = function(req, res) {
                         created: Date(Date.now()),
                         //updated: Date(Date.now()), - not relevant in this case
                         comment: req.body.oComment[i],
+                        task: {description: req.body.task.description, weight: req.body.task.weight},
                         //offer: {type: Schema.Types.ObjectId, ref: 'goalList'}, - implemented below
                         weight: req.body.weight[i],
                     });  
@@ -903,7 +909,7 @@ exports.goal_details_get = function(req, res) {
         
         Unit. /* extract the whole org. chart structure */
         findOne({name: 'Lithuania'}). 
-        populate({ path: 'parentTo', populate: { path: 'parentTo' }}).
+        populate({ path: 'parentTo owner', populate: { path: 'parentTo owner', populate: { path: 'owner' }}}).
         exec( function (err, orgChart) {
             if (err) { return err; }
             

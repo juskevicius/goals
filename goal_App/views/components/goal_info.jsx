@@ -2,6 +2,8 @@ import React from 'react';
 
 export default class GoalInfo extends React.Component {
   render() {
+  const tasks = this.props.goal.task.map((task, index) => { return (<p>{index + 1 + ". "}{task.description}</p>);}); 
+
     return (
       <div className="l-main2">
         <h4>Goal:</h4>
@@ -12,6 +14,8 @@ export default class GoalInfo extends React.Component {
         <p>{this.props.goal.initScore}</p>
         <h4>Target value:</h4>
         <p>{this.props.goal.targScore}</p>
+        <h4>Tasks:</h4>
+        <p>{tasks}</p>
         <h4>Details:</h4>
         <p>{this.props.goal.comment}</p>
         <h4>Created:</h4>

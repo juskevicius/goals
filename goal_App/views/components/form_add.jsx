@@ -16,7 +16,17 @@ export default class FormAdd extends React.Component {
               <input type="text" name="targScore" placeholder="99%"></input>
               <label>Comment:</label>
               <input type="text" name="comment"></input>
-              <input className="form-btn" type="submit" value="Save"></input>
+              <label className="task task-label">Task nr 1 description:</label>
+              <input className="task task-descr" type="text" name="task[0][description]"></input>
+              <label className="task task-label">Task nr 1 weight:</label>
+              <input className="task task-weight" type="text" name="task[0][weight]"></input>
+              <div className="buttons">
+                <div></div>
+                <div>
+                  <input className="form-btn add-tasks" id="triggerAddTasks" type='button' value='Add tasks'></input>
+                  <input className="form-btn" type="submit" value="Save"></input>
+                </div>
+              </div>
             </form>
           </div>
         </div>
