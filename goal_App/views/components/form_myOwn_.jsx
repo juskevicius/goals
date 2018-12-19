@@ -21,7 +21,7 @@ export default class FormMyOwn extends React.Component {
     }
 
     const goalsOfferedToMe = () => {
-      let goals = this.props.offeredToMe.map((goal) => { return  (
+      return this.props.offeredToMe.map((goal) => { return  (
         <div className="col-data-row" key={goal.id}>
           <div className="col-data col-data-goal-name">{goal.offer.name}</div>
           <div className="col-data">{goal.offer.initScore}</div>
@@ -37,11 +37,10 @@ export default class FormMyOwn extends React.Component {
           <FormNegotiateOffered goal={goal}/>
         </div>
       );});
-      return goals;
     }
 
     const goalsCreatedByMe = () => {
-      let goals = this.props.createdByMe.map((goal) => { return  (
+      return this.props.createdByMe.map((goal) => { return  (
         <div className="col-data-row" key={goal.id}>
           <div className="col-data col-data-goal-name">{goal.name}</div>
           <div className="col-data">{goal.initScore}</div>
@@ -55,11 +54,10 @@ export default class FormMyOwn extends React.Component {
           <FormNegotiateOwn goal={goal}/>
         </div>
       );});
-      return goals;
     }
 
     const myApprovedGoals = () => {
-      let goals = this.props.myApproved.map((goal) => { return  (
+      return this.props.myApproved.map((goal) => { return  (
         <div className="col-data-row" key={goal.id}>
           <div className="col-data col-data-goal-name"><a href={'/details/' + goal.id}>{goal.name}</a></div>
           <div className="col-data">{goal.initScore}</div>
@@ -75,7 +73,6 @@ export default class FormMyOwn extends React.Component {
           <FormOfferTo goal={goal} children={this.props.currentGoal.owner.parentTo}/>
         </div>
       );});
-      return goals;
     }
 
     return (

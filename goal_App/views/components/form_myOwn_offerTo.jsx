@@ -4,8 +4,37 @@ export default class FormOfferTo extends React.Component {
   render() {
 
     const children = () => {
-      let units = this.props.children.map((unit) => { return <option key={unit.id} value={unit.id}>{unit.name}</option>;})
-      return units;
+      return this.props.children.map((unit) => { return <option key={unit.id} value={unit.id}>{unit.name}</option>;})
+    }
+
+    const tasks = () => {
+      return this.props.goal.task.map((task, index) => { return (
+        <div className="task-row">
+          <div className="descr-block">
+            <label className="task task-label-descr">Task nr {index + 1}:</label>
+            <input className="task task-input-descr" type="text" name={"task[" + index + "][description]"} value={task.description} readOnly></input>
+          </div>
+          <div className="weight-block">
+            <label className="task task-label-weight">weight</label> 
+            <input className="task task-input-weight" type="text" name={"task[" + index + "][weight]"} value={task.weight} readOnly></input>
+          </div>
+        </div>
+      );});
+    }
+
+    const oTasks = () => {
+      return this.props.goal.task.map((task, index) => { return (
+        <div className="task-row">
+          <div className="descr-block">
+            <label className="task task-label-descr">Task nr {index + 1}:</label>
+            <input className="task task-input-descr" type="text" name={"task[" + index + "][description]"} value={task.description}></input>
+          </div>
+          <div className="weight-block">
+            <label className="task task-label-weight">weight</label> 
+            <input className="task task-input-weight" type="text" name={"task[" + index + "][weight]"} value={task.weight}></input>
+          </div>
+        </div>
+      );});
     }
 
     return (
@@ -21,6 +50,10 @@ export default class FormOfferTo extends React.Component {
             <input type="text" value={this.props.goal.targScore} readOnly></input>
             <label>Comment:</label>
             <input type="text" value={this.props.goal.comment} readOnly></input>
+            {this.props.goal.task.length > 0 && <div className="task-group">
+              {tasks()}
+              <div className="last-task-row"></div>
+            </div>}
             <form action="/offerTo" method="post" href="">
               <div className="offer-group">
                 <div className="offer-elm">
@@ -39,6 +72,27 @@ export default class FormOfferTo extends React.Component {
                   <input type="text" name="oComment[0]" defaultValue={this.props.goal.comment}></input>
                   <input type="hidden" name="childTo[0]" value={this.props.goal.id}></input>
                   <input type="hidden" name="name[0]" value={this.props.goal.name}></input>
+                  {this.props.goal.task.length > 0 && 
+                    <div className="task-group[0]">
+                      {oTasks()}
+                      <div className="last-task-row"></div>
+                    </div>
+                  }
+                  {this.props.goal.task.length == 0 && 
+                    <div className="task-group[0]">
+                      <div className="task-row">
+                        <div className="descr-block">
+                          <label className="task task-label-descr">Task nr 1:</label>
+                          <input className="task task-input-descr" type="text" name="task[0][description]"></input>
+                        </div>
+                        <div className="weight-block">
+                          <label className="task task-label-weight">Weight</label> 
+                          <input className="task task-input-weight" type="text" name="task[0][weight]"></input>
+                        </div>
+                      </div>
+                      <div className="last-task-row"></div>
+                    </div>
+                  }
                 </div>
                 <input className="form-btn make-offer-btn" type="submit" value="Submit the offers"></input>
               </div>

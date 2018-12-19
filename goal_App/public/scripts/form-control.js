@@ -166,6 +166,15 @@ function addOfferElm(ev) {
     offerToElm.getElementsByTagName("input")[3].setAttribute("name", "oComment[" + (nr + 1) + "]");
     offerToElm.getElementsByTagName("input")[4].setAttribute("name", "childTo[" + (nr + 1) + "]");
     offerToElm.getElementsByTagName("input")[5].setAttribute("name", "name[" + (nr + 1) + "]");
+    let tasks = offerToElm.getElementsByClassName("task-row");
+    for (let i = 0; i < tasks.length; i++) {
+      let currDescrName = tasks[i].getElementsByTagName("input")[0].getAttribute("name");
+      let newDescrName = currDescrName .replace("task", "task[" + (nr + 1) + "]");
+      tasks[i].getElementsByTagName("input")[0].setAttribute("name", newDescrName);
+      let currWeightName = tasks[i].getElementsByTagName("input")[1].getAttribute("name");
+      let newWeightName = currWeightName.replace("task", "task[" + (nr + 1) + "]");
+      tasks[i].getElementsByTagName("input")[1].setAttribute("name", newWeightName);
+    }
     let makeOfferButton = ev.currentTarget.parentElement.parentElement.lastChild;
     ev.currentTarget.parentElement.parentElement.insertBefore(offerToElm, makeOfferButton);
   }
@@ -178,34 +187,43 @@ if (document.getElementById('date-picker')) {
 
 // Add a goal form. If clicked on "Add tasks", show task fields
 document.getElementById("triggerAddTasks").addEventListener('click', 
-  () => {
-    let taskElements = document.getElementsByClassName("task");
-    for (let i = 0; i < taskElements.length; i++) {
-      taskElements[i].style.display = 'initial';
-      taskElements[i].addEventListener('input', addTaskElements );
-    }
-  });
+  () => { document.getElementsByClassName("task-group")[0].style.display = 'initial'; }
+);
+
+let taskElements = document.getElementsByClassName("task-input-descr");
+for (let i = 0; i < taskElements.length; i++) {
+  taskElements[i].setAttribute('oninput', 'addTaskElements(event)');
+}
 
 //When a new task is being entered, add more input fields for new tasks to enter 
 function addTaskElements(ev) {
-  let lastTask = ev.currentTarget.parentElement.childNodes.length - 4;
-  if (ev.currentTarget == ev.currentTarget.parentElement.childNodes[lastTask]) {
-    let nr = (lastTask - 5) / 4;
-    let label1 = ev.currentTarget.parentElement.childNodes[8].cloneNode(true);
-    label1.innerHTML = "Task nr " + (nr + 1) + " description:";
-    let input1 = ev.currentTarget.parentElement.childNodes[9].cloneNode(true);
-    input1.setAttribute('name', 'task[' + (nr + 1) + '][description]');
-    input1.setAttribute('oninput', 'addTaskElements(event)');
-    input1.value= '';
-    let label2 = ev.currentTarget.parentElement.childNodes[10].cloneNode(true);
-    label2.innerHTML = "Task nr " + (nr + 1) + " weight:";
-    let input2 = ev.currentTarget.parentElement.childNodes[11].cloneNode(true);
-    input2.setAttribute('name', 'task[' + (nr + 1) + '][weight]');
-    input2.value= '';
-    let buttonsAtTheBottom =  ev.currentTarget.parentElement.lastChild;
-    ev.currentTarget.parentElement.insertBefore(label1, buttonsAtTheBottom);
-    ev.currentTarget.parentElement.insertBefore(input1, buttonsAtTheBottom);
-    ev.currentTarget.parentElement.insertBefore(label2, buttonsAtTheBottom);
-    ev.currentTarget.parentElement.insertBefore(input2, buttonsAtTheBottom);
+  let lastTask = ev.currentTarget.parentElement.parentElement.parentElement.childNodes.length - 2;
+  if (ev.currentTarget.parentElement.parentElement == ev.currentTarget.parentElement.parentElement.parentElement.childNodes[lastTask]) {
+    let nr = lastTask + 1;
+    let taskElement = ev.currentTarget.parentElement.parentElement.parentElement.firstChild.cloneNode(true);
+    taskElement.getElementsByTagName("label")[0].innerHTML = "Task nr " + (nr + 1) + ":";
+    taskElement.getElementsByTagName("input")[0].value = '';
+    
+    let currDescrName = ev.currentTarget.getAttribute('name');
+    let newDescrName = currDescrName.replace("][" + (nr - 1) + "][", "][" + nr + "][");
+    if (newDescrName !== currDescrName) {
+      taskElement.getElementsByTagName("input")[0].setAttribute('name', newDescrName);
+    } else {
+      taskElement.getElementsByTagName("input")[0].setAttribute('name', 'task[' + nr + '][description]');
+    }
+    
+    taskElement.getElementsByTagName("input")[0].setAttribute('oninput', 'addTaskElements(event)');
+    taskElement.getElementsByTagName("input")[1].value = '';
+    
+    let currWeightName = ev.currentTarget.parentElement.getElementsByTagName("input")[1].getAttribute('name');
+    let newWeightName = currWeightName.replace("][" + (nr - 1) + "][", "][" + nr + "][");
+    if (newWeightName !== currWeightName) {
+      taskElement.getElementsByTagName("input")[1].setAttribute('name', newWeightName);
+    } else {
+      taskElement.getElementsByTagName("input")[1].setAttribute('name', 'task[' + nr + '][weight]');
+    }
+    
+    let lastTaskRow = ev.currentTarget.parentElement.parentElement.parentElement.lastChild;
+    ev.currentTarget.parentElement.parentElement.parentElement.insertBefore(taskElement, lastTaskRow);
   }
 }

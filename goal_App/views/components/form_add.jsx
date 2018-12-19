@@ -16,10 +16,19 @@ export default class FormAdd extends React.Component {
               <input type="text" name="targScore" placeholder="99%"></input>
               <label>Comment:</label>
               <input type="text" name="comment"></input>
-              <label className="task task-label">Task nr 1 description:</label>
-              <input className="task task-descr" type="text" name="task[0][description]"></input>
-              <label className="task task-label">Task nr 1 weight:</label>
-              <input className="task task-weight" type="text" name="task[0][weight]"></input>
+              <div className="task-group">
+                <div className="task-row">
+                  <div className="descr-block">
+                    <label className="task task-label-descr">Task nr 1:</label>
+                    <input className="task task-input-descr" type="text" name="task[0][description]"></input>
+                  </div>
+                  <div className="weight-block">
+                    <label className="task task-label-weight">Weight</label> 
+                    <input className="task task-input-weight" type="text" name="task[0][weight]"></input>
+                  </div>
+                </div>
+                <div className="last-task-row"></div>
+              </div>
               <div className="buttons">
                 <div></div>
                 <div>

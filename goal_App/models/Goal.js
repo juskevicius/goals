@@ -17,7 +17,7 @@ const GoalSchema = new Schema(
         created: {type: Date},
         updated: {type: Date},
         comment: {type: String},
-        task: [{description: {type: String}, weight: {type: Number}}],
+        task: [{description: {type: String}, weight: {type: Number}, implemented: {type: Boolean}}],
         offer: {type: Schema.Types.ObjectId, ref: 'Goal'},
         weight: {type: Number, default: 1}
     }
