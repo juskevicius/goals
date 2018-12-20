@@ -169,10 +169,10 @@ function addOfferElm(ev) {
     let tasks = offerToElm.getElementsByClassName("task-row");
     for (let i = 0; i < tasks.length; i++) {
       let currDescrName = tasks[i].getElementsByTagName("input")[0].getAttribute("name");
-      let newDescrName = currDescrName .replace("task", "task[" + (nr + 1) + "]");
+      let newDescrName = currDescrName .replace(/task\[\d+\]/i, "task[" + (nr + 1) + "]");
       tasks[i].getElementsByTagName("input")[0].setAttribute("name", newDescrName);
       let currWeightName = tasks[i].getElementsByTagName("input")[1].getAttribute("name");
-      let newWeightName = currWeightName.replace("task", "task[" + (nr + 1) + "]");
+      let newWeightName = currWeightName.replace(/task\[\d+\]/i, "task[" + (nr + 1) + "]");
       tasks[i].getElementsByTagName("input")[1].setAttribute("name", newWeightName);
     }
     let makeOfferButton = ev.currentTarget.parentElement.parentElement.lastChild;
@@ -215,7 +215,7 @@ function addTaskElements(ev) {
     taskElement.getElementsByTagName("input")[0].setAttribute('oninput', 'addTaskElements(event)');
     taskElement.getElementsByTagName("input")[1].value = '';
     
-    let currWeightName = ev.currentTarget.parentElement.getElementsByTagName("input")[1].getAttribute('name');
+    let currWeightName = ev.currentTarget.parentElement.parentElement.getElementsByTagName("input")[1].getAttribute('name');
     let newWeightName = currWeightName.replace("][" + (nr - 1) + "][", "][" + nr + "][");
     if (newWeightName !== currWeightName) {
       taskElement.getElementsByTagName("input")[1].setAttribute('name', newWeightName);

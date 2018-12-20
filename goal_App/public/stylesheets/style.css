@@ -107,30 +107,24 @@ body {
   padding: 50px;
 }
 
-.l-main2 h4 div, .l-main2 > div > div {
-  display: inline-block;
-  text-align: center;
-}
-
-
-.l-main2 > div td {
-  text-align: center;
-}
-
-.l-main2 h4 div:first-child, .l-main2 div div:first-child {
-  width: 67%;
-  text-align: left;
-}
-
-.l-main2 h4 div:nth-child(2), .l-main2 h4 div:nth-child(3), .l-main2 > div > div:nth-child(2), .l-main2 > div > div:nth-child(3) {
-  width: 15%;
-}
-
 .r-main2 .col-headers-row {
+  width: 100%;
   display: inline-block;
+}
+
+.r-main2 .col-headers-tasks {
+  margin-top: 40px;
 }
 
 .r-main2 .col-header {
+  width: 20%;
+}
+
+.r-main2 .col-headers-tasks .col-header:first-child  {
+  width: 60%;
+}
+
+.r-main2 .col-headers-tasks .col-header:nth-child(2), .r-main2 .col-headers-tasks .col-header:nth-child(3)  {
   width: 20%;
 }
 
@@ -148,6 +142,11 @@ body {
   padding: 0;
 }
 
+.r-main2 .col-data-tasks .col-data:first-child  {
+  width: 60%;
+  text-align: left;
+}
+
 .r-main2 .col-data form > div {
   text-align: center;
 }
@@ -157,7 +156,8 @@ body {
   width: 40px;
   font-size: 16px;
   font-family: 'Open Sans', sans-serif;
-  text-align: center;
+  text-align: right;
+  padding: 0 3px;
 }
 
 .r-main2 .col-data form button {
@@ -429,7 +429,7 @@ nav ul {
 
 /* Styling the form Offer To... */
 
-.form-offerTo .task-group {
+.form-myOwn .task-group {
   display: initial;
 }
 

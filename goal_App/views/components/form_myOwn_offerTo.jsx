@@ -15,7 +15,7 @@ export default class FormOfferTo extends React.Component {
             <input className="task task-input-descr" type="text" name={"task[" + index + "][description]"} value={task.description} readOnly></input>
           </div>
           <div className="weight-block">
-            <label className="task task-label-weight">weight</label> 
+            <label className="task task-label-weight">Weight</label> 
             <input className="task task-input-weight" type="text" name={"task[" + index + "][weight]"} value={task.weight} readOnly></input>
           </div>
         </div>
@@ -27,11 +27,11 @@ export default class FormOfferTo extends React.Component {
         <div className="task-row">
           <div className="descr-block">
             <label className="task task-label-descr">Task nr {index + 1}:</label>
-            <input className="task task-input-descr" type="text" name={"task[" + index + "][description]"} value={task.description}></input>
+            <input className="task task-input-descr" type="text" name={"task[0][" + index + "][description]"} defaultValue={task.description}></input>
           </div>
           <div className="weight-block">
-            <label className="task task-label-weight">weight</label> 
-            <input className="task task-input-weight" type="text" name={"task[" + index + "][weight]"} value={task.weight}></input>
+            <label className="task task-label-weight">Weight</label> 
+            <input className="task task-input-weight" type="text" name={"task[0][" + index + "][weight]"} defaultValue={task.weight}></input>
           </div>
         </div>
       );});
@@ -83,11 +83,11 @@ export default class FormOfferTo extends React.Component {
                       <div className="task-row">
                         <div className="descr-block">
                           <label className="task task-label-descr">Task nr 1:</label>
-                          <input className="task task-input-descr" type="text" name="task[0][description]"></input>
+                          <input className="task task-input-descr" type="text" name="task[0][0][description]" defaultValue=""></input>
                         </div>
                         <div className="weight-block">
                           <label className="task task-label-weight">Weight</label> 
-                          <input className="task task-input-weight" type="text" name="task[0][weight]"></input>
+                          <input className="task task-input-weight" type="text" name="task[0][0][weight]" defaultValue=""></input>
                         </div>
                       </div>
                       <div className="last-task-row"></div>

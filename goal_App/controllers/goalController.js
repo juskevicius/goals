@@ -85,22 +85,20 @@ exports.goal_add_post = [
     body('initScore').trim(),
     body('targScore').trim(),
     body('comment').trim(),
-    body('task[description]').trim(),
-    body('task[weight]').trim(),
-
+    body('task').trim(),
+    
     sanitizeBody('*').trim().escape(),
 
     (req, res, next) => {
-
         // Extract the validation errors from a request.
         const errors = validationResult(req);
+        console.log(errors);
 
         Unit.
         findOne({ owner: req.payload.id }).
         populate('parentTo').
         exec( function (err, ownerUnit) {
             if (err) { return err; }
-            req.body.task = req.body.task.filter((task) => { return task.description; });    
             
             // Create a Goal object with escaped and trimmed data.
             const goal = new Goal(
@@ -117,7 +115,7 @@ exports.goal_add_post = [
                     created: Date(Date.now()),
                     //updated: {type: Date},
                     comment: req.body.comment ? req.body.comment : '',
-                    task: req.body.task,
+                    task: req.body.task.filter((task) => { return task.description; }),
                     //offer: {type: Schema.Types.ObjectId, ref: 'goalList'}, - implemented below
                     //weight: {type: Number, default: 1}
                 }
@@ -260,6 +258,7 @@ exports.goal_edit_post = [
                             //created: Date(Date.now()),
                             updated: Date(Date.now()),
                             comment: req.body.comment ? req.body.comment : '',
+                            task: req.body.task.filter((task) => { return task.description; }),
                             //offer: {type: Schema.Types.ObjectId, ref: 'goalList'},
                             //weight: {type: Number, default: 1}
                             _id: req.body.id
@@ -399,6 +398,7 @@ exports.goal_offerTo_post = function(req, res) {
             var goalArr = [];
             for (let i = 0; i < req.body.owner.length; i++) {
                 if (req.body.owner[i]) {
+                    console.log(req.body.task[i]);
                     goalArr.push({
                         name: req.body.name[i],
                         owner: req.body.owner[i],
@@ -412,7 +412,7 @@ exports.goal_offerTo_post = function(req, res) {
                         created: Date(Date.now()),
                         //updated: Date(Date.now()), - not relevant in this case
                         comment: req.body.oComment[i],
-                        task: {description: req.body.task.description, weight: req.body.task.weight},
+                        task: req.body.task[i].filter((task) => { return task.description; }),
                         //offer: {type: Schema.Types.ObjectId, ref: 'goalList'}, - implemented below
                         weight: req.body.weight[i],
                     });  
@@ -1016,5 +1016,66 @@ exports.goal_editWeight_post = [
                 });
             });
         });       
+    }
+];
+
+
+exports.goal_taskImplementation_post = [
+    
+    sanitizeBody('*').trim().escape(),
+
+    (req, res, next) => {
+        
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+        
+        Goal.
+        updateOne(
+            { "_id": req.body.id, "task._id": req.body.taskId },
+            { 
+                "$set": {
+                    "task.$.implemented": req.body.implemented
+                }
+            },
+            (err) => {
+                if (err) { return err; }
+                
+                Goal. 
+                findOne({ parentTo: req.body.id }). 
+                populate('parentTo'). 
+                exec((err, goal) => {
+                    if (err) { return err; }
+                    for (let t = 0; t < goal.task.length; t++) {
+                        let currTask = goal.task[t].description;
+                        let impl = [];
+                        let weight = [];
+                        let sumWeight = 0;
+                        let sum = 0;
+                        for (let i = 0; i < goal.parentTo.length; i++) {
+                            for (let j = 0; j < goal.parentTo[i].task.length; j++) {
+                                if (currTask == goal.parentTo[i].task[j].description) {
+                                    impl[i] = goal.parentTo[i].task[j].implemented;
+                                    weight[i] = goal.parentTo[i].weight ? goal.parentTo[i].weight : 100;
+                                    sumWeight = sumWeight + weight[i];
+                                }
+                            }
+                        }
+                        for (let i = 0; i < impl.length; i++) {
+                            sum = sum + impl[i] * weight[i];
+                        }
+                        sum = sum / sumWeight;
+                        Goal.
+                        updateOne( 
+                            { "_id": goal._id, "task._id": goal.task[t]._id }, 
+                            { "$set": { "task.$.implemented": sum }},
+                            (err) => {
+                                if (err) { return err; }
+                            });           
+                    }
+                    res.redirect('/details/' + req.body.id);
+                });
+            }
+        );
+        
     }
 ];

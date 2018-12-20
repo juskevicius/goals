@@ -90,4 +90,7 @@ router.post('/addCurrentScore', auth.required, goalController.goal_addCurrentSco
 /* POST edit weight */
 router.post('/editWeight', auth.required, goalController.goal_editWeight_post, hDataController.hData_update_post);
 
+/* POST edit task implementation */
+router.post('/taskImplementation', auth.required, goalController.goal_taskImplementation_post);
+
 module.exports = router;
