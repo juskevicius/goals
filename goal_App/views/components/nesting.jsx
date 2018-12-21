@@ -29,6 +29,7 @@ export default class Nesting extends React.Component {
             <div>
               <input type="text" name="implemented" defaultValue={task.implemented ? task.implemented : 0}></input>
               <input type="hidden" name="taskId" value={task.id} readOnly></input>
+              <input type="hidden" name="description" value={task.description} readOnly></input>
               <input type="hidden" name="id" value={this.props.goal.id} readOnly></input>
               <button type="submit">%<i className="fas fa-save"/></button>
             </div>
@@ -39,6 +40,7 @@ export default class Nesting extends React.Component {
             <div>
               <input type="text" name="weight" defaultValue={task.weight}></input>
               <input type="hidden" name="id" value={task.id} readOnly></input>
+              <input type="hidden" name="description" value={task.description} readOnly></input>
               <button type="submit"><i className="fas fa-save"/></button>
             </div>
           </form>

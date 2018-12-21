@@ -398,7 +398,6 @@ exports.goal_offerTo_post = function(req, res) {
             var goalArr = [];
             for (let i = 0; i < req.body.owner.length; i++) {
                 if (req.body.owner[i]) {
-                    console.log(req.body.task[i]);
                     goalArr.push({
                         name: req.body.name[i],
                         owner: req.body.owner[i],
@@ -531,6 +530,7 @@ exports.goal_acceptOffer_post = [
                     hDataToUpdate.save(function(err, hdataUpdated) {
                         if (err) { return err; }
                         res.redirect('/myOwn');  
+                        next();
                     });
                 });
             });
@@ -1003,12 +1003,12 @@ exports.goal_editWeight_post = [
                 if (err) { return err; }
                 Goal. 
                 findOne({ parentTo: goalUpdated.id}).
-                exec( function(err, goal) {
+                exec( function(err, parent) {
                     if (err) { return err; }
                     
-                    if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
-                        res.locals.parent = goal.childTo[0];
-                        res.locals.currGoal = goal.id;
+                    if (parent) { /* if the goal has a parent then update the parent's history */
+                        res.locals.parent = parent._id;
+                        res.locals.currGoal = parent.id;
                         next();
                     } else {
                         res.redirect('/details/' + goal.id);  
@@ -1040,42 +1040,9 @@ exports.goal_taskImplementation_post = [
             (err) => {
                 if (err) { return err; }
                 
-                Goal. 
-                findOne({ parentTo: req.body.id }). 
-                populate('parentTo'). 
-                exec((err, goal) => {
-                    if (err) { return err; }
-                    for (let t = 0; t < goal.task.length; t++) {
-                        let currTask = goal.task[t].description;
-                        let impl = [];
-                        let weight = [];
-                        let sumWeight = 0;
-                        let sum = 0;
-                        for (let i = 0; i < goal.parentTo.length; i++) {
-                            for (let j = 0; j < goal.parentTo[i].task.length; j++) {
-                                if (currTask == goal.parentTo[i].task[j].description) {
-                                    impl[i] = goal.parentTo[i].task[j].implemented;
-                                    weight[i] = goal.parentTo[i].weight ? goal.parentTo[i].weight : 100;
-                                    sumWeight = sumWeight + weight[i];
-                                }
-                            }
-                        }
-                        for (let i = 0; i < impl.length; i++) {
-                            sum = sum + impl[i] * weight[i];
-                        }
-                        sum = sum / sumWeight;
-                        Goal.
-                        updateOne( 
-                            { "_id": goal._id, "task._id": goal.task[t]._id }, 
-                            { "$set": { "task.$.implemented": sum }},
-                            (err) => {
-                                if (err) { return err; }
-                            });           
-                    }
-                    res.redirect('/details/' + req.body.id);
-                });
+                res.redirect('/details/' + req.body.id);
+                next();
             }
         );
-        
     }
 ];

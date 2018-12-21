@@ -187,7 +187,10 @@ if (document.getElementById('date-picker')) {
 
 // Add a goal form. If clicked on "Add tasks", show task fields
 document.getElementById("triggerAddTasks").addEventListener('click', 
-  () => { document.getElementsByClassName("task-group")[0].style.display = 'initial'; }
+  () => { 
+          document.getElementsByClassName("task-group")[0].style.display = 'initial';
+          document.getElementById("triggerAddTasks").style.display = 'none'; 
+        }
 );
 
 let taskElements = document.getElementsByClassName("task-input-descr");

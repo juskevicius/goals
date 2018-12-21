@@ -44,7 +44,7 @@ router.post('/offerTo', auth.required, goalController.goal_offerTo_post);
 //router.get('/acceptOffer/:id', auth.required, goalController.goal_acceptOffer_get);
 
 /* POST accept */
-router.post('/acceptOffer', auth.required, goalController.goal_acceptOffer_post);
+router.post('/acceptOffer', auth.required, goalController.goal_acceptOffer_post, hDataController.updateAllTasksImplementation);
 
 /* GET negotiate offered */
 //router.get('/negotiateOffered/:id', auth.required, goalController.goal_negotiateOffered_get);
@@ -91,6 +91,6 @@ router.post('/addCurrentScore', auth.required, goalController.goal_addCurrentSco
 router.post('/editWeight', auth.required, goalController.goal_editWeight_post, hDataController.hData_update_post);
 
 /* POST edit task implementation */
-router.post('/taskImplementation', auth.required, goalController.goal_taskImplementation_post);
+router.post('/taskImplementation', auth.required, goalController.goal_taskImplementation_post, hDataController.updateOneTaskImplementation);
 
 module.exports = router;
