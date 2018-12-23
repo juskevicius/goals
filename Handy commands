@@ -6,3 +6,5 @@ mongo --port 27017 -u "myUserAdmin" -p "abc123" --authenticationDatabase "admin"
 
 SET DEBUG=goal_App:* & npm run devstart
 "devstart": "concurrently \"nodemon ./bin/www\" \"cd frontend && npm start\""
+
+"devstart": "nodemon ./bin/www"
