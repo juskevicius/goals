@@ -25,7 +25,7 @@ class App extends Component {
       password: this.state.password
     })
     .then( function(response) {
-      console.log(response);
+      console.log(response.status);
     });
   }
 

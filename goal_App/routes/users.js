@@ -3,6 +3,7 @@ const router = express.Router();
 
 const auth = require('../controllers/auth');
 const userController = require('../controllers/userController');
+const goalController = require('../controllers/goalController');
 const cookieController = require('../controllers/cookieValid');
 const authorization = require('../controllers/authorization');
 
@@ -22,7 +23,7 @@ router.post('/usersDelete', cookieController.validate_cookie, auth.required, aut
 router.get('/login', auth.optional, userController.user_login_get);
 
 //POST login route
-router.post('/login', auth.optional, userController.user_login_post);
+router.post('/login', auth.optional, userController.user_login_post, goalController.goal_homePage_get);
 
 /* GET unit management */
 router.get('/units', cookieController.validate_cookie, auth.required, authorization.restrict_to_admin, userController.unit_create_get);

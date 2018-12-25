@@ -155,8 +155,10 @@ exports.user_login_post = [
                 if(passportUser) {
                 const user = passportUser;
                 user.token = passportUser.generateJWT();
+                res.locals.currUser = user._id;
                 res.cookie("Token", user.token, {httpOnly: true, secure: false, maxAge: 2592000000});
-                return res.redirect("/");
+                /*return res.redirect("/");*/
+                return next();
                 }
                 return res.status(422).json({ "Login": "Unsuccessful. Either id or password is incorrect" });
             })(req, res, next);

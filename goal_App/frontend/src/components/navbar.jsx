@@ -4,11 +4,11 @@ export default class Navbar extends React.Component {
   render() {
 
     const orgChart = this.props.chart.parentTo.map((unit) => {return (
-      <li key={unit.id}>
-        <a href={'/myOwn/' + unit.owner.id}>{unit.name}</a>
+      <li key={unit._id}>
+        <a href={'/myOwn/' + unit._id}>{unit.name}</a>
         <ul>{unit.parentTo.map((subUnit) => {return (
-          <li key={subUnit.id}>
-            <a href={'/myOwn/' + subUnit.owner.id}>{subUnit.name}</a>
+          <li key={subUnit._id}>
+            <a href={'/myOwn/' + subUnit._id}>{subUnit.name}</a>
           </li>
           );})}
         </ul>
@@ -26,19 +26,19 @@ export default class Navbar extends React.Component {
               </ul>
             </li>
             <li>
-            <a href="#"><i className="fa fa-bullseye" style={{fontSize: 24 + "px"}}></i> Goals</a>
+            <a href="/myOwn"><i className="fa fa-bullseye" style={{fontSize: 24 + "px"}}></i> Goals</a>
               <ul>
                 <li>
-                  <a href="/add" id="showAddForm">Add</a>
+                  <a href="/add" onClick={this.props.toggleDisplayAddForm}>Add</a>
                 </li>
                 <li>
-                  <a href="/myOwn" id="showMyOwnForm">My goals</a>
+                  <a href="/add" onClick={this.props.toggleDisplayMyOwnForm}>My goals</a>
                 </li>
                 <li>
                   <a href="/others" id="showOthersForm">Others'</a>
                 </li>
                 <li>
-                  <a href="#">Rejected</a>
+                  <a href="/rejected">Rejected</a>
                 </li>
               </ul>
             </li>

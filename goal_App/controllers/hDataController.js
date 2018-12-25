@@ -81,20 +81,12 @@ exports.hData_update_post = function(req, res) {
                           calcHistoricalData(grandparentGoal, grandparentHistory); /* calculate historical data for grandparent goal */
                           grandparentHistory.save(function (err) {
                               if (err) { return err;}
-                              if (res.locals.formToDisplay) {
-                                res.redirect(res.locals.formToDisplay);  
-                              } else {
-                                res.redirect('/details/' + res.locals.currGoal);
-                              }        
+                              return res.send("successfuly updated history");     
                           });
                       });
                   });
               } else {
-                if (res.locals.formToDisplay) {
-                    res.redirect(res.locals.formToDisplay);  
-                } else {
-                    res.redirect('/details/' + res.locals.currGoal);
-                }                
+                return res.send("successfuly updated history");               
               }
           });
       });
