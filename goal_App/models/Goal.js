@@ -46,4 +46,7 @@ GoalSchema.virtual('updated_formatted').get(function() {
     
 });
 
+GoalSchema.set('toObject', { getters: true });
+GoalSchema.set('toJSON', { virtuals: true });
+
 module.exports = mongoose.model('Goal', GoalSchema);

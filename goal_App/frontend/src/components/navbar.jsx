@@ -29,13 +29,13 @@ export default class Navbar extends React.Component {
             <a href="/myOwn"><i className="fa fa-bullseye" style={{fontSize: 24 + "px"}}></i> Goals</a>
               <ul>
                 <li>
-                  <a href="/add" onClick={this.props.toggleDisplayAddForm}>Add</a>
+                  <a href="/add" onClick={(event) => this.props.toggleDisplayForm('formAdd', event)}>Add</a>
                 </li>
                 <li>
-                  <a href="/add" onClick={this.props.toggleDisplayMyOwnForm}>My goals</a>
+                  <a href="/add" onClick={(event) => this.props.toggleDisplayForm('formMyOwn', event)}>My goals</a>
                 </li>
                 <li>
-                  <a href="/others" id="showOthersForm">Others'</a>
+                  <a href="/others" onClick={(event) => this.props.toggleDisplayForm('formOthers', event)}>Others'</a>
                 </li>
                 <li>
                   <a href="/rejected">Rejected</a>

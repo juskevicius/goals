@@ -76,16 +76,17 @@ export default class FormOfferTo extends React.Component {
   handleSubmit = () => {
     const { offers } = this.state;
     axios.post('/offerTo', {
-      childTo: this.props.goal._id, name: this.props.goal.name, offers
-    }).then(
-      response => {
+      childTo: this.props.goal._id, 
+      name: this.props.goal.name, 
+      offers
+    })
+      .then(response => {
         if (response.status === 200) {
           /*this.props.updateOwnerGoals();    to update others goals? */ 
           let event = new Event('fake');
           this.props.toggleDisplayForm("formOfferTo", null, event);
         }
-      }
-    );
+      });
   }
   
   render() {

@@ -2,8 +2,8 @@ import React from 'react';
 import Navbar from './navbar.jsx';
 import FormAdd from './form_add.jsx';
 import FormMyOwn from './form_myOwn_.jsx';
-/*import FormOthers from './form_others_.jsx';
-import FormCurrent from '.form_current.jsx';
+import FormOthers from './form_others_.jsx';
+/*import FormCurrent from '.form_current.jsx';
 import GoalInfo from './goal_info.jsx';
 import Nesting from './nesting.jsx';*/
 
@@ -11,26 +11,21 @@ export default class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayAddForm: false,
-      displayMyOwnForm: false
     }
    }
 
-   toggleDisplayAddForm = (event) => {
+  toggleDisplayForm = (form, event) => {
     event.preventDefault();
-     if (event.target === event.currentTarget) {
-      this.setState(prevState => ({
-        displayAddForm: !prevState.displayAddForm
-      }));
-     }
-   }
-
-   toggleDisplayMyOwnForm = (event) => {
-    event.preventDefault();
-    if (event.target === event.currentTarget) {
-     this.setState(prevState => ({
-       displayMyOwnForm: !prevState.displayMyOwnForm
-     }));
+    if (this.state[form]) { 
+      if (event.target === event.currentTarget) {
+        this.setState({ /* if the form is currently visible, then hide it */
+          [form]: false
+        });
+      }
+    } else {
+      this.setState({
+        [form]: true
+      });
     }
   }
 
@@ -74,30 +69,26 @@ export default class HomePage extends React.Component {
       
     }*/
 
-    
-    const theGoal = this.props.ownerGoals ? this.props.ownerGoals.filter((goal) => { return (goal.statusApprover === "Approved" && goal.statusOwner === "Approved");}) : '';
-    const createdByMe = this.props.ownerGoals ? this.props.ownerGoals.filter((goal) => { return (goal.statusApprover === "Pending" && goal.statusOwner === "Approved");}) : '';
-    const offeredToMe = this.props.ownerGoals ? this.props.ownerGoals.filter((goal) => { return (goal.statusApprover === "Approved" && goal.statusOwner === "Pending");}) : '';
-    const myApproved = this.props.ownerGoals ? this.props.ownerGoals.filter((goal) => { return (goal.statusApprover === "Approved" && goal.statusOwner === "Approved");}) : '';
     const children = this.props.ownerUnit.parentTo.length > 0 ? this.props.ownerUnit.parentTo.map((child) => { return child; }) : '';
-    
+
     return (
       <div>
         <div className="grid-container">
           <div className="l-margin">
-            <Navbar toggleDisplayMyOwnForm={this.toggleDisplayMyOwnForm} toggleDisplayAddForm={this.toggleDisplayAddForm} chart={this.props.orgChart}/>
+            <Navbar toggleDisplayForm={this.toggleDisplayForm} chart={this.props.orgChart}/>
           </div>
           <div className="r-margin">
             <a href="/logout"><i className="fa fa-sign-out" style={{fontSize:54 + "px"}}></i></a>
           </div>
           <div className="header">
             <h1>
-              {theGoal.length > 0 ? theGoal[0].name : 'Welcome to Norian Grow!'}
+              {this.props.goalToDisplay ? this.props.goalToDisplay.name : 'Welcome to Norian Grow!'}
             </h1>
           </div>
         </div>
-        {this.state.displayAddForm && <FormAdd updateOwnerGoals={this.props.updateOwnerGoals} toggleDisplayAddForm={this.toggleDisplayAddForm} display={this.state.displayAddForm}/>}
-        {this.state.displayMyOwnForm && <FormMyOwn toggleDisplayMyOwnForm={this.toggleDisplayMyOwnForm} offeredToMe={offeredToMe} createdByMe={createdByMe} myApproved={myApproved} children={children} updateOwnerGoals={this.props.updateOwnerGoals}/>}
+        {this.state.formAdd && <FormAdd toggleDisplayForm={this.toggleDisplayForm}/>}
+        {this.state.formMyOwn && <FormMyOwn toggleDisplayForm={this.toggleDisplayForm} children={children}/>}
+        {this.state.formOthers && <FormOthers toggleDisplayForm={this.toggleDisplayForm} children={children}/>}
       </div>
     )
   }

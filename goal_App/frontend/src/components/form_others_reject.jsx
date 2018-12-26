@@ -1,9 +1,23 @@
 import React from 'react';
+import axios from 'axios';
 
 export default class FormReject extends React.Component {
+  
+  handleSubmit = () => {
+    axios.post('/reject', {
+      id: this.props.goal._id
+    }).then( response => {
+      if (response.status === 200) {
+        this.props.updateOthersGoals();
+        let event = new Event('fake');
+        this.props.toggleDisplayForm("formReject", null, event);
+      }
+    });
+  }
+  
   render() {
     return (
-      <div className="overlay2 form-reject-overlay">
+      <div className="overlay" onClick={(event) => this.props.toggleDisplayForm("formReject", null, event)}>
         <div className="form-reject">
           <div className="form-header">Reject a goal</div>
           <div className="form-body">
@@ -12,8 +26,7 @@ export default class FormReject extends React.Component {
               <input type="text" name="name" value={this.props.goal.name} readOnly></input>
               <label>Owner</label>
               <input type="text" name="owner" value={this.props.goal.owner.name} readOnly></input>
-              <input type="hidden" name="id" value={this.props.goal.id} readOnly></input>
-              <input className="form-btn" type="submit" value="Reject"></input>
+              <input className="form-btn" type="submit" value="Reject" onClick={this.handleSubmit}></input>
             </form>
           </div>
         </div>

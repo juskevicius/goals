@@ -9,8 +9,6 @@ const { sanitizeBody } = require('express-validator/filter');
 
 exports.goal_homePage_get = function(req, res) {
     
-    
-
     Unit. /* extract the whole org. chart structure */
     findOne({name: 'Lithuania'}). 
     populate({ path: 'parentTo', populate: { path: 'parentTo' }}).
@@ -23,7 +21,6 @@ exports.goal_homePage_get = function(req, res) {
         populate('parentTo').
         exec( function (err, ownerUnit) {
             if (err) { return err; }
-            console.log(ownerUnit.name);
             Goal. /* find owner's goals */
             find({ owner: ownerUnit.id}).
             populate({ path: 'offer', populate: { path: 'owner' }}).
@@ -49,8 +46,7 @@ exports.goal_homePage_get = function(req, res) {
                     let createdByMe = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Pending';});
                     let myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved';});
                     
-                    
-                    return res.send({orgChart, ownerGoals, childrenGoals, ownerUnit});
+                    return res.send({goalToDisplay: myApproved[0], orgChart, childrenGoals, ownerUnit});
 
                     if (req.url == "/add") {
                         res.render('b_body.jsx', {goal: myApproved[0], chart: orgChart, offeredToMe, createdByMe, myApproved, offeredByMe, createdByOthers, displayAddForm: true});
@@ -100,7 +96,6 @@ exports.goal_add_post = [
     (req, res, next) => {
         // Extract the validation errors from a request.
         const errors = validationResult(req);
-        console.log(errors);
 
         Unit.
         findOne({ owner: req.payload.id }).
@@ -424,7 +419,7 @@ exports.goal_acceptOffer_post = [
                     hDataToUpdate._id = goalAccepted.history.id;
                     hDataToUpdate.save(function(err, hdataUpdated) {
                         if (err) { return err; }
-                        res.redirect('/myOwn');  
+                        res.send('successfuly accepted the offer');  
                         next();
                     });
                 });
@@ -440,16 +435,19 @@ exports.goal_negotiate_post = function(req, res) {
     exec(function(err, goal) {
         if (err) { return err; }
         // update the goal
+        let tasks = [];
+        req.body.task.forEach((task) => { if (task.description) { tasks.push({ _id: task._id, description: task.description, weight: Number(task.weight) }); } });
         goal.set({
             name: req.body.name,
             initScore: req.body.initScore,
             targScore: req.body.targScore,
             comment: req.body.comment,
-            updated: Date(Date.now())
+            updated: Date(Date.now()),
+            task: tasks
         });
         goal.save(function(err, goalUpdated) {
             if (err) { return err; }
-            res.redirect('/myOwn');
+            res.send('an offer has been made');
         });
     });
 };
@@ -457,7 +455,7 @@ exports.goal_negotiate_post = function(req, res) {
 /////////////////////////////////////////// OTHERS' GOALS:
 
 // Display others' goals on GET.
-/*
+
 exports.goal_others_get = function(req, res) {
     Unit.
     findOne({ owner: req.payload.id }).
@@ -471,14 +469,12 @@ exports.goal_others_get = function(req, res) {
             .in(ownerUnit.parentTo)
             .populate('owner')
             .populate('offer')
-            .exec( function (err, childrenGoals) {
+            .exec( function (err, othersGoals) {
             if (err) { return err; }
-            let offeredByMe = childrenGoals.filter((goal) => { return goal.statusOwner == "Pending" && goal.statusApprover == "Approved";});
-            let createdByOthers = childrenGoals.filter((goal) => { return goal.statusOwner == "Approved" && goal.statusApprover == "Pending";});
-            res.render('f_others_.pug', {children: ownerUnit.parentTo, offeredByMe, createdByOthers});
+            return res.send({othersGoals});
         });  
     });
-};*/
+};
 
 // Display Goal negotiate my offered form on GET.
 /*
@@ -552,50 +548,24 @@ exports.goal_negotiateOthers_post = function(req, res) {
         findById(goal.offer.id).
         exec( function(err, offerToUpdate) {
             if (err) { return err; }
+            let tasks = [];
+            req.body.task.forEach((task) => { if (task.description) { tasks.push({ _id: task._id, description: task.description, weight: Number(task.weight) }); } });
             offerToUpdate.set({
                 name: req.body.name,
                 initScore: req.body.initScore,
                 targScore: req.body.targScore,
                 comment: req.body.comment,
-                updated: Date(Date.now())
+                updated: Date(Date.now()),
+                task: tasks
             });
             offerToUpdate.save(function(err, offerUpdated) {
                 if (err) { return err; }
-                res.redirect('/others');
+                return res.send('offer submitted successfuly');
             });
         });
     
     });
 };
-
-// Handle Goal approve on GET.
-/*
-exports.goal_approve_get = function(req, res) {
-    Unit.
-    findOne({ owner: req.payload.id }).
-    populate('parentTo').
-    exec( function (err, ownerUnit) {
-        if (err) { return err; }
-        Goal.find()
-            .where('owner')
-            .in(ownerUnit.parentTo)
-            .populate('owner')
-            .populate('offer')
-            .exec( function (err, childrenGoals) {
-            if (err) { return err; }
-            let offeredByMe = childrenGoals.filter((goal) => { return goal.statusOwner == "Pending" && goal.statusApprover == "Approved";});
-            let createdByOthers = childrenGoals.filter((goal) => { return goal.statusOwner == "Approved" && goal.statusApprover == "Pending";});    
-            Goal.
-            findById(req.params.id).
-            populate({ path: 'owner', populate: { path: 'owner'}}).
-            populate('offer').
-            exec( function(err, goalToApprove) {
-                if(err) { return err; }
-                res.render('f_others_approve.pug', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToApprove});
-            });
-        });  
-    });
-}*/
 
 // Handle Goal approve on POST.
 exports.goal_approve_post = [
@@ -626,48 +596,13 @@ exports.goal_approve_post = [
                     hDataToUpdate._id = goalAccepted.history.id;
                     hDataToUpdate.save(function(err, hdataUpdated) {
                         if (err) { return err; }
-                        res.redirect('/others');  
+                        return res.send('successfuly approved the goal');
                     });
                 });
             });
         });       
     }
 ];
-
-// Handle Goal reject on GET.
-/*
-exports.goal_reject_get = function(req, res) {
-    Unit.
-    findOne({ owner: req.payload.id }).
-    populate('parentTo').
-    exec( function (err, ownerUnit) {
-        if (err) { return err; }
-        Goal.find()
-            .where('owner')
-            .in(ownerUnit.parentTo)
-            .populate('owner')
-            .populate('offer')
-            .exec( function (err, childrenGoals) {
-            if (err) { return err; }
-            let offeredByMe = childrenGoals.filter((goal) => { return goal.statusOwner == "Pending" && goal.statusApprover == "Approved";});
-            let createdByOthers = childrenGoals.filter((goal) => { return goal.statusOwner == "Approved" && goal.statusApprover == "Pending";});    
-            Goal.
-            findById(req.params.id).
-            populate({ path: 'owner', populate: { path: 'owner'}}).
-            populate('offer').
-            exec( function(err, goalToReject) {
-                if(err) { return err; }
-                if (goalToReject.statusOwner == "Pending" && goalToReject.statusApprover == "Approved") {
-                    //Rejet a goal that is offered by me:
-                    res.render('f_others_reject.pug', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToReject, goalName: goalToReject.offer.name});
-                } else {
-                    //Rejet a goal that is created by others:
-                    res.render('f_others_reject.pug', {children: ownerUnit.parentTo, offeredByMe, createdByOthers, goal: goalToReject, goalName: goalToReject.name});
-                }
-            });
-        });  
-    });
-}*/
 
 // Handle Goal reject on POST.
 exports.goal_reject_post = [
@@ -686,7 +621,6 @@ exports.goal_reject_post = [
             goal.set({statusApprover: 'Rejected'});
             goal.save( function (err, goalRejected) {
                 if (err) { return err; }
-                console.log(goalRejected.childTo);
                 Goal.
                 findById(goalRejected.childTo[0]).
                 exec( function(err, parentGoal) {
@@ -697,10 +631,11 @@ exports.goal_reject_post = [
                             parentGoal.parentTo.splice(index, 1);
                             parentGoal.save( function(err, updatedParentGoal) {
                                 if (err) { return err; }
+                                return res.send('successfuly rejected the goal');
                             });
                         }
                     }
-                    res.redirect('/others');
+                    return res.send('successfuly rejected the goal');
                 });
             });
         });       

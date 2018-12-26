@@ -4,16 +4,14 @@ import axios from 'axios';
 export default class FormAcceptOffer extends React.Component {
   
   handleSubmit = () => {
-    axios
-    .post('/acceptOffer', { id: this.props.goal._id })
-    .then(response => {
-        if (response.status === 200) {
-          this.props.updateOwnerGoals();
-          let event = new Event('fake');
-          this.props.toggleDisplayForm("formAcceptOffer", null, event);
-        }
+    axios.post('/acceptOffer', { id: this.props.goal._id })
+    .then( response => {
+      if (response.status === 200) {
+        this.props.updateOwnerGoals();
+        let event = new Event('fake');
+        this.props.toggleDisplayForm("formAcceptOffer", null, event);
       }
-    );
+    });
   }
   
   render() {

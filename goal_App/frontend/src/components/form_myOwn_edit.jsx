@@ -42,17 +42,15 @@ export default class FormEdit extends React.Component {
 
   handleSubmit = () => {
     const { name, initScore, targScore, comment, task} = this.state;
-    axios.post('/edit', {
-      id: this.props.goal._id, name, initScore, targScore, comment, task
-    }).then(
-      response => {
-        if (response.status === 200) {
-          this.props.updateOwnerGoals();
-          let event = new Event('fake');
-          this.props.toggleDisplayForm("formEdit", null, event);
-        }
-      }
-    );
+    axios.post('/edit', { id: this.props.goal._id, name, initScore, targScore, comment, task })
+      .then(
+        response => {
+          if (response.status === 200) {
+            this.props.updateOwnerGoals();
+            let event = new Event('fake');
+            this.props.toggleDisplayForm("formEdit", null, event);
+          }
+      });
   }
 
   toggleShowtasks = () => {

@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import FormRemove from './form_myOwn_remove.jsx';
 import FormAcceptOffer from './form_myOwn_acceptOffer.jsx';
 import FormNegotiateOffered from './form_myOwn_negotiateOffered.jsx';
@@ -10,12 +11,6 @@ export default class FormMyOwn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formRemove: false,
-      formAcceptOffer: false,
-      formNegotiateOffered: false,
-      formNegotiateOwn: false,
-      formEdit: false,
-      formOfferTo: false,
       someGoal: {}
     }
   }
@@ -28,7 +23,7 @@ export default class FormMyOwn extends React.Component {
         });
       }
     } else {
-      this.setState({ /* if the form is not visible, then load the goal to remove and show the form */
+      this.setState({ /* if the form is not visible, then load the goal to handle and show the form */
         someGoal: goal
       },
         this.setState({
@@ -36,6 +31,19 @@ export default class FormMyOwn extends React.Component {
         })
       );
     }
+  }
+
+  componentDidMount() {
+    this.updateOwnerGoals();
+  }
+
+  updateOwnerGoals = () => {
+    axios.get('/myOwn')
+    .then( response => {
+      this.setState({
+        ownerGoals: response.data.ownerGoals
+      });
+    });
   }
 
   render() {
@@ -52,80 +60,95 @@ export default class FormMyOwn extends React.Component {
     }
 
     const goalsOfferedToMe = () => {
-      return this.props.offeredToMe.map((goal) => { return  (
-        <div className="col-data-row" key={goal._id}>
-          <div className="col-data col-data-goal-name">{goal.offer.name}</div>
-          <div className="col-data">{goal.offer.initScore}</div>
-          <div className="col-data">{goal.offer.targScore}</div>
-          <div className="col-data">{goal.status}</div>
-          <div className="col-data">
-            <i className="far fa-check-square" onClick={(event) => this.toggleDisplayForm("formAcceptOffer", goal, event)} title="Accept"></i>
-            <i className="far fa-comment" title="Negotiate" style={goal.offer.updated > goal.updated || !goal.updated ? {color: '#515ad8', fontWeight: 'bold'} : {}}></i>
-            <i className="fa fa-remove" onClick={(event) => this.toggleDisplayForm("formRemove", goal, event)} title="Reject"></i>
-          </div>
-        </div>
-      );});
+      if (this.state.ownerGoals) {
+        const offeredToMe = this.state.ownerGoals.filter((goal) => { return (goal.statusApprover === "Approved" && goal.statusOwner === "Pending");});
+        if (offeredToMe.length > 0) {
+          return (
+            <div className="offeredToMe">
+              <div className="section-header">Goals offered to me</div>
+              {headers()}
+              {offeredToMe.map((goal) => { return (
+              <div className="col-data-row" key={goal._id}>
+                <div className="col-data col-data-goal-name">{goal.offer.name}</div>
+                <div className="col-data">{goal.offer.initScore}</div>
+                <div className="col-data">{goal.offer.targScore}</div>
+                <div className="col-data">{goal.status}</div>
+                <div className="col-data">
+                  <i className="far fa-check-square" onClick={(event) => this.toggleDisplayForm("formAcceptOffer", goal, event)} title="Accept"></i>
+                  <i className="far fa-comment" onClick={(event) => this.toggleDisplayForm("formNegotiateOffered", goal, event)} title="Negotiate" style={goal.offer.updated > goal.updated || !goal.updated ? {color: '#515ad8', fontWeight: 'bold'} : {}}></i>
+                  <i className="fa fa-remove" onClick={(event) => this.toggleDisplayForm("formRemove", goal, event)} title="Reject"></i>
+                </div>
+              </div>);})}
+            </div>);
+        }
+      }
     }
 
     const goalsCreatedByMe = () => {
-      return this.props.createdByMe.map((goal) => { return  (
-        <div className="col-data-row" key={goal._id}>
-          <div className="col-data col-data-goal-name">{goal.name}</div>
-          <div className="col-data">{goal.initScore}</div>
-          <div className="col-data">{goal.targScore}</div>
-          <div className="col-data">{goal.status}</div>
-          <div className="col-data">
-            <i className="far fa-comment" title="Negotiate" style={goal.offer.updated > goal.updated || (!goal.updated && goal.offer.updated) ?  {color: '#515ad8', fontWeight: 'bold'} : {}}></i>
-            <i className="fa fa-remove" onClick={(event) => this.toggleDisplayForm("formRemove", goal, event)} title="Reject"></i>
-          </div>
-        </div>
-      );});
+      if (this.state.ownerGoals) {
+        const createdByMe = this.state.ownerGoals.filter((goal) => { return (goal.statusApprover === "Pending" && goal.statusOwner === "Approved");});
+        if (createdByMe.length > 0) {
+          return (
+            <div className="myOffered">
+              <div className="section-header">Goals submitted by me</div>
+              {headers()}
+              {createdByMe.map((goal) => { return  (
+              <div className="col-data-row" key={goal._id}>
+                <div className="col-data col-data-goal-name">{goal.name}</div>
+                <div className="col-data">{goal.initScore}</div>
+                <div className="col-data">{goal.targScore}</div>
+                <div className="col-data">{goal.status}</div>
+                <div className="col-data">
+                  <i className="far fa-comment" onClick={(event) => this.toggleDisplayForm("formNegotiateOwn", goal, event)} title="Negotiate" style={goal.offer.updated > goal.updated || (!goal.updated && goal.offer.updated) ?  {color: '#515ad8', fontWeight: 'bold'} : {}}></i>
+                  <i className="fa fa-remove" onClick={(event) => this.toggleDisplayForm("formRemove", goal, event)} title="Reject"></i>
+                </div>
+              </div>);})}
+            </div>
+          );
+        }
+      } 
     }
 
     const myApprovedGoals = () => {
-      return this.props.myApproved.map((goal) => { return  (
-        <div className="col-data-row" key={goal._id}>
-          <div className="col-data col-data-goal-name"><a href={'/details/' + goal.id}>{goal.name}</a></div>
-          <div className="col-data">{goal.initScore}</div>
-          <div className="col-data">{goal.targScore}</div>
-          <div className="col-data">{goal.status}</div>
-          <div className="col-data">
-            <i className="fa fa-edit" onClick={(event) => this.toggleDisplayForm("formEdit", goal, event)} title="Edit"></i>
-            <i className="fa fa-remove" onClick={(event) => this.toggleDisplayForm("formRemove", goal, event)} title="Delete"></i>
-            <i className="fa fa-share-alt" onClick={(event) => this.toggleDisplayForm("formOfferTo", goal, event)} title="Ofer to..."></i>
-          </div>
-        </div>
-      );});
+      if (this.state.ownerGoals) {
+        const myApproved = this.state.ownerGoals.filter((goal) => { return (goal.statusApprover === "Approved" && goal.statusOwner === "Approved");});
+        if (myApproved.length > 0) {
+          return (
+            <div className="myApproved">
+              <div className="section-header">Approved goals</div>
+              {headers()}
+              {myApproved.map((goal) => { return  (
+              <div className="col-data-row" key={goal._id}>
+                <div className="col-data col-data-goal-name"><a href={'/details/' + goal.id}>{goal.name}</a></div>
+                <div className="col-data">{goal.initScore}</div>
+                <div className="col-data">{goal.targScore}</div>
+                <div className="col-data">{goal.status}</div>
+                <div className="col-data">
+                  <i className="fa fa-edit" onClick={(event) => this.toggleDisplayForm("formEdit", goal, event)} title="Edit"></i>
+                  <i className="fa fa-remove" onClick={(event) => this.toggleDisplayForm("formRemove", goal, event)} title="Delete"></i>
+                  <i className="fa fa-share-alt" onClick={(event) => this.toggleDisplayForm("formOfferTo", goal, event)} title="Ofer to..."></i>
+                </div>
+              </div>);})}
+            </div>
+          );
+        }
+      } 
     }
 
-
     return (
-      <div className="overlay" onClick={this.props.toggleDisplayMyOwnForm}>
+      <div className="overlay" onClick={(event) => this.props.toggleDisplayForm("formMyOwn", event)}>
         <div className="form-myOwn">
           <div className="form-header">My goals</div>
           <div className="form-body form-myOwn-body">
-          {this.props.offeredToMe.length > 0 && <div className="offeredToMe">
-              <div className="section-header">Goals offered to me</div>
-              {headers()}
-              {goalsOfferedToMe()}
-            </div>}
-            {this.props.createdByMe.length > 0 && <div className="myOffered">
-              <div className="section-header">Goals submitted by me</div>
-              {headers()}
-              {goalsCreatedByMe()}
-            </div>}
-            {this.props.myApproved.length > 0 && <div className="myApproved">
-              <div className="section-header">Approved goals</div>
-              {headers()}
-              {myApprovedGoals()}
-            </div>}
-            {this.state.formRemove && <FormRemove toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.props.updateOwnerGoals}/>}
-            {this.state.formNegotiateOwn && <FormNegotiateOwn toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal}/>}
-            {this.state.formAcceptOffer && <FormAcceptOffer toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.props.updateOwnerGoals}/>}
-            {this.state.formNegotiateOffered && <FormNegotiateOffered toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal}/>}
-            {this.state.formEdit && <FormEdit toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.props.updateOwnerGoals}/>}
-            {this.state.formOfferTo && <FormOfferTo toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.props.updateOwnerGoals} children={this.props.children}/>}
-
+            {goalsOfferedToMe()}
+            {goalsCreatedByMe()}
+            {myApprovedGoals()}
+            {this.state.formRemove && <FormRemove toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals}/>}
+            {this.state.formNegotiateOwn && <FormNegotiateOwn toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals}/>}
+            {this.state.formAcceptOffer && <FormAcceptOffer toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals}/>}
+            {this.state.formNegotiateOffered && <FormNegotiateOffered toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals}/>}
+            {this.state.formEdit && <FormEdit toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals}/>}
+            {this.state.formOfferTo && <FormOfferTo toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals} children={this.props.children}/>}
           </div>
         </div>
       </div>

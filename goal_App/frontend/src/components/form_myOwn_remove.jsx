@@ -4,15 +4,14 @@ import axios from 'axios';
 export default class FormRemove extends React.Component {
   
   handleSubmit = () => {
-    axios.post('/delete', {
-      id: this.props.goal._id
-    }).then( response => {
-      if (response.status === 200) {
-        this.props.updateOwnerGoals();
-        let event = new Event('fake');
-        this.props.toggleDisplayForm("formRemove", null, event);
-      }
-    });
+    axios.post('/delete', {id: this.props.goal._id})
+      .then(response => {
+        if (response.status === 200) {
+          this.props.updateOwnerGoals();
+          let event = new Event('fake');
+          this.props.toggleDisplayForm("formRemove", null, event);
+        }
+      });
   }
   
   render() {

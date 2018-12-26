@@ -55,9 +55,8 @@ export default class FormAdd extends React.Component {
     }).then(
       response => { 
         if (response.status === 200) {
-          this.props.updateOwnerGoals();
           let event = new Event('fake');
-          this.props.toggleDisplayAddForm(event);
+          this.props.toggleDisplayForm('formAdd', event);
         }
       }  
     );
@@ -82,7 +81,7 @@ export default class FormAdd extends React.Component {
     }
 
     return (
-      <div className="overlay form-add-overlay" onClick={this.props.toggleDisplayAddForm}>
+      <div className="overlay form-add-overlay" onClick={(event) => this.props.toggleDisplayForm('formAdd', event)}>
         <div className="form-add">
           <div className="form-header">Add a new goal</div>
           <div className="form-body">

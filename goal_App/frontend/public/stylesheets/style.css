@@ -484,9 +484,24 @@ nav ul {
   
 .form-others .col-data-goal-name { width: 25%; }
 
-/* Styling the form negotiateTheirOwn*/
+/* Styling the form negotiateOfferedToMe*/
 
-.form-negotiateTheirOwn form {
-  padding-top: 30px;
-  border-top: 1px solid rgb(187, 187, 187);
+.form-negotiateOffered, .form-negotiateOwn, .form-negotiateMyOffered {
+  margin: 5% 10% auto 10%;
+}
+
+.form-negotiateOffered .form-body, .form-negotiateOwn .form-body, .form-negotiateMyOffered .form-body {
+  padding-bottom: 5%;
+}
+
+
+
+.form-negotiateOffered form, .form-negotiateOwn form, .form-negotiateMyOffered form {
+  width: 45%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.form-negotiateOffered form:first-child, .form-negotiateOwn form:first-child, .form-negotiateMyOffered form:first-child {
+  margin-right: 10%;
 }

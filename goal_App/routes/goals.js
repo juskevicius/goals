@@ -58,7 +58,7 @@ router.post('/negotiate', auth.required, goalController.goal_negotiate_post);
 
 
 /* GET others */
-router.get('/others', auth.required, goalController.goal_homePage_get);
+router.get('/others', auth.required, goalController.goal_others_get);
 
 /* GET negotiate my offered */
 //router.get('/negotiateMyOffered/:id', auth.required, goalController.goal_negotiateMyOffered_get);
