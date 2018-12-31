@@ -5,11 +5,11 @@ export default class FormNegotiateMyOffered extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: this.props.goal.offer.name,
-      initScore: this.props.goal.offer.initScore,
-      targScore: this.props.goal.offer.targScore,
-      comment: this.props.goal.offer.comment,
-      task: this.props.goal.offer.task,
+      name: this.props.goal.approversOffer.name || '',
+      initScore: this.props.goal.approversOffer.initScore || '',
+      targScore: this.props.goal.approversOffer.targScore || '',
+      comment: this.props.goal.approversOffer.comment || '',
+      task: this.props.goal.approversOffer.task,
     }
   }
 
@@ -40,6 +40,16 @@ export default class FormNegotiateMyOffered extends React.Component {
     }
   }
 
+  copyFieldValues = () => {
+    this.setState({
+      name: this.props.goal.ownersOffer.name || '',
+      initScore: this.props.goal.ownersOffer.initScore || '',
+      targScore: this.props.goal.ownersOffer.targScore || '',
+      comment: this.props.goal.ownersOffer.comment || '',
+      task: this.props.goal.ownersOffer.task || '',
+    });
+  }
+
   handleSubmit1 = () => {
     axios.post('/approve', {id: this.props.goal._id})
       .then(response => {
@@ -52,22 +62,32 @@ export default class FormNegotiateMyOffered extends React.Component {
   }
 
   handleSubmit2 = () => {
-    const { name, initScore, targScore, comment, task } = this.state;
-    axios.post('/negotiateOthers', {
-      id: this.props.goal._id, 
-      name, 
-      initScore, 
-      targScore, 
-      comment, 
-      task 
-    })
-      .then(response => {
-        if (response.status === 200) {
-          this.props.updateOthersGoals();
-          let event = new Event('fake');
-          this.props.toggleDisplayForm("formNegotiateMyOffered", null, event);
+    
+    if (this.form.checkValidity() === false) {
+      for (let i = 0; i < this.form.length; i++) {
+        if (this.form[i].validationMessage) {
+          this.form.querySelector('.invalid-feedback').textContent = this.form[i].validationMessage;
         }
-      });
+      }
+    } else {
+      const { name, initScore, targScore, comment } = this.state;
+      const task = this.state.task.filter((task) => {return task.description;});
+      axios.post('/approversOffer', {
+        id: this.props.goal._id, 
+        name, 
+        initScore, 
+        targScore, 
+        comment, 
+        task 
+      })
+        .then(response => {
+          if (response.status === 200) {
+            this.props.updateOthersGoals();
+            let event = new Event('fake');
+            this.props.toggleDisplayForm("formNegotiateMyOffered", null, event);
+          }
+        });
+    }
   }
 
   
@@ -77,16 +97,20 @@ export default class FormNegotiateMyOffered extends React.Component {
       return tasksToList.map((task, index) => { return (
         <div className="task-row" key={task._id || task.nr}>
           <div className="descr-block">
-            <label className="task task-label-descr">Task nr {index + 1}:</label>
-            <input className="task task-input-descr" type="text" onChange={this.handleTaskChange} name={"task[" + index + "][description]"} value={task.description} readOnly={readOnly}></input>
+            <label className="task task-label-descr">Task nr {index + 1}:
+              <input className="task task-input-descr" type="text" onChange={this.handleTaskChange} name={"task[" + index + "][description]"} value={task.description} readOnly={readOnly}></input>
+            </label>
           </div>
           <div className="weight-block">
-            <label className="task task-label-weight">Weight</label> 
-            <input className="task task-input-weight" type="text" onChange={this.handleTaskChange} name={"task[" + index + "][weight]"} value={task.weight || ''} readOnly={readOnly}></input>
+            <label className="task task-label-weight">Weight 
+              <input className="task task-input-weight" type="number" onChange={this.handleTaskChange} name={"task[" + index + "][weight]"} value={task.weight || ''} readOnly={readOnly}></input>
+            </label>
           </div>
         </div>
       );});
     }
+
+    const ownersOffer = this.props.goal.ownersOffer;
 
     return (
       <div className="overlay" onClick={(event) => this.props.toggleDisplayForm("formNegotiateMyOffered", null, event)}>
@@ -94,39 +118,51 @@ export default class FormNegotiateMyOffered extends React.Component {
           <div className="form-header">Negotiate my offered goal</div>
           <div className="form-body">
             <form>
-              <h4>Response from {this.props.goal.owner.name} {this.props.goal.updated_formatted ? this.props.goal.updated_formatted : 'not yet submitted'}:</h4>
-              <label>Goal:</label>
-              <input type="text" value={this.props.goal.name} readOnly></input>
-              <label>Initial score:</label>
-              <input type="text" value={this.props.goal.initScore} readOnly></input>
-              <label>Target score:</label>
-              <input type="text" value={this.props.goal.targScore} readOnly></input>
-              <label>Comment:</label>
-              <input type="text" value={this.props.goal.comment} readOnly></input>
-              {this.props.goal.task.length > 0 && 
+              <h4>Response {ownersOffer ? 'from ' + ownersOffer.owner.name + ', ' : 'not yet submitted'}{ownersOffer ? (ownersOffer.updated_formatted ? ownersOffer.updated_formatted : ownersOffer.created_formatted) : ''}:</h4>
+              <label>Goal:
+                <input type="text" value={(ownersOffer && ownersOffer.name) ? ownersOffer.name : ''} readOnly></input>
+              </label>
+              <label>Initial score:
+                <input type="number" value={(ownersOffer && ownersOffer.initScore) ? ownersOffer.initScore : ''} readOnly></input>
+              </label>
+              <label>Target score:
+                <input type="number" value={(ownersOffer && ownersOffer.targScore) ? ownersOffer.targScore : ''} readOnly></input>
+              </label>
+              <label>Comment:
+                <input type="text" value={(ownersOffer && ownersOffer.comment) ? ownersOffer.comment : ''} readOnly></input>
+              </label>
+              {(ownersOffer && ownersOffer.task.length > 0) && 
               <div className="task-group">
-                {tasks(this.props.goal.task, true)}
+                {tasks(ownersOffer.task, true)}
                 <div className="last-task-row"></div>
               </div>}
-              <input className="form-btn" type="submit" value="Approve" onClick={this.handleSubmit1}></input>
+              {ownersOffer && <input className="form-btn" type="submit" value="Approve" onClick={this.handleSubmit1}></input>}
             </form>
-            <form>
-              <h4>My offer {this.props.goal.updated_formatted ? '' : 'to ' + this.props.goal.owner.name + ' '}{this.props.goal.offer.updated_formatted ? ', ' + this.props.goal.offer.updated_formatted : this.props.goal.offer.created_formatted}:</h4>
-              <label>Goal:</label>
-              <input type="text" name="name" value={this.state.name} onChange={this.handleChange}></input>
-              <label>Initial score:</label>
-              <input type="text" name="initScore" value={this.state.initScore} onChange={this.handleChange}></input>
-              <label>Target score:</label>
-              <input type="text" name="targScore" value={this.state.targScore} onChange={this.handleChange}></input>
-              <label>Comment:</label>
-              <input type="text" name="comment" value={this.state.comment} onChange={this.handleChange}></input>
-              {this.props.goal.offer.task.length > 0 && 
+            <form ref={el => this.form = el}>
+              <h4>My offer to {this.props.goal.owner.name + ', '}{this.props.goal.approversOffer.updated_formatted ? this.props.goal.approversOffer.updated_formatted : this.props.goal.approversOffer.created_formatted}:</h4>
+              <label>Goal:
+                <input type="text" name="name" value={this.state.name} onChange={this.handleChange} required></input>
+                <div className="invalid-feedback" />
+              </label>
+              <label>Initial score:
+                <input type="number" name="initScore" value={this.state.initScore || ''} onChange={this.handleChange}></input>
+              </label>
+              <label>Target score:
+                <input type="number" name="targScore" value={this.state.targScore || ''} onChange={this.handleChange}></input>
+              </label>
+              <label>Comment:
+                <input type="text" name="comment" value={this.state.comment || ''} onChange={this.handleChange}></input>
+              </label>
+              {this.props.goal.approversOffer.task.length > 0 && 
               <div className="task-group">
                 {tasks(this.state.task, false)}
                 <div className="last-task-row"></div>
               </div>}
               <input className="form-btn" type="submit" value="Submit a new offer" onClick={this.handleSubmit2}></input>
             </form>
+            <div className="form-btn-center">
+              <input className="form-btn" onClick={this.copyFieldValues} type='button' value='&#8658; copy field values &#8658;'></input>
+            </div>
           </div>
         </div>
       </div>

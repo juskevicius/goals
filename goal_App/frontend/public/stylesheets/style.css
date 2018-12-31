@@ -93,6 +93,7 @@ body {
 
 .header {
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .r-margin, .l-margin {
@@ -122,8 +123,8 @@ body {
   display: inline-block;
 }
 
-.r-main2 .col-headers-tasks {
-  margin-top: 40px;
+.r-main2 .children-goals {
+  margin-bottom: 40px;
 }
 
 .r-main2 .col-header {
@@ -294,7 +295,7 @@ nav ul {
   font-weight: bold;
 }
 
-.form-body label, .form-body input  {
+.form-body label, .form-body input, .form-body select  {
   width: 100%;
   font-size: 14px;
   margin: 15px 0;
@@ -313,7 +314,6 @@ nav ul {
 }
 
 .overlay {
-  /*display: none;*/
   position: fixed;
   width: 100%;
   height: 100%;
@@ -335,6 +335,21 @@ nav ul {
   float: right;
   clear: both;
   cursor: pointer;
+}
+
+.form-btn-center input {
+  float: none;
+}
+
+.form-btn-center {
+  text-align: center;
+}
+
+.invalid-feedback {
+  color: red;
+  font-size: 10px;
+  position: relative;
+  top: -15px;
 }
 
 /* Styling the form Add a goal */
@@ -361,8 +376,8 @@ nav ul {
   justify-content: space-between;
 }
 
-.buttons .add-task {
-  margin-right: 20px;
+.buttons input:nth-child(2) {
+  margin-left: 20px;
 }
 
 /* Styling the form for my goals */
@@ -449,21 +464,34 @@ nav ul {
   padding-top: 40px;
 }
 
-.offer-elm label, .offer-elm input, .offer-elm select, .task-row > div {
+.offer-elm label, .task-row .descr-block, .task-row .weight-block {
   width: 45%;
   display: inline-block;
 }
 
-.offer-elm input {
-  padding: 1%;
-  width: 43%;
+.task-row label {
+  width: 100%;
 }
 
-.offer-elm label:nth-child(1), .offer-elm select, .offer-elm label:nth-child(5), .offer-elm input:nth-child(7), .offer-elm .descr-block {
+.offer-elm label:nth-child(5) {
+  width: 100%;
+}
+
+.offer-elm input, .offer-elm select {
+  padding: 3%;
+  width: 94%;
+}
+
+.offer-elm label:nth-child(5) input {
+  padding: 1.5%;
+  width: 97%;
+}
+
+.offer-elm label:nth-child(1), .offer-elm label:nth-child(3), .offer-elm .descr-block {
   margin-right: 10%;
 }
 
-.offer-elm label:nth-child(9), .offer-elm input:nth-child(10), .offer-elm .task {
+.offer-elm label:nth-child(9) {
   width: 100%;
 }
 
@@ -486,22 +514,24 @@ nav ul {
 
 /* Styling the form negotiateOfferedToMe*/
 
-.form-negotiateOffered, .form-negotiateOwn, .form-negotiateMyOffered {
+.form-negotiateOffered, .form-negotiateOwn, .form-negotiateMyOffered, .form-negotiateTheirOwn {
   margin: 5% 10% auto 10%;
 }
 
-.form-negotiateOffered .form-body, .form-negotiateOwn .form-body, .form-negotiateMyOffered .form-body {
+.form-negotiateOffered .form-body, .form-negotiateOwn .form-body, .form-negotiateMyOffered .form-body, .form-negotiateTheirOwn .form-body {
   padding-bottom: 5%;
 }
 
-
-
-.form-negotiateOffered form, .form-negotiateOwn form, .form-negotiateMyOffered form {
+.form-negotiateOffered form, .form-negotiateOwn form, .form-negotiateMyOffered form, .form-negotiateTheirOwn form {
   width: 45%;
   display: inline-block;
   vertical-align: top;
 }
 
-.form-negotiateOffered form:first-child, .form-negotiateOwn form:first-child, .form-negotiateMyOffered form:first-child {
+.form-negotiateOffered form:first-child, .form-negotiateOwn form:first-child, .form-negotiateMyOffered form:first-child, .form-negotiateTheirOwn form:first-child {
   margin-right: 10%;
+}
+
+.DayPickerInput, .DayPickerInput input {
+  width: 100%;
 }

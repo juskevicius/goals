@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import FormReject from './form_others_reject.jsx';
-import FormApprove from './form_others_approve.jsx';
 import FormNegotiateMyOffered from './form_others_negotiateMyOffered.jsx';
 import FormNegotiateTheirOwn from './form_others_negotiateTheirOwn.jsx';
 
@@ -81,14 +80,14 @@ export default class FormOthers extends React.Component {
               <div className="section-header">Offered by me</div>
               {headers1()}
               {offeredByMe.map((goal) => { return (
-              <div className="col-data-row" key={goal.id}>
-                <div className="col-data col-data-goal-name">{goal.offer.name}</div>
+              <div className="col-data-row" key={goal._id}>
+                <div className="col-data col-data-goal-name">{goal.approversOffer.name}</div>
                 <div className="col-data">{goal.owner.name}</div>
-                <div className="col-data">{goal.offer.initScore}</div>
-                <div className="col-data">{goal.offer.targScore}</div>
+                <div className="col-data">{goal.approversOffer.initScore}</div>
+                <div className="col-data">{goal.approversOffer.targScore}</div>
                 <div className="col-data">{goal.status}</div>
                 <div className="col-data">
-                  <i className="far fa-comment" title="Negotiate" style={goal.updated > goal.offer.updated || (!goal.offer.updated && goal.updated) ? {color: '#515ad8', fontWeight: 'bold'} : {}} onClick={(event) => this.toggleDisplayForm("formNegotiateMyOffered", goal, event)}></i>
+                  <i className="far fa-comment" title="Negotiate" style={goal.ownersOffer && ((goal.ownersOffer.updated_formatted || goal.ownersOffer.created_formatted) > (goal.approversOffer.updated_formatted || goal.approversOffer.created_formatted)) ? {color: '#515ad8', fontWeight: 'bold'} : {}} onClick={(event) => this.toggleDisplayForm("formNegotiateMyOffered", goal, event)}></i>
                   <i className="fa fa-remove" title="Remove" onClick={(event) => this.toggleDisplayForm("formReject", goal, event)}></i>
                 </div>
               </div>);})}
@@ -107,15 +106,14 @@ export default class FormOthers extends React.Component {
               <div className="section-header">Created by others</div>
               {headers2()}
               {createdByOthers.map((goal) => { return (
-              <div className="col-data-row" key={goal.id}>
-                <div className="col-data col-data-goal-name">{goal.name}</div>
+              <div className="col-data-row" key={goal._id}>
+                <div className="col-data col-data-goal-name">{goal.ownersOffer.name}</div>
                 <div className="col-data">{goal.owner.name}</div>
-                <div className="col-data">{goal.initScore}</div>
-                <div className="col-data">{goal.targScore}</div>
+                <div className="col-data">{goal.ownersOffer.initScore}</div>
+                <div className="col-data">{goal.ownersOffer.targScore}</div>
                 <div className="col-data">{goal.status}</div>
                 <div className="col-data">
-                  <i className="far fa-check-square" title="Approve" onClick={(event) => this.toggleDisplayForm("formApprove", goal, event)}></i>
-                  <i className="far fa-comment triggerNegotiateTheirOwn" title="Negotiate" style={goal.updated > goal.offer.updated || !goal.offer.updated ? {color: '#515ad8', fontWeight: 'bold'} : {}}></i>
+                  <i className="far fa-comment triggerNegotiateTheirOwn" title="Negotiate" style={!goal.approversOffer || (goal.approversOffer && ((goal.ownersOffer.updated_formatted || goal.ownersOffer.created_formatted) > (goal.approversOffer.updated_formatted || goal.approversOffer.created_formatted))) ? {color: '#515ad8', fontWeight: 'bold'} : {}} onClick={(event) => this.toggleDisplayForm("formNegotiateTheirOwn", goal, event)}></i>
                   <i className="fa fa-remove" title="Reject" onClick={(event) => this.toggleDisplayForm("formReject", goal, event)}></i>
                 </div>
               </div>);})}
@@ -133,7 +131,6 @@ export default class FormOthers extends React.Component {
           <div className="form-body form-others-body">
             {goalsOfferedByMe()}
             {goalsCreatedByOthers()}
-            {this.state.formApprove && <FormApprove toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals}/>}
             {this.state.formNegotiateMyOffered && <FormNegotiateMyOffered toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals}/>}
             {this.state.formNegotiateTheirOwn && <FormNegotiateTheirOwn toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals}/>}
             {this.state.formReject && <FormReject toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals}/>}

@@ -46,6 +46,19 @@ export default class FormMyOwn extends React.Component {
     });
   }
 
+  getGoalDetails = (event) => {
+    event.preventDefault();
+    const url = event.target.getAttribute('href');
+    axios.get(url)
+      .then(response => {
+        if (response.status === 200) {
+          this.props.updateGoalToDisplay(response);
+          const event = new Event('fake');
+          this.props.toggleDisplayForm("formMyOwn", event);
+        }
+      }); 
+  } 
+
   render() {
 
     const headers = () => {
@@ -69,13 +82,13 @@ export default class FormMyOwn extends React.Component {
               {headers()}
               {offeredToMe.map((goal) => { return (
               <div className="col-data-row" key={goal._id}>
-                <div className="col-data col-data-goal-name">{goal.offer.name}</div>
-                <div className="col-data">{goal.offer.initScore}</div>
-                <div className="col-data">{goal.offer.targScore}</div>
+                <div className="col-data col-data-goal-name">{goal.approversOffer.name}</div>
+                <div className="col-data">{goal.approversOffer.initScore}</div>
+                <div className="col-data">{goal.approversOffer.targScore}</div>
                 <div className="col-data">{goal.status}</div>
                 <div className="col-data">
                   <i className="far fa-check-square" onClick={(event) => this.toggleDisplayForm("formAcceptOffer", goal, event)} title="Accept"></i>
-                  <i className="far fa-comment" onClick={(event) => this.toggleDisplayForm("formNegotiateOffered", goal, event)} title="Negotiate" style={goal.offer.updated > goal.updated || !goal.updated ? {color: '#515ad8', fontWeight: 'bold'} : {}}></i>
+                  <i className="far fa-comment" onClick={(event) => this.toggleDisplayForm("formNegotiateOffered", goal, event)} title="Negotiate" style={!goal.ownersOffer || ((goal.approversOffer.updated || goal.approversOffer.created) > (goal.ownersOffer.updated || goal.ownersOffer.created)) ? {color: '#515ad8', fontWeight: 'bold'} : {}}></i>
                   <i className="fa fa-remove" onClick={(event) => this.toggleDisplayForm("formRemove", goal, event)} title="Reject"></i>
                 </div>
               </div>);})}
@@ -94,12 +107,12 @@ export default class FormMyOwn extends React.Component {
               {headers()}
               {createdByMe.map((goal) => { return  (
               <div className="col-data-row" key={goal._id}>
-                <div className="col-data col-data-goal-name">{goal.name}</div>
-                <div className="col-data">{goal.initScore}</div>
-                <div className="col-data">{goal.targScore}</div>
+                <div className="col-data col-data-goal-name">{goal.ownersOffer.name}</div>
+                <div className="col-data">{goal.ownersOffer.initScore}</div>
+                <div className="col-data">{goal.ownersOffer.targScore}</div>
                 <div className="col-data">{goal.status}</div>
                 <div className="col-data">
-                  <i className="far fa-comment" onClick={(event) => this.toggleDisplayForm("formNegotiateOwn", goal, event)} title="Negotiate" style={goal.offer.updated > goal.updated || (!goal.updated && goal.offer.updated) ?  {color: '#515ad8', fontWeight: 'bold'} : {}}></i>
+                  <i className="far fa-comment" onClick={(event) => this.toggleDisplayForm("formNegotiateOwn", goal, event)} title="Negotiate" style={goal.approversOffer && ((goal.approversOffer.updated || goal.approversOffer.created) > (goal.ownersOffer.updated || goal.ownersOffer.created)) ?  {color: '#515ad8', fontWeight: 'bold'} : {}}></i>
                   <i className="fa fa-remove" onClick={(event) => this.toggleDisplayForm("formRemove", goal, event)} title="Reject"></i>
                 </div>
               </div>);})}
@@ -119,7 +132,7 @@ export default class FormMyOwn extends React.Component {
               {headers()}
               {myApproved.map((goal) => { return  (
               <div className="col-data-row" key={goal._id}>
-                <div className="col-data col-data-goal-name"><a href={'/details/' + goal.id}>{goal.name}</a></div>
+                <div className="col-data col-data-goal-name"><a href={'/details/' + goal._id} onClick={this.getGoalDetails}>{goal.name}</a></div>
                 <div className="col-data">{goal.initScore}</div>
                 <div className="col-data">{goal.targScore}</div>
                 <div className="col-data">{goal.status}</div>

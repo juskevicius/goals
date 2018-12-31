@@ -47,19 +47,32 @@ export default class FormAdd extends React.Component {
     }
   }
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    const { name, initScore, targScore, comment, task } = this.state;
-    axios.post('/add', {
-      name, initScore, targScore, comment, task
-    }).then(
-      response => { 
-        if (response.status === 200) {
-          let event = new Event('fake');
-          this.props.toggleDisplayForm('formAdd', event);
+  handleSubmit = () => {
+    if (this.form.checkValidity() === false) {
+      for (let i = 0; i < this.form.length; i++) {
+        if (this.form[i].validationMessage) {
+          this.form.querySelector('.invalid-feedback').textContent = this.form[i].validationMessage;
         }
-      }  
-    );
+      }
+    } else {
+      const { name, initScore, targScore, comment } = this.state;
+      const task = this.state.task.filter((task) => {return task.description;});
+      axios.post('/add', {
+        name, initScore, targScore, comment, task
+      }).then(
+        response => {
+          if (response.status === 200) {
+            if (response.data.constructor === Array) {
+              for (let i = 0; i < response.data.length; i++) {
+                alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
+              }
+            }
+            let event = new Event('fake');
+            this.props.toggleDisplayForm('formAdd', event);
+          }
+        }  
+      );
+    }
   }
 
   
@@ -69,31 +82,38 @@ export default class FormAdd extends React.Component {
       return (
         <div className="task-row" key={taskNr}>
           <div className="descr-block">
-            <label className="task task-label-descr">Task nr {taskNr + 1}</label>
-            <input className="task task-input-descr" onChange={funcAddtask} type="text" name={"task[" + taskNr + "][description]"} value={description || ''}></input>
+            <label className="task task-label-descr">Task nr {taskNr + 1}
+              <input className="task task-input-descr" onChange={funcAddtask} type="text" name={"task[" + taskNr + "][description]"} value={description || ''}></input>
+            </label>
           </div>
           <div className="weight-block">
-            <label className="task task-label-weight">Weight</label> 
-            <input className="task task-input-weight" onChange={funcAddtask} type="text" name={"task[" + taskNr + "][weight]"} value={weight || ''}></input>
+            <label className="task task-label-weight">Weight
+              <input className="task task-input-weight" onChange={funcAddtask} type="number" name={"task[" + taskNr + "][weight]"} value={weight || ''}></input>
+            </label>
           </div>
         </div>
       );
     }
 
     return (
-      <div className="overlay form-add-overlay" onClick={(event) => this.props.toggleDisplayForm('formAdd', event)}>
+      <div className="overlay" onClick={(event) => this.props.toggleDisplayForm('formAdd', event)}>
         <div className="form-add">
           <div className="form-header">Add a new goal</div>
           <div className="form-body">
-            <form>
-              <label>Goal:</label>
-              <input type="text" name="name" value={this.state.name} onChange={this.handleChange}></input>
-              <label>Initial score:</label>
-              <input type="text" name="initScore" placeholder="50%" value={this.state.initScore || ''} onChange={this.handleChange}></input>
-              <label>Target score:</label>
-              <input type="text" name="targScore" placeholder="99%" value={this.state.targScore || ''} onChange={this.handleChange}></input>
-              <label>Comment:</label>
-              <input type="text" name="comment" value={this.state.comment} onChange={this.handleChange || ''}></input>
+            <form ref={el => this.form = el}>
+              <label>Goal:
+                <input type="text" name="name" value={this.state.name} onChange={this.handleChange} /*required*/></input>
+                <div className="invalid-feedback" />
+              </label>
+              <label>Initial score:
+                <input type="number" name="initScore" placeholder="50%" value={this.state.initScore || ''} onChange={this.handleChange}></input>
+              </label>
+              <label>Target score:
+                <input type="number" name="targScore" placeholder="99%" value={this.state.targScore || ''} onChange={this.handleChange}></input>
+              </label>
+              <label>Comment:
+                <input type="text" name="comment" value={this.state.comment} onChange={this.handleChange || ''}></input>
+              </label>
               {this.state.showtasks &&
               <div className="task-group">
                 {this.state.task.map((task) => {return taskElm(task.nr, task.description, task.weight, this.handleTaskChange);})}

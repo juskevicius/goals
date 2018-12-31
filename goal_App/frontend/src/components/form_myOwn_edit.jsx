@@ -41,16 +41,27 @@ export default class FormEdit extends React.Component {
   }
 
   handleSubmit = () => {
-    const { name, initScore, targScore, comment, task} = this.state;
-    axios.post('/edit', { id: this.props.goal._id, name, initScore, targScore, comment, task })
-      .then(
-        response => {
-          if (response.status === 200) {
-            this.props.updateOwnerGoals();
-            let event = new Event('fake');
-            this.props.toggleDisplayForm("formEdit", null, event);
-          }
-      });
+    
+    if (this.form.checkValidity() === false) {
+      for (let i = 0; i < this.form.length; i++) {
+        if (this.form[i].validationMessage) {
+          this.form.querySelector('.invalid-feedback').textContent = this.form[i].validationMessage;
+        }
+      }
+    } else {
+      const { name, initScore, targScore, comment } = this.state;
+      const task = this.state.task.filter((task) => {return task.description;});
+      console.log(task);
+      axios.post('/edit', { id: this.props.goal._id, name, initScore, targScore, comment, task })
+        .then(
+          response => {
+            if (response.status === 200) {
+              this.props.updateOwnerGoals();
+              let event = new Event('fake');
+              this.props.toggleDisplayForm("formEdit", null, event);
+            }
+        });
+    }
   }
 
   toggleShowtasks = () => {
@@ -65,12 +76,14 @@ export default class FormEdit extends React.Component {
       return this.state.task.map((task, index) => { return (
         <div className="task-row" key={task._id || task.nr}>
           <div className="descr-block">
-            <label className="task task-label-descr">Task nr {index + 1}:</label>
-            <input className="task task-input-descr" type="text" onChange={this.handleTaskChange} name={"task[" + index + "][description]"} value={task.description}></input>
+            <label className="task task-label-descr">Task nr {index + 1}:
+              <input className="task task-input-descr" type="text" onChange={this.handleTaskChange} name={"task[" + index + "][description]"} value={task.description}></input>
+            </label>
           </div>
           <div className="weight-block">
-            <label className="task task-label-weight">Weight</label> 
-            <input className="task task-input-weight" type="text" onChange={this.handleTaskChange} name={"task[" + index + "][weight]"} value={task.weight || ''}></input>
+            <label className="task task-label-weight">Weight
+              <input className="task task-input-weight" type="number" onChange={this.handleTaskChange} name={"task[" + index + "][weight]"} value={task.weight || ''}></input>
+            </label> 
           </div>
         </div>
       );});
@@ -81,15 +94,20 @@ export default class FormEdit extends React.Component {
         <div className="form-edit">
           <div className="form-header">Edit a goal</div>
           <div className="form-body">
-            <form>
-              <label>Goal:</label>
-              <input type="text" name="name" onChange={this.handleChange} value={this.state.name}></input>
-              <label>Initial score:</label>
-              <input type="text" name="initScore" onChange={this.handleChange} value={this.state.initScore || ''}></input>
-              <label>Target score:</label>
-              <input type="text" name="targScore" onChange={this.handleChange} value={this.state.targScore || ''}></input>
-              <label>Comment:</label>
-              <input type="text" name="comment" onChange={this.handleChange} value={this.state.comment || ''}></input>
+            <form ref={el => this.form = el}>
+              <label>Goal:
+                <input type="text" name="name" onChange={this.handleChange} value={this.state.name} required></input>
+                <div className="invalid-feedback" />
+              </label>
+              <label>Initial score:
+                <input type="number" name="initScore" onChange={this.handleChange} value={this.state.initScore || ''}></input>
+              </label>
+              <label>Target score:
+                <input type="number" name="targScore" onChange={this.handleChange} value={this.state.targScore || ''}></input>
+              </label>
+              <label>Comment:
+                <input type="text" name="comment" onChange={this.handleChange} value={this.state.comment || ''}></input>
+              </label>
               {this.state.task.length > 0 && 
               <div className="task-group">
                 {tasks()}

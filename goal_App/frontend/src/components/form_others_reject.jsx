@@ -22,10 +22,12 @@ export default class FormReject extends React.Component {
           <div className="form-header">Reject a goal</div>
           <div className="form-body">
             <form action="/reject" method="post" href="">
-              <label>Do you really want to reject this goal?</label>
-              <input type="text" name="name" value={this.props.goal.name} readOnly></input>
-              <label>Owner</label>
-              <input type="text" name="owner" value={this.props.goal.owner.name} readOnly></input>
+              <label>Do you really want to reject this goal?
+                <input type="text" name="name" value={this.props.goal.name} readOnly></input>
+              </label>
+              <label>Owner
+                <input type="text" name="owner" value={this.props.goal.owner.name} readOnly></input>
+              </label>
               <input className="form-btn" type="submit" value="Reject" onClick={this.handleSubmit}></input>
             </form>
           </div>

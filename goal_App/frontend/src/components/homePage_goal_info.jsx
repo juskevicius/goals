@@ -3,7 +3,7 @@ import React from 'react';
 export default class GoalInfo extends React.Component {
   render() {
     return (
-      <div className="l-main2">
+      <div>
         <h4>Goal:</h4>
         <p>{this.props.goal.name}</p>
         <h4>Owner:</h4>

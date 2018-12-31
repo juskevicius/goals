@@ -21,8 +21,9 @@ export default class FormRemove extends React.Component {
           <div className="form-header">Remove a goal</div>
           <div className="form-body">
             <form>
-              <label>Do you really want to remove this goal?</label>
-              <input type="text" name="name" value={this.props.goal.name} readOnly></input>
+              <label>Do you really want to remove this goal?
+                <input type="text" name="name" value={this.props.goal.name} readOnly></input>
+              </label>
               <input className="form-btn" type="submit" onClick={this.handleSubmit} value="Remove"></input>
             </form>
           </div>

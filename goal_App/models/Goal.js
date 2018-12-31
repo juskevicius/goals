@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const GoalSchema = new Schema(
     {
-        name: {type: String, required: true, max: 100},
+        name: {type: String, required: true},
         owner: {type: Schema.Types.ObjectId, ref: 'Unit'},
         initScore: {type: Number},
         targScore: {type: Number},
@@ -18,8 +18,9 @@ const GoalSchema = new Schema(
         updated: {type: Date},
         comment: {type: String},
         task: [{description: {type: String}, weight: {type: Number}, implemented: {type: Number}}],
-        offer: {type: Schema.Types.ObjectId, ref: 'Goal'},
-        weight: {type: Number, default: 1}
+        ownersOffer: {type: Schema.Types.ObjectId, ref: 'Goal'},
+        approversOffer: {type: Schema.Types.ObjectId, ref: 'Goal'},
+        weight: {type: Number}
     }
 );
 

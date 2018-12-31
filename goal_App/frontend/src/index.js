@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import Login from './components/login';
-import HomePage from './components/homePage';
+import HomePage from './components/homePage_';
 
 class App extends React.Component {
   constructor(props) {
@@ -10,6 +10,12 @@ class App extends React.Component {
     this.state = {
       loginSuccessful: false
     }
+  }
+
+  updateGoalToDisplay = (response) => {
+    this.setState({
+      goalToDisplay: response.data.goalToDisplay
+    });
   }
 
   loadData = (response) => {
@@ -27,7 +33,7 @@ class App extends React.Component {
     return (
       <div>
         {this.state.loginSuccessful ? 
-          <HomePage goalToDisplay={this.state.goalToDisplay} orgChart={this.state.orgChart} ownerUnit={this.state.ownerUnit}/> :
+          <HomePage goalToDisplay={this.state.goalToDisplay} updateGoalToDisplay={this.updateGoalToDisplay} orgChart={this.state.orgChart} ownerUnit={this.state.ownerUnit}/> :
           <Login loadData={this.loadData}/>
         }
       </div>
