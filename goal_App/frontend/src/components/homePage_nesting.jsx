@@ -46,7 +46,7 @@ export default class Nesting extends React.Component {
         <div className="col-data">
           <form action={"/editTaskWeight"} method="post">
             <div>
-              <input type="text" name="weight" defaultValue={task.weight}></input>
+              <input type="text" name="weight" defaultValue={task.weight} maxLength="11"></input>
               <input type="hidden" name="id" value={task._id} readOnly></input>
               <input type="hidden" name="description" value={task.description} readOnly></input>
               <button type="submit"><i className="fas fa-save"/></button>

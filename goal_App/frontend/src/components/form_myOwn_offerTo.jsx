@@ -74,7 +74,8 @@ export default class FormOfferTo extends React.Component {
   }
 
   handleSubmit = () => {
-    const { offers } = this.state;
+    let { offers } = this.state;
+    offers = offers.filter((offer) => { return offer.owner; });
     axios.post('/offerTo', {
       childTo: this.props.goal._id, 
       name: this.props.goal.name, 
@@ -82,6 +83,11 @@ export default class FormOfferTo extends React.Component {
     })
       .then(response => {
         if (response.status === 200) {
+          if (response.data.constructor === Array) {
+            for (let i = 0; i < response.data.length; i++) {
+              alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
+            }
+          }
           let event = new Event('fake');
           this.props.toggleDisplayForm("formOfferTo", null, event);
         }

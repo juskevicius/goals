@@ -47,6 +47,11 @@ export default class FormCurrent extends React.Component {
             axios.get('/details/' + this.props.goal._id)
               .then(response => {
                 if (response.status === 200) {
+                  if (response.data.constructor === Array) {
+                    for (let i = 0; i < response.data.length; i++) {
+                      alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
+                    }
+                  }
                   this.props.updateGoalToDisplay(response);
                 }
               })
@@ -69,7 +74,7 @@ export default class FormCurrent extends React.Component {
                 <input type="text" name="name" value={this.props.goal.name} readOnly></input>
               </label>
               <label>Current score:
-                <input type="number" name="currScore" value={this.state.currScore} onChange={this.handleChange} required></input>
+                <input type="number" name="currScore" value={this.state.currScore} onChange={this.handleChange} required maxLength="11"></input>
                 <div className="invalid-feedback" />
               </label>
               <label>Date:

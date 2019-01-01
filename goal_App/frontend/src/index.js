@@ -24,6 +24,7 @@ class App extends React.Component {
       orgChart: response.data.orgChart,
       childrenGoals: response.data.childrenGoals,
       ownerUnit: response.data.ownerUnit,
+      userRole: response.data.userRole,
       loginSuccessful: true,
     });
   }
@@ -33,7 +34,7 @@ class App extends React.Component {
     return (
       <div>
         {this.state.loginSuccessful ? 
-          <HomePage goalToDisplay={this.state.goalToDisplay} updateGoalToDisplay={this.updateGoalToDisplay} orgChart={this.state.orgChart} ownerUnit={this.state.ownerUnit}/> :
+          <HomePage goalToDisplay={this.state.goalToDisplay} updateGoalToDisplay={this.updateGoalToDisplay} orgChart={this.state.orgChart} ownerUnit={this.state.ownerUnit} userRole={this.state.userRole}/> :
           <Login loadData={this.loadData}/>
         }
       </div>

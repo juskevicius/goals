@@ -26,13 +26,13 @@ export default class Navbar extends React.Component {
               </ul>
             </li>
             <li>
-            <a href="/myOwn"><i className="fa fa-bullseye" style={{fontSize: 24 + "px"}}></i> Goals</a>
+              <a href="/goals"><i className="fa fa-bullseye" style={{fontSize: 24 + "px"}}></i> Goals</a>
               <ul>
                 <li>
                   <a href="/add" onClick={(event) => this.props.toggleDisplayForm('formAdd', event)}>Add</a>
                 </li>
                 <li>
-                  <a href="/add" onClick={(event) => this.props.toggleDisplayForm('formMyOwn', event)}>My goals</a>
+                  <a href="/myOwn" onClick={(event) => this.props.toggleDisplayForm('formMyOwn', event)}>My goals</a>
                 </li>
                 <li>
                   <a href="/others" onClick={(event) => this.props.toggleDisplayForm('formOthers', event)}>Others'</a>
@@ -42,6 +42,18 @@ export default class Navbar extends React.Component {
                 </li>
               </ul>
             </li>
+            {this.props.userRole === 'admin' && 
+            <li>
+              <a href="/admin">Admin center</a>
+              <ul>
+                <li>
+                  <a href="/units" onClick={(event) => this.props.toggleDisplayForm('units', event)}>Units</a>
+                </li>
+                <li>
+                  <a href="/users" onClick={(event) => this.props.toggleDisplayForm('users', event)}>Users</a>
+                </li>
+              </ul>
+            </li>}
           </ul>
         </nav>
       </div>  

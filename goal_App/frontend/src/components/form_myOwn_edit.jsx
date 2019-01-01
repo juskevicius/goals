@@ -56,6 +56,11 @@ export default class FormEdit extends React.Component {
         .then(
           response => {
             if (response.status === 200) {
+              if (response.data.constructor === Array) {
+                for (let i = 0; i < response.data.length; i++) {
+                  alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
+                }
+              }
               this.props.updateOwnerGoals();
               let event = new Event('fake');
               this.props.toggleDisplayForm("formEdit", null, event);
@@ -77,12 +82,12 @@ export default class FormEdit extends React.Component {
         <div className="task-row" key={task._id || task.nr}>
           <div className="descr-block">
             <label className="task task-label-descr">Task nr {index + 1}:
-              <input className="task task-input-descr" type="text" onChange={this.handleTaskChange} name={"task[" + index + "][description]"} value={task.description}></input>
+              <input className="task task-input-descr" type="text" onChange={this.handleTaskChange} name={"task[" + index + "][description]"} value={task.description} maxLength="200"></input>
             </label>
           </div>
           <div className="weight-block">
             <label className="task task-label-weight">Weight
-              <input className="task task-input-weight" type="number" onChange={this.handleTaskChange} name={"task[" + index + "][weight]"} value={task.weight || ''}></input>
+              <input className="task task-input-weight" type="number" onChange={this.handleTaskChange} name={"task[" + index + "][weight]"} value={task.weight || ''} maxLength="11"></input>
             </label> 
           </div>
         </div>
@@ -96,17 +101,17 @@ export default class FormEdit extends React.Component {
           <div className="form-body">
             <form ref={el => this.form = el}>
               <label>Goal:
-                <input type="text" name="name" onChange={this.handleChange} value={this.state.name} required></input>
+                <input type="text" name="name" onChange={this.handleChange} value={this.state.name} required maxLength="100"></input>
                 <div className="invalid-feedback" />
               </label>
               <label>Initial score:
-                <input type="number" name="initScore" onChange={this.handleChange} value={this.state.initScore || ''}></input>
+                <input type="number" name="initScore" onChange={this.handleChange} value={this.state.initScore || ''} maxLength="11"></input>
               </label>
               <label>Target score:
-                <input type="number" name="targScore" onChange={this.handleChange} value={this.state.targScore || ''}></input>
+                <input type="number" name="targScore" onChange={this.handleChange} value={this.state.targScore || ''} maxLength="11"></input>
               </label>
               <label>Comment:
-                <input type="text" name="comment" onChange={this.handleChange} value={this.state.comment || ''}></input>
+                <input type="text" name="comment" onChange={this.handleChange} value={this.state.comment || ''} maxLength="400"></input>
               </label>
               {this.state.task.length > 0 && 
               <div className="task-group">

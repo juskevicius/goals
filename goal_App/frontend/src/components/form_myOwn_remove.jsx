@@ -7,6 +7,11 @@ export default class FormRemove extends React.Component {
     axios.post('/delete', {id: this.props.goal._id})
       .then(response => {
         if (response.status === 200) {
+          if (response.data.constructor === Array) {
+            for (let i = 0; i < response.data.length; i++) {
+              alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
+            }
+          }
           this.props.updateOwnerGoals();
           let event = new Event('fake');
           this.props.toggleDisplayForm("formRemove", null, event);

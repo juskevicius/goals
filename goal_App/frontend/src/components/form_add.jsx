@@ -83,12 +83,12 @@ export default class FormAdd extends React.Component {
         <div className="task-row" key={taskNr}>
           <div className="descr-block">
             <label className="task task-label-descr">Task nr {taskNr + 1}
-              <input className="task task-input-descr" onChange={funcAddtask} type="text" name={"task[" + taskNr + "][description]"} value={description || ''}></input>
+              <input className="task task-input-descr" onChange={funcAddtask} type="text" name={"task[" + taskNr + "][description]"} value={description || ''} maxLength="200"></input>
             </label>
           </div>
           <div className="weight-block">
             <label className="task task-label-weight">Weight
-              <input className="task task-input-weight" onChange={funcAddtask} type="number" name={"task[" + taskNr + "][weight]"} value={weight || ''}></input>
+              <input className="task task-input-weight" onChange={funcAddtask} type="number" name={"task[" + taskNr + "][weight]"} value={weight || ''} maxLength="11"></input>
             </label>
           </div>
         </div>
@@ -102,17 +102,17 @@ export default class FormAdd extends React.Component {
           <div className="form-body">
             <form ref={el => this.form = el}>
               <label>Goal:
-                <input type="text" name="name" value={this.state.name} onChange={this.handleChange} /*required*/></input>
+                <input type="text" name="name" value={this.state.name} onChange={this.handleChange} required maxLength="100"></input>
                 <div className="invalid-feedback" />
               </label>
               <label>Initial score:
-                <input type="number" name="initScore" placeholder="50%" value={this.state.initScore || ''} onChange={this.handleChange}></input>
+                <input type="number" name="initScore" placeholder="50%" value={this.state.initScore || ''} onChange={this.handleChange} maxLength="11"></input>
               </label>
               <label>Target score:
-                <input type="number" name="targScore" placeholder="99%" value={this.state.targScore || ''} onChange={this.handleChange}></input>
+                <input type="number" name="targScore" placeholder="99%" value={this.state.targScore || ''} onChange={this.handleChange} maxLength="11"></input>
               </label>
               <label>Comment:
-                <input type="text" name="comment" value={this.state.comment} onChange={this.handleChange || ''}></input>
+                <input type="text" name="comment" value={this.state.comment} onChange={this.handleChange || ''} maxLength="400"></input>
               </label>
               {this.state.showtasks &&
               <div className="task-group">

@@ -7,6 +7,8 @@ import Nesting from './homePage_nesting';
 import FormAdd from './form_add.jsx';
 import FormMyOwn from './form_myOwn_';
 import FormOthers from './form_others_';
+import Units from './units';
+import Users from './users';
 
 export default class HomePage extends React.Component {  
   constructor(props) {
@@ -39,7 +41,7 @@ export default class HomePage extends React.Component {
       <div>
         <div className="grid-container">
           <div className="l-margin">
-            <Navbar toggleDisplayForm={this.toggleDisplayForm} chart={this.props.orgChart}/>
+            <Navbar toggleDisplayForm={this.toggleDisplayForm} chart={this.props.orgChart} userRole={this.props.userRole}/>
           </div>
           <div className="r-margin">
             <a href="/logout"><i className="fa fa-sign-out" style={{fontSize:54 + "px"}}></i></a>
@@ -69,6 +71,8 @@ export default class HomePage extends React.Component {
         {this.state.formAdd && <FormAdd toggleDisplayForm={this.toggleDisplayForm}/>}
         {this.state.formMyOwn && <FormMyOwn toggleDisplayForm={this.toggleDisplayForm} children={children} updateGoalToDisplay={this.props.updateGoalToDisplay}/>}
         {this.state.formOthers && <FormOthers toggleDisplayForm={this.toggleDisplayForm} children={children}/>}
+        {this.state.units && <Units toggleDisplayForm={this.toggleDisplayForm} />}
+        {this.state.users && <Users toggleDisplayForm={this.toggleDisplayForm} />}
       </div>
     )
   }
