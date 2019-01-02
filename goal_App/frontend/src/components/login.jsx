@@ -32,13 +32,16 @@ export default class Login extends React.Component {
       empId: this.state.empId,
       password: this.state.password
     })
-    .then( response => {
+    .then(response => {
       if (response.status === 200) {
         this.props.loadData(response);
-      } else if (response.status === 422) {
-        console.log("either username or password is incorrect");
       } else {
         console.log("something went wrong");
+      }
+    })
+    .catch(error => {
+      if (error.response) {
+        alert(error.response.data.Login);
       }
     });
   }

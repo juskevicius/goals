@@ -18,6 +18,12 @@ class App extends React.Component {
     });
   }
 
+  logout = () => {
+    this.setState({
+      loginSuccessful: false
+    });
+  }
+
   loadData = (response) => {
     this.setState({
       goalToDisplay: response.data.goalToDisplay,
@@ -25,7 +31,7 @@ class App extends React.Component {
       childrenGoals: response.data.childrenGoals,
       ownerUnit: response.data.ownerUnit,
       userRole: response.data.userRole,
-      loginSuccessful: true,
+      loginSuccessful: true
     });
   }
 
@@ -34,7 +40,7 @@ class App extends React.Component {
     return (
       <div>
         {this.state.loginSuccessful ? 
-          <HomePage goalToDisplay={this.state.goalToDisplay} updateGoalToDisplay={this.updateGoalToDisplay} orgChart={this.state.orgChart} ownerUnit={this.state.ownerUnit} userRole={this.state.userRole}/> :
+          <HomePage goalToDisplay={this.state.goalToDisplay} updateGoalToDisplay={this.updateGoalToDisplay} logout={this.logout} orgChart={this.state.orgChart} ownerUnit={this.state.ownerUnit} userRole={this.state.userRole}/> :
           <Login loadData={this.loadData}/>
         }
       </div>

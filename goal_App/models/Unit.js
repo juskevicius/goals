@@ -7,8 +7,8 @@ const orgUnit = new Schema(
         name: {type: String, required: true, max: 25},
         owner: {type: Schema.Types.ObjectId, ref: 'User'},
         unitType: {type: String, required: true, enum: ['Country', 'Department', 'Group', 'Person'], max: 30},
-        parentTo: [{type: Schema.Types.ObjectId, ref: 'Unit'}],
         childTo: [{type: Schema.Types.ObjectId, ref: 'Unit'}],
+        parentTo: [{type: Schema.Types.ObjectId, ref: 'Unit'}]
     }
 );
 

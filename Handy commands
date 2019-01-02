@@ -8,3 +8,8 @@ SET DEBUG=goal_App:* & npm run devstart
 "devstart": "concurrently \"nodemon ./bin/www\" \"cd frontend && npm start\""
 
 "devstart": "nodemon ./bin/www"
+
+To do:
+login, logout - what's the best practice?
+nesting
+goal details

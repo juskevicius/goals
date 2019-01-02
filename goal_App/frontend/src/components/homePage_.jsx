@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import Navbar from './homePage_navbar';
 import GaugeChart from './homePage_chart_gauge';
 import LineChart from './homePage_chart_line';
@@ -7,8 +8,8 @@ import Nesting from './homePage_nesting';
 import FormAdd from './form_add.jsx';
 import FormMyOwn from './form_myOwn_';
 import FormOthers from './form_others_';
-import Units from './units';
-import Users from './users';
+import Units from './units_';
+import Users from './users_';
 
 export default class HomePage extends React.Component {  
   constructor(props) {
@@ -30,6 +31,24 @@ export default class HomePage extends React.Component {
         [form]: true
       });
     }
+    if (form === 'users') {
+      this.setState({
+        units: false
+      })
+    } else if (form === 'units') {
+      this.setState({
+        users: false
+      })
+    }
+  }
+
+  logout = (event) => {
+    event.preventDefault();
+    axios
+      .get('/logout')
+      .then(
+        this.props.logout()
+      );
   }
 
   render() {
@@ -44,7 +63,7 @@ export default class HomePage extends React.Component {
             <Navbar toggleDisplayForm={this.toggleDisplayForm} chart={this.props.orgChart} userRole={this.props.userRole}/>
           </div>
           <div className="r-margin">
-            <a href="/logout"><i className="fa fa-sign-out" style={{fontSize:54 + "px"}}></i></a>
+            <a href="/logout" onClick={this.logout}><i className="fa fa-sign-out" style={{fontSize:54 + "px"}}></i></a>
           </div>
           <div className="header">
             <h1>
