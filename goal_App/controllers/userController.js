@@ -25,6 +25,7 @@ exports.user_login_post = (req, res, next) => {
 exports.logout_get = (req, res) => {
     req.logout();
     res.cookie("Token", "", { expires: new Date(0)});
+    return res.send('successfuly logged out');
 };
 
 /////////////////////////// USER MANAGEMENT

@@ -13,3 +13,4 @@ To do:
 login, logout - what's the best practice?
 nesting
 goal details
+jwt secret?
