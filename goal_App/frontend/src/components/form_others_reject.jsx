@@ -4,20 +4,24 @@ import axios from 'axios';
 export default class FormReject extends React.Component {
   
   handleSubmit = () => {
-    axios.post('/reject', {
-      id: this.props.goal._id
-    }).then( response => {
-      if (response.status === 200) {
-        if (response.data.constructor === Array) {
-          for (let i = 0; i < response.data.length; i++) {
-            alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
+    axios.post('/reject', { id: this.props.goal._id })
+      .then( response => {
+        if (response.status === 200) {
+          if (response.data.constructor === Array) {
+            for (let i = 0; i < response.data.length; i++) {
+              alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
+            }
           }
+          this.props.updateOthersGoals();
+          let event = new Event('fake');
+          this.props.toggleDisplayForm("formReject", null, event);
         }
-        this.props.updateOthersGoals();
-        let event = new Event('fake');
-        this.props.toggleDisplayForm("formReject", null, event);
-      }
-    });
+      })
+      .catch(error => {
+        if (error.response) {
+          alert(error.response.data);
+        }
+      });
   }
   
   render() {

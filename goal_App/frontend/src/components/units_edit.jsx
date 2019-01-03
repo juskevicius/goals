@@ -69,6 +69,11 @@ export default class UnitsEdit extends React.Component {
           alert("successfuly updated a unit");
           this.props.loadData();
         }
+      })
+      .catch(error => {
+        if (error.response) {
+          alert(error.response.data);
+        }
       });
   }
 

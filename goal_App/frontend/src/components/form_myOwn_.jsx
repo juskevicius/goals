@@ -38,12 +38,18 @@ export default class FormMyOwn extends React.Component {
   }
 
   updateOwnerGoals = () => {
-    axios.get('/myOwn')
-    .then( response => {
-      this.setState({
-        ownerGoals: response.data.ownerGoals
+    const path = this.props.unitID ? '/myOwn/' + this.props.unitID : '/myOwn';
+    axios.get(path)
+      .then( response => {
+        this.setState({
+          ownerGoals: response.data.ownerGoals
+        });
+      })
+      .catch(error => {
+        if (error.response) {
+          alert(error.response.data);
+        }
       });
-    });
   }
 
   getGoalDetails = (event) => {

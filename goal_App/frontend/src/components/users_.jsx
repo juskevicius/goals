@@ -21,6 +21,11 @@ export default class Users extends React.Component {
       this.setState({
         users: response.data.users
       });
+    })
+    .catch(error => {
+      if (error.response) {
+        alert(error.response.data);
+      }
     });
   }
 
@@ -47,6 +52,11 @@ export default class Users extends React.Component {
           }
           alert('successfuly added a user');
           this.loadUsers();
+        }
+      })
+      .catch(error => {
+        if (error.response) {
+          alert(error.response.data);
         }
       });
   }

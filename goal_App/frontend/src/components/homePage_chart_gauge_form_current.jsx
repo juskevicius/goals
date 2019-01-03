@@ -55,11 +55,21 @@ export default class FormCurrent extends React.Component {
                   this.props.updateGoalToDisplay(response);
                 }
               })
+              .catch(error => {
+                if (error.response) {
+                  alert(error.response.data);
+                }
+              });
             let event = new Event('fake');
             this.props.toggleDisplayForm('formCurrentScore', event);
           }
         }  
-      );
+      )
+      .catch(error => {
+        if (error.response) {
+          alert(error.response.data);
+        }
+      });
     }
   }
   

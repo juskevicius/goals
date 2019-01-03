@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const auth = require('../controllers/auth');
+const authorization = require('../controllers/authorization');
 const goalController = require('../controllers/goalController');
 const hDataController = require('../controllers/hDataController');
 const validationController = require('../controllers/validationController');
@@ -34,7 +35,8 @@ router.get('/details/:id',
 /* POST add current score */
 router.post('/addCurrentScore', 
   validationController.validate_cookie, 
-  auth.required, 
+  auth.required,
+  authorization.restrict_to_owner_h_id, 
   validationController.goal_addCurrentScore_post, 
   goalController.goal_addCurrentScore_post, 
   hDataController.hData_update_post
@@ -43,7 +45,8 @@ router.post('/addCurrentScore',
 /* POST edit weight */
 router.post('/editWeight', 
   validationController.validate_cookie, 
-  auth.required, 
+  auth.required,
+  /*authorization.restrict_to_owner, */
   validationController.goal_editWeight_post, 
   goalController.goal_editWeight_post, 
   hDataController.hData_update_post
@@ -52,7 +55,8 @@ router.post('/editWeight',
 /* POST edit task implementation */
 router.post('/taskImplementation', 
   validationController.validate_cookie, 
-  auth.required, 
+  auth.required,
+  /*authorization.restrict_to_owner, */
   validationController.goal_taskImplementation_post, 
   goalController.goal_taskImplementation_post, 
   hDataController.updateOneTaskImplementation
@@ -68,10 +72,18 @@ router.get('/myOwn',
   goalController.goal_myOwn_get
 );
 
+/* GET myOwn (others' goals) */
+router.get('/myOwn/:id', 
+  validationController.validate_cookie, 
+  auth.required, 
+  goalController.goal_myOwn_get
+);
+
 /* POST edit */
 router.post('/edit', 
   validationController.validate_cookie, 
   auth.required, 
+  authorization.restrict_to_owner, 
   validationController.goal_edit_post, 
   goalController.goal_edit_post
 );
@@ -79,7 +91,8 @@ router.post('/edit',
 /* POST delete */
 router.post('/delete', 
   validationController.validate_cookie, 
-  auth.required, 
+  auth.required,
+  authorization.restrict_to_owner,
   validationController.goal_delete_post, 
   goalController.goal_delete_post, 
   hDataController.hData_update_post
@@ -89,6 +102,7 @@ router.post('/delete',
 router.post('/offerTo', 
   validationController.validate_cookie, 
   auth.required,
+  authorization.restrict_to_owner,
   validationController.goal_offerTo_post,
   goalController.goal_offerTo_post
 );
@@ -96,7 +110,8 @@ router.post('/offerTo',
 /* POST accept */
 router.post('/acceptOffer', 
   validationController.validate_cookie, 
-  auth.required, 
+  auth.required,
+  authorization.restrict_to_owner,
   validationController.goal_acceptOffer_post,
   goalController.goal_acceptOffer_post, 
   hDataController.updateAllTasksImplementation
@@ -106,6 +121,7 @@ router.post('/acceptOffer',
 router.post('/ownersOffer', 
   validationController.validate_cookie, 
   auth.required,
+  authorization.restrict_to_owner, 
   validationController.goal_ownersOffer_post,
   goalController.goal_ownersOffer_post
 );
@@ -124,6 +140,7 @@ router.get('/others',
 router.post('/approversOffer', 
   validationController.validate_cookie, 
   auth.required,
+  authorization.restrict_to_approver, 
   validationController.goal_approversOffer_post,
   goalController.goal_approversOffer_post
 );
@@ -132,6 +149,7 @@ router.post('/approversOffer',
 router.post('/approve', 
   validationController.validate_cookie, 
   auth.required,
+  authorization.restrict_to_approver, 
   validationController.goal_approve_post,
   goalController.goal_approve_post
 );
@@ -140,6 +158,7 @@ router.post('/approve',
 router.post('/reject', 
   validationController.validate_cookie, 
   auth.required,
+  authorization.restrict_to_approver,
   validationController.goal_reject_post,
   goalController.goal_reject_post
 );

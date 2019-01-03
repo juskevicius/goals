@@ -10,12 +10,10 @@ SET DEBUG=goal_App:* & npm run devstart
 "devstart": "nodemon ./bin/www"
 
 To do:
-jwt blacklist
-auth (restrict C UD operations to the owner)
-remove empId from jwt
 
 https
-jwt secret - to change
+jwt secret (model users.js, controller auth.js) - to change in prod
+passport secret (app.js) - to change in prod
 
 nesting
 goal details

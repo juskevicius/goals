@@ -64,6 +64,11 @@ export default class FormNegotiateOffered extends React.Component {
           let event = new Event('fake');
           this.props.toggleDisplayForm("formNegotiateOffered", null, event);
         }
+      })
+      .catch(error => {
+        if (error.response) {
+          alert(error.response.data);
+        }
       });
   }
 
@@ -93,7 +98,12 @@ export default class FormNegotiateOffered extends React.Component {
             this.props.toggleDisplayForm("formNegotiateOffered", null, event);
           }
         }
-      );
+      )
+      .catch(error => {
+        if (error.response) {
+          alert(error.response.data);
+        }
+      });
     }
   }
   

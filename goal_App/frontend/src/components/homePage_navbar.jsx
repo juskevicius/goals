@@ -1,14 +1,51 @@
 import React from 'react';
+import FormMyOwn from './form_myOwn_';
 
 export default class Navbar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      someUnit: ''
+    }
+  }
+
+
+  toggleDisplayForm = (form, event) => {
+    event.preventDefault();
+    if (this.state[form]) { 
+      if (event.target === event.currentTarget) {
+        this.setState({ /* if the form is currently visible, then hide it */
+          [form]: false
+        });
+      }
+    } else {
+      this.setState({
+        [form]: true
+      });
+    }
+  }
+  
+  
+  viewOthersGoals = (event) => {
+    event.preventDefault();
+    const unitID = event.target.getAttribute('href');
+    console.log(unitID);
+    this.setState({
+      someUnit: unitID
+    }, 
+      this.toggleDisplayForm('formMyOwn', event)
+    );
+  }
+  
+  
   render() {
 
     const orgChart = this.props.chart.parentTo.map((unit) => {return (
       <li key={unit._id}>
-        <a href={'/myOwn/' + unit._id}>{unit.name}</a>
+        <a href={unit._id} onClick={this.viewOthersGoals}>{unit.name}</a>
         <ul>{unit.parentTo.map((subUnit) => {return (
           <li key={subUnit._id}>
-            <a href={'/myOwn/' + subUnit._id}>{subUnit.name}</a>
+            <a href={subUnit._id} onClick={this.viewOthersGoals}>{subUnit.name}</a>
           </li>
           );})}
         </ul>
@@ -20,7 +57,7 @@ export default class Navbar extends React.Component {
         <nav>
           <ul className="nav">
             <li>
-              <a href={'/myOwn/' + this.props.chart.owner.id}><i className="fa fa-sitemap" style={{fontSize: 24 + "px"}}></i> Lithuania</a>
+              <a href={this.props.chart._id} onClick={this.viewOthersGoals}><i className="fa fa-sitemap" style={{fontSize: 24 + "px"}}></i> Lithuania</a>
               <ul>
                 {orgChart}
               </ul>
@@ -56,6 +93,7 @@ export default class Navbar extends React.Component {
             </li>}
           </ul>
         </nav>
+        {this.state.formMyOwn && <FormMyOwn unitID={this.state.someUnit} toggleDisplayForm={this.toggleDisplayForm} updateGoalToDisplay={this.props.updateGoalToDisplay}/>}
       </div>  
     )
   }

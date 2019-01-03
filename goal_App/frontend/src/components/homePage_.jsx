@@ -60,7 +60,7 @@ export default class HomePage extends React.Component {
       <div>
         <div className="grid-container">
           <div className="l-margin">
-            <Navbar toggleDisplayForm={this.toggleDisplayForm} chart={this.props.orgChart} userRole={this.props.userRole}/>
+            <Navbar toggleDisplayForm={this.toggleDisplayForm} chart={this.props.orgChart} userRole={this.props.userRole} updateGoalToDisplay={this.props.updateGoalToDisplay}/>
           </div>
           <div className="r-margin">
             <a href="/logout" onClick={this.logout}><i className="fa fa-sign-out" style={{fontSize:54 + "px"}}></i></a>

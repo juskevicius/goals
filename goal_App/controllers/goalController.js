@@ -6,6 +6,7 @@ const hData = require('../models/hData');
 const Unit = require('../models/Unit');
 
 
+
 exports.goal_homePage_get = (req, res) => {
     Unit. /* extract the whole org. chart structure */
     findOne({name: 'Lithuania'}). 
@@ -216,7 +217,7 @@ exports.goal_myOwn_get = (req, res) => {
     exec((err, ownerUnit) => {
         if (err) { return err; }
         Goal. /* find owner's goals */
-        find({ owner: ownerUnit._id}).
+        find({ owner: req.params.id || ownerUnit._id}). /* req.params.id - included in url (when searching for others' goals) */
         populate({ path: 'ownersOffer approversOffer', populate: { path: 'owner' }}).
         populate('history owner').
         populate({ path: 'parentTo', populate: { path: 'owner history' }}).
@@ -449,7 +450,7 @@ exports.goal_offerTo_post = (req, res) => {
                                 if (err) { return err; }
                                 //make original goal a child to the parent goal 
                                 Goal.
-                                findById(req.body.childTo).
+                                findById(req.body.id).
                                 exec((err, parentGoal) => {
                                     if (err) { return err; }
                                     parentGoal.parentTo.push(updatedGoalDoc.id);
@@ -643,14 +644,15 @@ exports.goal_approversOffer_post = (req, res) => {
                 });
             });
         } else {
-            Unit. 
-            findById(goal.owner). 
+            Unit.
+            findOne({ owner: req.payload.id }).
             exec((err, ownerUnit) => {
+                if (err) { return err; }
 
                 const approversOffer = new Goal(
                     {
                         name: req.body.name.replace('&#x27;', '’'),
-                        owner: ownerUnit.childTo[0],
+                        owner: ownerUnit._id,
                         initScore: req.body.initScore,
                         targScore: req.body.targScore,
                         //childTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],

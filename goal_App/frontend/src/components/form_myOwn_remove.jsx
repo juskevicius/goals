@@ -16,6 +16,11 @@ export default class FormRemove extends React.Component {
           let event = new Event('fake');
           this.props.toggleDisplayForm("formRemove", null, event);
         }
+      })
+      .catch(error => {
+        if (error.response) {
+          alert(error.response.data);
+        }
       });
   }
   

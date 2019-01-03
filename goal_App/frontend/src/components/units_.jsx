@@ -24,6 +24,11 @@ export default class Units extends React.Component {
         units: response.data.units,
         users: response.data.users
       });
+    })
+    .catch(error => {
+      if (error.response) {
+        alert(error.response.data);
+      }
     });
   }
 
@@ -64,6 +69,11 @@ export default class Units extends React.Component {
           }
           alert("successfuly aded a unit");
           this.loadData();
+        }
+      })
+      .catch(error => {
+        if (error.response) {
+          alert(error.response.data);
         }
       });
   }

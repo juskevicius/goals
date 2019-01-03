@@ -7,8 +7,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
 const errorHandler = require('errorhandler');
-/*const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');*/
+
 
 //Configure isProduction variable
 const isProduction = process.env.NODE_ENV === 'production';
@@ -24,13 +23,6 @@ mongoose.set('debug', true);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-app.set('view engine', 'jsx');
-app.engine('jsx', require('express-react-views').createEngine());
-
-
 app.use(cors());
 app.use(require('morgan')('dev'));
 app.use(bodyParser.json());
@@ -43,8 +35,6 @@ require('./models/User');
 require('./config/passport');
 app.use(require('./routes/users'));
 app.use(require('./routes/goals'));
-/*app.use('/', indexRouter);
-app.use('/users', usersRouter);*/
 
 if(!isProduction) {
   app.use(errorHandler());

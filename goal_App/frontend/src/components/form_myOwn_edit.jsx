@@ -51,7 +51,6 @@ export default class FormEdit extends React.Component {
     } else {
       const { name, initScore, targScore, comment } = this.state;
       const task = this.state.task.filter((task) => {return task.description;});
-      console.log(task);
       axios.post('/edit', { id: this.props.goal._id, name, initScore, targScore, comment, task })
         .then(
           response => {
@@ -65,6 +64,11 @@ export default class FormEdit extends React.Component {
               let event = new Event('fake');
               this.props.toggleDisplayForm("formEdit", null, event);
             }
+        })
+        .catch(error => {
+          if (error.response) {
+            alert(error.response.data);
+          }
         });
     }
   }

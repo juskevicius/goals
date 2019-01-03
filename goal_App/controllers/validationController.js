@@ -202,7 +202,7 @@ exports.goal_delete_post = [
 
 exports.goal_offerTo_post = [
   
-  body('childTo').custom(id => {
+  body('id').custom(id => {
     return id.match(/^[a-fA-F0-9]{24}$/) ? true : false;
   }).withMessage('id is not valid'),
   body('name').isLength({ min: 1, max: 100 }).trim().withMessage('Goal failure. Max length is 100 sybmols.'),

@@ -77,7 +77,7 @@ export default class FormOfferTo extends React.Component {
     let { offers } = this.state;
     offers = offers.filter((offer) => { return offer.owner; });
     axios.post('/offerTo', {
-      childTo: this.props.goal._id, 
+      id: this.props.goal._id, 
       name: this.props.goal.name, 
       offers
     })
@@ -91,6 +91,11 @@ export default class FormOfferTo extends React.Component {
           let event = new Event('fake');
           this.props.toggleDisplayForm("formOfferTo", null, event);
         }
+      })
+      .catch(error => {
+        if (error.response) {
+          alert(error.response.data);
+        }
       });
   }
   
@@ -102,7 +107,7 @@ export default class FormOfferTo extends React.Component {
           <label>Offer to:
             <select className="offer-unit" name={"owner[" + index + "]"} value={offer.owner} onChange={this.handleChange}>
               <option value="">Choose</option>
-              {this.props.children.map((unit) => { return <option key={unit._id} value={unit._id}>{unit.name}</option>;})}
+              {this.props.children && this.props.children.map((unit) => { return <option key={unit._id} value={unit._id}>{unit.name}</option>;})}
             </select>
           </label>
           <label>Weight:

@@ -37,6 +37,11 @@ export default class UsersEdit extends React.Component {
           alert("successfuly updated a user");
           this.props.loadUsers();
         }
+      })
+      .catch(error => {
+        if (error.response) {
+          alert(error.response.data);
+        }
       });
   }
 
@@ -55,6 +60,11 @@ export default class UsersEdit extends React.Component {
           }
           alert("successfuly deleted a user");
           this.props.loadUsers();
+        }
+      })
+      .catch(error => {
+        if (error.response) {
+          alert(error.response.data);
         }
       });
   }

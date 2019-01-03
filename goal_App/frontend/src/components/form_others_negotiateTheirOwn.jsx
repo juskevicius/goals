@@ -63,6 +63,11 @@ export default class FormNegotiateTheirOwn extends React.Component {
           let event = new Event('fake');
           this.props.toggleDisplayForm("formNegotiateTheirOwn", null, event);
         }
+      })
+      .catch(error => {
+        if (error.response) {
+          alert(error.response.data);
+        }
       });
   }
 
@@ -94,6 +99,11 @@ export default class FormNegotiateTheirOwn extends React.Component {
             this.props.updateOthersGoals();
             let event = new Event('fake');
             this.props.toggleDisplayForm("formNegotiateTheirOwn", null, event);
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            alert(error.response.data);
           }
         });
     }

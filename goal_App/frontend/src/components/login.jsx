@@ -41,7 +41,7 @@ export default class Login extends React.Component {
     })
     .catch(error => {
       if (error.response) {
-        alert(error.response.data.Login);
+        alert(error.response.data);
       }
     });
   }
