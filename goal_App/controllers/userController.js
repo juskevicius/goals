@@ -13,7 +13,7 @@ exports.user_login_post = (req, res, next) => {
         const user = passportUser;
         user.token = passportUser.generateJWT();
         res.locals.currUser = user._id;
-        res.cookie("Token", user.token, { httpOnly: true, secure: false, maxAge: 10000 /*2592000000*/ });
+        res.cookie("Token", user.token, { httpOnly: true, secure: false, maxAge: 28800000 });
         return next();
         }
         return res.status(422).json({ "Login": "Login unsuccessful. Either id or password is incorrect" });

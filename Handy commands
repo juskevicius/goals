@@ -10,7 +10,12 @@ SET DEBUG=goal_App:* & npm run devstart
 "devstart": "nodemon ./bin/www"
 
 To do:
-login, logout - what's the best practice?
+jwt blacklist
+auth (restrict C UD operations to the owner)
+remove empId from jwt
+
+https
+jwt secret - to change
+
 nesting
 goal details
-jwt secret?
