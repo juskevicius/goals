@@ -24,20 +24,16 @@ UsersSchema.methods.validatePassword = function(password) {
 
 UsersSchema.methods.generateJWT = function() {
   const today = new Date();
-  const expirationDate = new Date(today);
-  expirationDate.setDate(today.getDate() + 60);
-
+  const expirationTime = today.getTime() + 28800000; /* 8 hours from now */
   return jwt.sign({
-    empId: this.empId,
     id: this._id,
-    exp: parseInt(expirationDate.getTime() / 1000, 10),
+    exp: parseInt(expirationTime, 10),
   }, 'secret');
 }
 
 UsersSchema.methods.toAuthJSON = function() {
   return {
     _id: this._id,
-    empId: this.empId,
     token: this.generateJWT(),
   };
 };

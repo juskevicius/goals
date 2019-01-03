@@ -173,9 +173,10 @@ export default class FormNegotiateOwn extends React.Component {
                 <input className="form-btn" type="submit" value="Submit a new goal offer" onClick={this.handleSubmit2}></input>
               </div>
             </form>
+            {approversOffer &&
             <div className="form-btn-center">
               <input className="form-btn" onClick={this.copyFieldValues} type='button' value='&#8658; copy field values &#8658;'></input>
-            </div>
+            </div>}
           </div>
         </div>
       </div>
