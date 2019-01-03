@@ -129,6 +129,7 @@ exports.goal_taskImplementation_post = [
     return id.match(/^[a-fA-F0-9]{24}$/) ? true : false;
   }).withMessage('Task id is not valid'),
   body('implemented').trim().isNumeric().isLength({ max: 11 }).withMessage('Implementation score failure'),
+  body('weight').trim().isNumeric().isLength({ max: 11 }).withMessage('weight failure'),
   
   sanitizeBody('*').trim().escape(),
 
@@ -137,6 +138,7 @@ exports.goal_taskImplementation_post = [
     if (errors.isEmpty()) {
       return next();
     } else {
+      console.log("falsy implemented???");
       return res.send(errors.array());
     }
   }

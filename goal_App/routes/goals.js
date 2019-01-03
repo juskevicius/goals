@@ -56,8 +56,8 @@ router.post('/editWeight',
 router.post('/taskImplementation', 
   validationController.validate_cookie, 
   auth.required,
-  /*authorization.restrict_to_owner, */
-  validationController.goal_taskImplementation_post, 
+  authorization.restrict_to_owner,
+  validationController.goal_taskImplementation_post,
   goalController.goal_taskImplementation_post, 
   hDataController.updateOneTaskImplementation
 );

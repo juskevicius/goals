@@ -11,6 +11,9 @@ SET DEBUG=goal_App:* & npm run devstart
 
 To do:
 
+edit entered scores
+edit goal details
+
 https
 jwt secret (model users.js, controller auth.js) - to change in prod
 passport secret (app.js) - to change in prod

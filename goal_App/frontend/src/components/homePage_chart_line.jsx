@@ -19,7 +19,7 @@ constructor(props) {
 
   draw = (props) => {
     d3.select('.line-chart > *').remove();
-    const sortedHistory = props.goal.history.data.sort((a, b) => { return a.date - b.date; });
+    const sortedHistory = props.goal.history.data.sort((a, b) => { return new Date(a.date) - new Date(b.date); });
     const dates = sortedHistory.map((entry) => { return entry.date});
     const values = sortedHistory.map((entry) => { return entry.value});
     const targetVal = props.goal.targScore; 

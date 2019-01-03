@@ -151,6 +151,7 @@ body {
 .r-main2 .col-data {
   width: 20%;
   padding: 0;
+  margin: 3px 0;
 }
 
 .r-main2 .col-data-tasks .col-data:first-child  {
@@ -158,17 +159,18 @@ body {
   text-align: left;
 }
 
-.r-main2 .col-data form > div {
-  text-align: center;
-}
-
-.r-main2 .col-data form input {
+.r-main2 .col-data input {
   border: none;
-  width: 40px;
+  width: 90%;
   font-size: 16px;
   font-family: 'Open Sans', sans-serif;
-  text-align: right;
+  text-align: center;
   padding: 0 3px;
+}
+
+.r-main2 .col-data input::-webkit-outer-spin-button, .r-main2 .col-data input::-webkit-inner-spin-button {
+  -webkit-appearance: none; 
+  margin: 0; 
 }
 
 .r-main2 .col-data form button {

@@ -175,19 +175,16 @@ exports.goal_editWeight_post = (req, res, next) => {
             findOne({ parentTo: goalUpdated.id}).
             exec((err, parent) => {
                 if (err) { return err; }
-                
                 if (parent) { /* if the goal has a parent then update the parent's history */
                     res.locals.parent = parent._id;
-                    res.locals.currGoal = parent.id;
-                    next();
+                    return next();
                 } else {
-                    res.redirect('/details/' + goal.id);  
+                    return res.send('successfuly edited the weight');  
                 }
             });
         });
     });  
-}     
-
+}
 
 // Handle Goal edit task implementation on POST.
 
@@ -195,10 +192,11 @@ exports.goal_taskImplementation_post = (req, res, next) => {
     Goal.
     updateOne(
         { "_id": req.body.id, "task._id": req.body.taskId },
+        { "$set": { "task.$.weight": req.body.weight }},
         { "$set": { "task.$.implemented": req.body.implemented }},
         (err) => {
             if (err) { return err; }
-            res.redirect('/details/' + req.body.id);
+            res.send('successfuly updated task immplementation');
             next();
         }
     );
