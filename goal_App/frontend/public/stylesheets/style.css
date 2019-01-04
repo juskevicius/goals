@@ -127,6 +127,10 @@ body {
   margin-bottom: 40px;
 }
 
+.r-main2 .children-tasks {
+  width: 100%;
+}
+
 .r-main2 .col-header {
   width: 20%;
 }

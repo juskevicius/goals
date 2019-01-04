@@ -28,7 +28,7 @@ exports.goal_homePage_get = (req, res) => {
                 findById(res.locals.currUser).
                 exec((err, user) => {
                     if (err) { return err; }
-                    const myApproved = ownerGoals.filter((goal) => { return goal.statusOwner == 'Approved' && goal.statusApprover == 'Approved'; });
+                    const myApproved = ownerGoals.filter((goal) => { return goal.statusOwner === 'Approved' && goal.statusApprover === 'Approved'; });
                     return res.send({goalToDisplay: myApproved[0], orgChart, ownerUnit, userRole: user.role});
                 });
             }); 
@@ -117,6 +117,7 @@ exports.goal_details_get = (req, res) => {
     Goal. /* find details about the current goal */
     findById(req.params.id). /* req params - included in url */
     populate({path: 'history parentTo', populate: { path: 'owner history' }}).
+    populate('owner').
     exec((err, goalToDisplay) => {
         if (err) { return err; }   
         res.send({goalToDisplay});
@@ -131,7 +132,7 @@ exports.goal_addCurrentScore_post = (req, res, next) => {
     exec((err, history) => {
         if(err) { return err; }
         const newDate = new Date(req.body.date);
-        const index = history.data.findIndex(i => i.date.getTime() == newDate.getTime());
+        const index = history.data.findIndex(i => (i.date.getFullYear() === newDate.getFullYear()) && (i.date.getMonth() === newDate.getMonth()) && (i.date.getDate() === newDate.getDate()));
         if (index > -1) {
             history.data.splice(index, 1);
         }
@@ -192,11 +193,38 @@ exports.goal_taskImplementation_post = (req, res, next) => {
     Goal.
     updateOne(
         { "_id": req.body.id, "task._id": req.body.taskId },
-        { "$set": { "task.$.weight": req.body.weight }},
-        { "$set": { "task.$.implemented": req.body.implemented }},
+        { "$set": { "task.$.implemented": req.body.implemented, "task.$.weight": req.body.weight }},
         (err) => {
             if (err) { return err; }
             res.send('successfuly updated task immplementation');
+
+            Goal.findById(req.body.id, 'history task initScore', (err, goal) => {
+                if (err) { return err; }
+                let sumTaskImpl = goal.initScore ? goal.initScore : 0;
+                console.log(goal.initScore);
+                for (let i = 0; i < goal.task.length; i++) {
+                    sumTaskImpl = sumTaskImpl + (goal.task[i].implemented / 100 * goal.task[i].weight);
+                }
+                console.log(sumTaskImpl);
+                hData.
+                findById(goal.history).
+                exec((err, history) => {
+                    if (err) { return err; }
+                    const index = history.data.findIndex(i => (i.date.getFullYear() === new Date().getFullYear()) && (i.date.getMonth() === new Date().getMonth()) && (i.date.getDate() === new Date().getDate()));
+                    if (index > -1) {
+                        history.data.splice(index, 1);
+                    }
+                    history.data.push({
+                        date: new Date(),
+                        value: sumTaskImpl
+                    });
+                    history.save((err, historyUpdated) => {
+                        if (err) { return err; }
+                    });            
+                });
+            });
+            
+
             next();
         }
     );
@@ -347,7 +375,7 @@ exports.goal_delete_post = (req, res, next) => {
     exec((err, goalToDelete) => {
         if (err) { return err; }
         Goal.findByIdAndDelete(goalToDelete.ownersOffer).exec();
-        Goal.findByIdAndDelete(goalToDelete.approverssOffer).exec();
+        Goal.findByIdAndDelete(goalToDelete.approversOffer).exec();
         hData.findByIdAndDelete(goalToDelete.history).exec();
         Goal.findByIdAndDelete(req.body.id).
         exec((err) => {
@@ -407,7 +435,7 @@ exports.goal_offerTo_post = (req, res) => {
                         owner: req.body.offers[i].owner,
                         initScore: req.body.offers[i].initScore,
                         targScore: req.body.offers[i].targScore,
-                        childTo: [req.body.childTo],
+                        childTo: [req.body.id],
                         //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}], - not relevant in this case
                         statusOwner: 'Pending',
                         statusApprover: 'Approved',

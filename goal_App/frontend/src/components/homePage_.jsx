@@ -71,21 +71,17 @@ export default class HomePage extends React.Component {
             </h1>
           </div>
           <div className="l-main1">
-            {this.props.goalToDisplay && <GaugeChart goal={this.props.goalToDisplay} updateGoalToDisplay={this.props.updateGoalToDisplay} targscore={this.props.goalToDisplay.targScore} /*current={currentScore}*//>}
+            {this.props.goalToDisplay && <GaugeChart key={this.props.goalToDisplay._id} goal={this.props.goalToDisplay} updateGoalToDisplay={this.props.updateGoalToDisplay} targscore={this.props.goalToDisplay.targScore}/>}
           </div>
           <div className="r-main1">
-            {this.props.goalToDisplay && <LineChart goal={this.props.goalToDisplay}/>}
+            {this.props.goalToDisplay && <LineChart key={this.props.goalToDisplay._id} goal={this.props.goalToDisplay}/>}
           </div>
           <div className="l-main2">
-            {this.props.goalToDisplay && <GoalInfo goal={this.props.goalToDisplay}/>}
-          </div>
-          <div className="l-main2">
-            {this.props.goalToDisplay && <GoalInfo goal={this.props.goalToDisplay}/>}
+            {this.props.goalToDisplay && <GoalInfo key={this.props.goalToDisplay._id} goal={this.props.goalToDisplay}/>}
           </div>
           <div className="r-main2">
-            {this.props.goalToDisplay && <Nesting goal={this.props.goalToDisplay}/>}
+            {this.props.goalToDisplay && <Nesting key={this.props.goalToDisplay._id} children={this.props.goalToDisplay.parentTo} task={this.props.goalToDisplay.task} id={this.props.goalToDisplay._id} updateGoalToDisplay={this.props.updateGoalToDisplay}/>}
           </div>
-          
         </div>
         {this.state.formAdd && <FormAdd toggleDisplayForm={this.toggleDisplayForm}/>}
         {this.state.formMyOwn && <FormMyOwn toggleDisplayForm={this.toggleDisplayForm} children={children} updateGoalToDisplay={this.props.updateGoalToDisplay}/>}

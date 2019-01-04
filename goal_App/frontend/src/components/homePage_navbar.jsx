@@ -29,7 +29,6 @@ export default class Navbar extends React.Component {
   viewOthersGoals = (event) => {
     event.preventDefault();
     const unitID = event.target.getAttribute('href');
-    console.log(unitID);
     this.setState({
       someUnit: unitID
     }, 

@@ -128,8 +128,9 @@ exports.goal_taskImplementation_post = [
   body('taskId').custom(id => {
     return id.match(/^[a-fA-F0-9]{24}$/) ? true : false;
   }).withMessage('Task id is not valid'),
-  body('implemented').trim().isNumeric().isLength({ max: 11 }).withMessage('Implementation score failure'),
-  body('weight').trim().isNumeric().isLength({ max: 11 }).withMessage('weight failure'),
+  body('implemented').trim().optional({ checkFalsy: true }).isNumeric().isLength({ max: 11 }).withMessage('Implementation score failure'),
+  body('weight').trim().optional({ checkFalsy: true }).isNumeric().isLength({ max: 11 }).withMessage('weight failure'),
+  body('description').isLength({ min: 1, max: 200 }).trim().withMessage('Task description failure. Max length is 200 sybmols.'),
   
   sanitizeBody('*').trim().escape(),
 
@@ -138,7 +139,6 @@ exports.goal_taskImplementation_post = [
     if (errors.isEmpty()) {
       return next();
     } else {
-      console.log("falsy implemented???");
       return res.send(errors.array());
     }
   }

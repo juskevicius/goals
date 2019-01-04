@@ -51,9 +51,6 @@ exports.restrict_to_owner = [
         populate('owner').
         exec((err, goal) => {
           if (err) { return err; }
-          console.log("comes here");
-          console.log(user._id);
-          console.log(goal);
           if (user._id.equals(goal.owner.owner)) {
             return next();
           } else {

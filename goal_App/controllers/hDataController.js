@@ -2,10 +2,6 @@ var Goal = require('../models/Goal');
 var hData = require('../models/hData');
 const mongoose = require('mongoose');
 
-const { body,validationResult } = require('express-validator/check');
-const { sanitizeBody } = require('express-validator/filter');
-
-
 exports.hData_update_post = (req, res) => {
   
   /* function to calculate historical data from children goals and/or grandchildren goals */
@@ -94,18 +90,17 @@ exports.hData_update_post = (req, res) => {
 }
 
 exports.updateOneTaskImplementation = (req, res, next) => {
-    
-        
+      
     function calcTaskImpl(theGoal) {
         for (let t = 0; t < theGoal.task.length; t++) {
-            if (theGoal.task[t].description == req.body.description) { /* loop through the parent's tasks and find the current task */
+            if (theGoal.task[t].description === req.body.description) { /* loop through the parent's tasks and find the current task */
                 let impl = [];
                 let weight = [];
                 let sumWeight = 0;
                 let sum = 0;
                 for (let i = 0; i < theGoal.parentTo.length; i++) { /* loop through goals of children */
-                    for (let j = 0; j < theGoal.parentTo[i].task.length; j++) { /* loo through tasks in children goals */
-                        if (req.body.description == theGoal.parentTo[i].task[j].description && theGoal.parentTo[i].status == 'Approved') { /* if current task is found in a child's goal  */
+                    for (let j = 0; j < theGoal.parentTo[i].task.length; j++) { /* loop through tasks in children goals */
+                        if (req.body.description === theGoal.parentTo[i].task[j].description && theGoal.parentTo[i].status === 'Approved') { /* if current task is found in a child's goal  */
                             impl[i] = theGoal.parentTo[i].task[j].implemented ? theGoal.parentTo[i].task[j].implemented : 0; /* then copy its implementation status into an array */
                             weight[i] = theGoal.parentTo[i].weight ? theGoal.parentTo[i].weight : 100; /* also copy child goal's weight  */
                             sumWeight = sumWeight + weight[i]; /* a sum of all weights. Required to be able to calculate the weighted average */
@@ -115,10 +110,15 @@ exports.updateOneTaskImplementation = (req, res, next) => {
                 for (let i = 0; i < impl.length; i++) {
                     sum = sum + impl[i] * weight[i]; /* multiply weights and implementation statuses */
                 }
-                return {
-                    taskId: theGoal.task[t]._id,
-                    taskImpl: sum / sumWeight /* calculate weighted average */
-                };
+                const implemented = (sum / sumWeight) ? (sum / sumWeight) : 0;
+                Goal.
+                updateOne( 
+                    { "_id": theGoal._id, "task._id": theGoal.task[t]._id }, 
+                    { "$set": { "task.$.implemented": implemented }},
+                    (err) => {
+                        if (err) { return err; }
+                    }
+                );
             }
         }
     }
@@ -129,32 +129,17 @@ exports.updateOneTaskImplementation = (req, res, next) => {
     exec((err, parentGoal) => {
         if (err) { return err; }
         if (parentGoal) {
+            calcTaskImpl(parentGoal);
             Goal.
-            updateOne( 
-                { "_id": parentGoal._id, "task._id": calcTaskImpl(parentGoal).taskId }, 
-                { "$set": { "task.$.implemented": calcTaskImpl(parentGoal).taskImpl }},
-                (err) => {
-                    if (err) { return err; }
-                    Goal.
-                    findOne({ parentTo: parentGoal._id }). 
-                    populate('parentTo'). 
-                    exec((err, grandparentGoal) => {
-                        if (err) { return err; }
-                        if (grandparentGoal) {
-                            Goal.
-                            updateOne( 
-                                { "_id": grandparentGoal._id, "task._id": calcTaskImpl(grandparentGoal).taskId }, 
-                                { "$set": { "task.$.implemented": calcTaskImpl(grandparentGoal).taskImpl }},
-                                (err) => {
-                                    if (err) { return err; }
-                                }
-                            );
-                        }
-                    });
+            findOne({ parentTo: parentGoal._id }). 
+            populate('parentTo'). 
+            exec((err, grandparentGoal) => {
+                if (err) { return err; }
+                if (grandparentGoal) {
+                    calcTaskImpl(grandparentGoal);
                 }
-            );
+            }); 
         }
-        
     });
 }
 
@@ -180,11 +165,11 @@ exports.updateAllTasksImplementation =  (req, res, next) => {
             for (let i = 0; i < impl.length; i++) {
                 sum = sum + impl[i] * weight[i]; /* multiply weights and implementation statuses */
             }
-
+            const implemented = (sum / sumWeight) ? (sum / sumWeight) : 0;
             Goal.
             updateOne( 
                 { "_id": theGoal._id, "task._id": theGoal.task[t]._id }, 
-                { "$set": { "task.$.implemented": sum / sumWeight }},
+                { "$set": { "task.$.implemented": implemented }},
                 (err) => {
                     if (err) { return err; }
                 }
