@@ -110,7 +110,7 @@ exports.updateOneTaskImplementation = (req, res, next) => {
                 for (let i = 0; i < impl.length; i++) {
                     sum = sum + impl[i] * weight[i]; /* multiply weights and implementation statuses */
                 }
-                const implemented = (sum / sumWeight) ? (sum / sumWeight) : 0;
+                const implemented = (sum / sumWeight) ? Math.round(sum / sumWeight) : 0;
                 Goal.
                 updateOne( 
                     { "_id": theGoal._id, "task._id": theGoal.task[t]._id }, 
@@ -165,7 +165,7 @@ exports.updateAllTasksImplementation =  (req, res, next) => {
             for (let i = 0; i < impl.length; i++) {
                 sum = sum + impl[i] * weight[i]; /* multiply weights and implementation statuses */
             }
-            const implemented = (sum / sumWeight) ? (sum / sumWeight) : 0;
+            const implemented = (sum / sumWeight) ? Math.round(sum / sumWeight) : 0;
             Goal.
             updateOne( 
                 { "_id": theGoal._id, "task._id": theGoal.task[t]._id }, 
