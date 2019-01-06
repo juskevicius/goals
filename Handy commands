@@ -29,16 +29,18 @@ Check hdata calculations and whether they should be initiated.
 
 production:
 NODE_ENV
-mongo atlas
+mongo - change IP to the one that the host uses
+
+cookie session vs express session
+sessions? Redis, mongo?
 
 production?
 
 
 
-use helmet?
 Auto restart the app if the app or server crashes 
 tls -> https
-jwt secret (model users.js, controller auth.js) - to change in prod
-passport secret (app.js) - to change in prod
+
+
 secure cookies
 implement rate-limiting, protect the app against brute-force attacks

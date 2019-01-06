@@ -63,7 +63,7 @@ export default class HomePage extends React.Component {
   render() {
     
 
-    const children = this.props.ownerUnit.parentTo.length > 0 ? this.props.ownerUnit.parentTo.map((child) => { return child; }) : '';
+    const children = this.props.ownerUnit && this.props.ownerUnit.parentTo.length > 0 ? this.props.ownerUnit.parentTo.map((child) => { return child; }) : '';
 
     return (
       <div>

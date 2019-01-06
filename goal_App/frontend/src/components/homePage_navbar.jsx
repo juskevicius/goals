@@ -39,7 +39,7 @@ export default class Navbar extends React.Component {
   
   render() {
 
-    const orgChart = this.props.chart.parentTo.map((unit) => {return (
+    const orgChart = this.props.chart && this.props.chart.parentTo.map((unit) => {return (
       <li key={unit._id}>
         <a href={unit._id} onClick={this.viewOthersGoals}>{unit.name}</a>
         <ul>{unit.parentTo.map((subUnit) => {return (
@@ -56,7 +56,7 @@ export default class Navbar extends React.Component {
         <nav>
           <ul className="nav">
             <li>
-              <a href={this.props.chart._id} onClick={this.viewOthersGoals}><i className="fa fa-sitemap" style={{fontSize: 24 + "px"}}></i> Lithuania</a>
+              <a href={this.props.chart && this.props.chart._id} onClick={this.viewOthersGoals}><i className="fa fa-sitemap" style={{fontSize: 24 + "px"}}></i> Lithuania</a>
               <ul>
                 {orgChart}
               </ul>

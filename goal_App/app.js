@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
-
+const helmet = require('helmet')
 
 //Configure isProduction variable
 const isProduction = process.env.NODE_ENV === 'production';
@@ -22,6 +22,7 @@ mongoose.set('debug', true);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+app.use(helmet());
 app.use(cors());
 app.use(require('morgan')('dev'));
 app.use(bodyParser.json());

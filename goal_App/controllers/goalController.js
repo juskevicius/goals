@@ -6,6 +6,7 @@ const hData = require('../models/hData');
 const Unit = require('../models/Unit');
 
 exports.goal_homePage_get = (req, res) => {
+    
     Unit. /* extract the whole org. chart structure */
     findOne({name: 'Lithuania'}). 
     populate({ path: 'parentTo', populate: { path: 'parentTo' }}).
