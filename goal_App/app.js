@@ -1,4 +1,4 @@
-const createError = require('http-errors');
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -6,7 +6,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
-const errorHandler = require('errorhandler');
 
 
 //Configure isProduction variable
@@ -16,7 +15,7 @@ const app = express();
 
 //Set up mongoose connection.
 const mongoose = require('mongoose');
-const mongoDB = 'mongodb://127.0.0.1:27017/Goals';
+const mongoDB = process.env.DB_ADDRESS;
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 mongoose.set('debug', true);
@@ -29,16 +28,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
+app.use(session({ secret: process.env.SECRET1, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 
 require('./models/User');
 require('./config/passport');
 app.use(require('./routes/users'));
 app.use(require('./routes/goals'));
-
-if(!isProduction) {
-  app.use(errorHandler());
-}
 
 //Error handlers & middlewares
 if(!isProduction) {
@@ -48,7 +43,7 @@ if(!isProduction) {
     res.json({
       errors: {
         message: err.message,
-        error: err,
+        error: err
       },
     });
   });

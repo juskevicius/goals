@@ -44,11 +44,20 @@ export default class HomePage extends React.Component {
 
   logout = (event) => {
     event.preventDefault();
-    axios
-      .get('/logout')
+    axios.get('/logout')
       .then(
         this.props.logout()
-      );
+      )
+      .catch(error => {
+        const errorMessage = error.response.data.errors.message;
+        if (errorMessage.constructor === Array) {
+          for (let i = 0; i < errorMessage.length; i++) {
+            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+          }
+        } else {
+          alert(errorMessage);
+        }
+      });
   }
 
   render() {

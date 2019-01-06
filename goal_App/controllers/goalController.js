@@ -5,29 +5,27 @@ const Goal = require('../models/Goal');
 const hData = require('../models/hData');
 const Unit = require('../models/Unit');
 
-
-
 exports.goal_homePage_get = (req, res) => {
     Unit. /* extract the whole org. chart structure */
     findOne({name: 'Lithuania'}). 
     populate({ path: 'parentTo', populate: { path: 'parentTo' }}).
     exec((err, orgChart) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         Unit. /* find owner's unit */
         findOne({ owner: res.locals.currUser }).
         populate('parentTo').
         exec((err, ownerUnit) => {
-            if (err) { return err; }
+            if (err) { return next(err); }
             Goal. /* find owner's goals */
             find({ owner: ownerUnit.id}).
             populate('history owner').
             populate({ path: 'parentTo', populate: { path: 'history owner' }}).
             exec((err, ownerGoals) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
                 User.
                 findById(res.locals.currUser).
                 exec((err, user) => {
-                    if (err) { return err; }
+                    if (err) { return next(err); }
                     const myApproved = ownerGoals.filter((goal) => { return goal.statusOwner === 'Approved' && goal.statusApprover === 'Approved'; });
                     return res.send({goalToDisplay: myApproved[0], orgChart, ownerUnit, userRole: user.role});
                 });
@@ -42,7 +40,7 @@ exports.goal_add_post = (req, res) => {
     findOne({ owner: req.payload.id }).
     populate('parentTo').
     exec((err, ownerUnit) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         
         // Create a Goal object with escaped and trimmed data.
         const goal = new Goal(
@@ -78,10 +76,10 @@ exports.goal_add_post = (req, res) => {
 
                 //save historical data object and assign it to the goal
         hdata.save((err, hdataDoc) => {
-            if (err) { return (err); }
+            if (err) { return next(err); }
             goal.history = hdataDoc.id;
             goal.save((err, goalDoc) => {
-                if (err) { return (err); }
+                if (err) { return next(err); }
                 //create a copy and assign it as the offer to the original goal
                 const currId = goalDoc.id;
                 goalDoc.set({
@@ -91,15 +89,15 @@ exports.goal_add_post = (req, res) => {
                 });
                 goalDoc.isNew = true;
                 goalDoc.save((err, newGoalOffer) => {
-                    if (err) { return err; }
+                    if (err) { return next(err); }
                     //assign offer's id to the original goal
                     Goal.
                     findById(currId).
                     exec((err, goalDoc) => {
-                        if (err) { return err; }
+                        if (err) { return next(err); }
                         goalDoc.set({ownersOffer: newGoalOffer.id});
                         goalDoc.save((err, updatedGoalDoc) => {
-                            if (err) { return err; }
+                            if (err) { return next(err); }
                             return res.send(updatedGoalDoc)
                         
                         });    
@@ -119,7 +117,7 @@ exports.goal_details_get = (req, res) => {
     populate({path: 'history parentTo', populate: { path: 'owner history' }}).
     populate('owner').
     exec((err, goalToDisplay) => {
-        if (err) { return err; }   
+        if (err) { return next(err); }   
         res.send({goalToDisplay});
     });
 }
@@ -130,7 +128,7 @@ exports.goal_addCurrentScore_post = (req, res, next) => {
     hData.
     findById(req.body.id).
     exec((err, history) => {
-        if(err) { return err; }
+        if(err) { return next(err); }
         const newDate = new Date(req.body.date);
         const index = history.data.findIndex(i => (i.date.getFullYear() === newDate.getFullYear()) && (i.date.getMonth() === newDate.getMonth()) && (i.date.getDate() === newDate.getDate()));
         if (index > -1) {
@@ -141,13 +139,13 @@ exports.goal_addCurrentScore_post = (req, res, next) => {
             value: req.body.currScore
         });
         history.save((err, historyUpdated) => {
-            if (err) { return err; }
+            if (err) { return next(err); }
             
             Goal. 
             findOne({ history: historyUpdated.id}).
             populate({path: 'childTo', populate: { path: 'childTo'}}).
             exec((err, goal) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
                 if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
                     res.locals.parent = goal.childTo[0];
                     res.locals.currGoal = goal.id;
@@ -166,16 +164,16 @@ exports.goal_editWeight_post = (req, res, next) => {
     Goal.
     findById(req.body.id).
     exec((err, goalToUpdate) => {
-        if(err) { return err; } 
+        if(err) { return next(err); } 
         goalToUpdate.set({
             weight: req.body.weight
         });
         goalToUpdate.save((err, goalUpdated) => {
-            if (err) { return err; }
+            if (err) { return next(err); }
             Goal. 
             findOne({ parentTo: goalUpdated.id}).
             exec((err, parent) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
                 if (parent) { /* if the goal has a parent then update the parent's history */
                     res.locals.parent = parent._id;
                     return next();
@@ -195,11 +193,11 @@ exports.goal_taskImplementation_post = (req, res, next) => {
         { "_id": req.body.id, "task._id": req.body.taskId },
         { "$set": { "task.$.implemented": req.body.implemented, "task.$.weight": req.body.weight }},
         (err) => {
-            if (err) { return err; }
+            if (err) { return next(err); }
             res.send('successfuly updated task immplementation');
 
             Goal.findById(req.body.id, 'history task initScore', (err, goal) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
                 let sumTaskImpl = goal.initScore ? goal.initScore : 0;
                 console.log(goal.initScore);
                 for (let i = 0; i < goal.task.length; i++) {
@@ -209,7 +207,7 @@ exports.goal_taskImplementation_post = (req, res, next) => {
                 hData.
                 findById(goal.history).
                 exec((err, history) => {
-                    if (err) { return err; }
+                    if (err) { return next(err); }
                     const index = history.data.findIndex(i => (i.date.getFullYear() === new Date().getFullYear()) && (i.date.getMonth() === new Date().getMonth()) && (i.date.getDate() === new Date().getDate()));
                     if (index > -1) {
                         history.data.splice(index, 1);
@@ -218,8 +216,8 @@ exports.goal_taskImplementation_post = (req, res, next) => {
                         date: new Date(),
                         value: sumTaskImpl
                     });
-                    history.save((err, historyUpdated) => {
-                        if (err) { return err; }
+                    history.save((err) => {
+                        if (err) { return next(err); }
                     });            
                 });
             });
@@ -236,12 +234,12 @@ exports.goal_taskImplementation_post = (req, res, next) => {
 
 // Handle Goal myOwn on GET.
 
-exports.goal_myOwn_get = (req, res) => {
+exports.goal_myOwn_get = (req, res, next) => {
     Unit.
     findOne({ owner: req.payload.id }).
     populate('parentTo').
     exec((err, ownerUnit) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         Goal. /* find owner's goals */
         find({ owner: req.params.id || ownerUnit._id}). /* req.params.id - included in url (when searching for others' goals) */
         populate({ path: 'ownersOffer approversOffer', populate: { path: 'owner' }}).
@@ -250,7 +248,7 @@ exports.goal_myOwn_get = (req, res) => {
         populate({ path: 'childTo', populate: { path: 'owner' }}).
         populate({ path: 'owner', populate: { path: 'parentTo' }}).
         exec((err, ownerGoals) => {
-            if (err) { return err; }
+            if (err) { return next(err); }
             return res.send({ownerGoals, ownerUnit});
         });
         
@@ -264,12 +262,12 @@ exports.goal_edit_post = (req, res, next) => {
     findOne({ owner: req.payload.id }).
     populate('parentTo').
     exec((err, ownerUnit) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         Goal.
         findById(req.body.id).
         populate('history').
         exec((err, goal) => {
-            if(err) { return err; }
+            if(err) { return next(err); }
             goal.set(
                 {
                     //name: {type: String, required: true},
@@ -292,12 +290,12 @@ exports.goal_edit_post = (req, res, next) => {
                 }
             );
             goal.save((err, goalUpdated) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
                 if (goalUpdated.ownersOffer) {
                     Goal. 
                     findById(goalUpdated.ownersOffer).
                     exec((err, ownersOffer) => {
-                        if (err) { return err; }
+                        if (err) { return next(err); }
                         ownersOffer.set({
                             name: req.body.name.replace('&#x27;', '’'),
                             initScore: req.body.initScore,
@@ -317,7 +315,7 @@ exports.goal_edit_post = (req, res, next) => {
                             _id: ownersOffer.id
                         });
                         ownersOffer.save((err) => {
-                            if (err) { return err; }
+                            if (err) { return next(err); }
                             res.locals.currGoal = goalUpdated.id;
                             return res.send(goalUpdated);  
                         });
@@ -345,17 +343,17 @@ exports.goal_edit_post = (req, res, next) => {
                     );
                     goal.isNew = true;
                     goal.save((err, newOwnersOffer) => {
-                        if (err) { return err; }
+                        if (err) { return next(err); }
                         Goal. 
                         findById(req.body.id). 
                         exec((err, mainGoal) => {
-                            if (err) { return err; }
+                            if (err) { return next(err); }
                             mainGoal.set({
                                 ownersOffer: newOwnersOffer,
                                 _id: req.body.id
                             });
                             mainGoal.save((err, goalUpdated) => {
-                                if (err) { return err; }
+                                if (err) { return next(err); }
                                 res.locals.currGoal = goalUpdated.id;
                                 return res.send(goalUpdated);  
                             });
@@ -373,22 +371,22 @@ exports.goal_delete_post = (req, res, next) => {
     Goal.
     findById(req.body.id).
     exec((err, goalToDelete) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         Goal.findByIdAndDelete(goalToDelete.ownersOffer).exec();
         Goal.findByIdAndDelete(goalToDelete.approversOffer).exec();
         hData.findByIdAndDelete(goalToDelete.history).exec();
         Goal.findByIdAndDelete(req.body.id).
         exec((err) => {
-            if(err) { return err; }
+            if(err) { return next(err); }
             Goal.
             findOne({ parentTo: req.body.id }).
             exec((err, parentGoal) => {
-                if(err) { return err; }
+                if(err) { return next(err); }
                 if (parentGoal) {
                     const index = parentGoal.parentTo.indexOf(req.body.id);
                     parentGoal.parentTo.splice(index, 1);
                     parentGoal.save((err, updatedParentGoal) => {
-                        if(err) { return err; }
+                        if(err) { return next(err); }
                         res.locals.parent = updatedParentGoal.id;
                         next();
                     });
@@ -407,7 +405,7 @@ exports.goal_offerTo_post = (req, res) => {
     Unit.
     findOne({ owner: req.payload.id }).
     exec((err, ownerUnit) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         //create an array for offers' historical data
         let hDataArr = [];
         for (let i = 0; i < req.body.offers.length; i++) {
@@ -423,7 +421,7 @@ exports.goal_offerTo_post = (req, res) => {
         //create docs for historical data from the array
         hData.
         create(hDataArr, (err, hDataDocs) => {
-            if (err) { return err; }
+            if (err) { return next(err); }
             //create an array for offered goals
             let goalArr = [];
             for (let i = 0; i < req.body.offers.length; i++) {
@@ -453,7 +451,7 @@ exports.goal_offerTo_post = (req, res) => {
             //create docs for offered goals (goals are owned by recipients)
             Goal.
                 create(goalArr, (err, goalDocs) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
                 //create their copies, assign new id and owner (the one who made the offer). Bind to offered goals
                 each(goalDocs, (goalOffer, callback) => {
                     const currId = goalOffer.id;
@@ -465,23 +463,23 @@ exports.goal_offerTo_post = (req, res) => {
                     });
                     goalOffer.isNew = true;
                     goalOffer.save((err, newGoalOffer) => {
-                        if (err) { return err; }
+                        if (err) { return next(err); }
                         //assign offer's id to the original goal
                         Goal.
                         findById(currId).
                         exec((err, goalDoc) => {
-                            if (err) { return err; }
+                            if (err) { return next(err); }
                             goalDoc.set({approversOffer: newGoalOffer.id});
                             goalDoc.save((err, updatedGoalDoc) => {
-                                if (err) { return err; }
+                                if (err) { return next(err); }
                                 //make original goal a child to the parent goal 
                                 Goal.
                                 findById(req.body.id).
                                 exec((err, parentGoal) => {
-                                    if (err) { return err; }
+                                    if (err) { return next(err); }
                                     parentGoal.parentTo.push(updatedGoalDoc.id);
                                     parentGoal.save((err) => {
-                                        if (err) { return err; }
+                                        if (err) { return next(err); }
                                         callback();          
                                     }); 
                                 });
@@ -490,7 +488,7 @@ exports.goal_offerTo_post = (req, res) => {
                     });
                 }, 
                 (err) => {
-                    if (err) { return err; }
+                    if (err) { return next(err); }
                     return res.send('successfully made some offers');
                 });
             });
@@ -506,7 +504,7 @@ exports.goal_acceptOffer_post = (req, res, next) => {
     populate('approversOffer').
     populate('history').
     exec((err, goal) => {
-        if(err) { return err; } 
+        if(err) { return next(err); } 
         goal.set({
             name: goal.approversOffer.name,
             initScore: goal.approversOffer.initScore,
@@ -519,12 +517,12 @@ exports.goal_acceptOffer_post = (req, res, next) => {
             _id: req.body.id
         });
         goal.save((err, goalAccepted) => {
-            if (err) { return err; }
+            if (err) { return next(err); }
             if (goalAccepted.ownersOffer) {
                 Goal.
                 findById(goalAccepted.ownersOffer).
                 exec((err, ownersOffer) => {
-                    if (err) { return err; }
+                    if (err) { return next(err); }
                     ownersOffer.set({
                         name: goal.approversOffer.name,
                         initScore: goal.approversOffer.initScore,
@@ -535,18 +533,18 @@ exports.goal_acceptOffer_post = (req, res, next) => {
                         _id: ownersOffer.id
                     });
                     ownersOffer.save((err) => {
-                        if (err) { return err; }
+                        if (err) { return next(err); }
                     })
                 });
             }
             hData. 
             findById(goalAccepted.history._id).
             exec((err, hDataToUpdate) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
                 hDataToUpdate.data[0].value = goal.approversOffer.initScore ? goal.approversOffer.initScore : 0;
                 hDataToUpdate._id = goalAccepted.history.id;
                 hDataToUpdate.save((err) => {
-                    if (err) { return err; }
+                    if (err) { return next(err); }
                     res.send('successfuly accepted the offer');  
                     next();
                 });
@@ -561,12 +559,12 @@ exports.goal_ownersOffer_post = (req, res) => {
     Goal.
     findById(req.body.id).
     exec((err, goal) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         if (goal.ownersOffer) {
             Goal. 
             findById(goal.ownersOffer). 
             exec((err, ownersOffer) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
                 ownersOffer.set({
                     name: req.body.name,
                     initScore: req.body.initScore,
@@ -577,7 +575,7 @@ exports.goal_ownersOffer_post = (req, res) => {
                     _id: ownersOffer.id
                 });
                 ownersOffer.save((err) => {
-                    if (err) { return err; }
+                    if (err) { return next(err); }
                     res.send('owners offer has been updated');
                 });
             });
@@ -604,7 +602,7 @@ exports.goal_ownersOffer_post = (req, res) => {
                 
             );
             ownersOffer.save((err, newOwnersOffer) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
                 goal.set(
                     {
                         ownersOffer: newOwnersOffer.id,
@@ -612,7 +610,7 @@ exports.goal_ownersOffer_post = (req, res) => {
                     }
                 );
                 goal.save((err) => {
-                    if (err) { return err; }
+                    if (err) { return next(err); }
                     res.send('owners offer has been submitted');
                 });
             });
@@ -629,7 +627,7 @@ exports.goal_others_get = (req, res) => {
     findOne({ owner: req.payload.id }).
     populate('parentTo').
     exec((err, ownerUnit) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         
         //find childrens' goals
         Goal.find()
@@ -638,7 +636,7 @@ exports.goal_others_get = (req, res) => {
             .populate('owner')
             .populate({ path: 'ownersOffer approversOffer', populate: { path: 'owner' }})
             .exec((err, othersGoals) => {
-            if (err) { return err; }
+            if (err) { return next(err); }
             return res.send({othersGoals});
         });  
     });
@@ -649,12 +647,12 @@ exports.goal_approversOffer_post = (req, res) => {
     Goal.
     findById(req.body.id).
     exec((err, goal) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         if (goal.approversOffer) {
             Goal. 
             findById(goal.approversOffer). 
             exec((err, approversOffer) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
                 approversOffer.set({
                     name: req.body.name,
                     initScore: req.body.initScore,
@@ -665,7 +663,7 @@ exports.goal_approversOffer_post = (req, res) => {
                     _id: approversOffer.id
                 });
                 approversOffer.save((err) => {
-                    if (err) { return err; }
+                    if (err) { return next(err); }
                     res.send('approvers offer has been updated');
                 });
             });
@@ -673,7 +671,7 @@ exports.goal_approversOffer_post = (req, res) => {
             Unit.
             findOne({ owner: req.payload.id }).
             exec((err, ownerUnit) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
 
                 const approversOffer = new Goal(
                     {
@@ -697,7 +695,7 @@ exports.goal_approversOffer_post = (req, res) => {
                     
                 );
                 approversOffer.save((err, newApproversOffer) => {
-                    if (err) { return err; }
+                    if (err) { return next(err); }
                     goal.set(
                         {
                             approversOffer: newApproversOffer.id,
@@ -705,7 +703,7 @@ exports.goal_approversOffer_post = (req, res) => {
                         }
                     );
                     goal.save((err) => {
-                        if (err) { return err; }
+                        if (err) { return next(err); }
                         res.send('approvers offer has been submitted');
                     });
                 });
@@ -721,7 +719,7 @@ exports.goal_approve_post = (req, res, next) => {
     populate('ownersOffer').
     populate('history').
     exec((err, goal) => {
-        if(err) { return err; } 
+        if(err) { return next(err); } 
         goal.set({
             name: goal.ownersOffer.name,
             initScore: goal.ownersOffer.initScore,
@@ -734,12 +732,12 @@ exports.goal_approve_post = (req, res, next) => {
             _id: goal.id
         });
         goal.save((err, goalAccepted) => {
-            if (err) { return err; }
+            if (err) { return next(err); }
             if (goalAccepted.approversOffer) {
                 Goal.
                 findById(goalAccepted.approversOffer).
                 exec((err, approversOffer) => {
-                    if (err) { return err; }
+                    if (err) { return next(err); }
                     approversOffer.set({
                         name: goal.ownersOffer.name,
                         initScore: goal.ownersOffer.initScore,
@@ -750,18 +748,18 @@ exports.goal_approve_post = (req, res, next) => {
                         _id: approversOffer.id
                     });
                     approversOffer.save((err) => {
-                        if (err) { return err; }
+                        if (err) { return next(err); }
                     })
                 });
             }
             hData. 
             findById(goalAccepted.history._id).
             exec((err, hDataToUpdate) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
                 hDataToUpdate.data[0].value = goal.ownersOffer.initScore ? goal.ownersOffer.initScore : 0;
                 hDataToUpdate._id = goalAccepted.history.id;
                 hDataToUpdate.save((err) => {
-                    if (err) { return err; }
+                    if (err) { return next(err); }
                     res.send('successfuly accepted the offer');  
                     next();
                 });
@@ -775,20 +773,20 @@ exports.goal_reject_post = (req, res, next) => {
     Goal.
     findById(req.body.id).
     exec((err, goal) => {
-        if(err) { return err; } 
+        if(err) { return next(err); } 
         goal.set({statusApprover: 'Rejected'});
         goal.save((err, goalRejected) => {
-            if (err) { return err; }
+            if (err) { return next(err); }
             Goal.
             findById(goalRejected.childTo[0]).
             exec((err, parentGoal) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
                 if (parentGoal) {
                     const index = parentGoal.parentTo.indexOf(goalRejected.id);
                     if (index > -1) {
                         parentGoal.parentTo.splice(index, 1);
                         parentGoal.save((err) => {
-                            if (err) { return err; }
+                            if (err) { return next(err); }
                             return res.send('successfuly rejected the goal');
                         });
                     }

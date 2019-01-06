@@ -57,21 +57,26 @@ export default class FormAdd extends React.Component {
     } else {
       const { name, initScore, targScore, comment } = this.state;
       const task = this.state.task.filter((task) => {return task.description;});
-      axios.post('/add', {
-        name, initScore, targScore, comment, task
-      }).then(
-        response => {
-          if (response.status === 200) {
-            if (response.data.constructor === Array) {
-              for (let i = 0; i < response.data.length; i++) {
-                alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
-              }
+      axios
+        .post('/add', {
+          name, initScore, targScore, comment, task
+        })
+        .then(response => {
+            if (response.status === 200) {
+              let event = new Event('fake');
+              this.props.toggleDisplayForm('formAdd', event);
             }
-            let event = new Event('fake');
-            this.props.toggleDisplayForm('formAdd', event);
+        })
+        .catch(error => {
+          const errorMessage = error.response.data.errors.message;
+          if (errorMessage.constructor === Array) {
+            for (let i = 0; i < errorMessage.length; i++) {
+              alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            }
+          } else {
+            alert(errorMessage);
           }
-        }  
-      );
+        });
     }
   }
 

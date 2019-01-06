@@ -55,28 +55,28 @@ exports.hData_update_post = (req, res) => {
   findById(parent).
   populate({path: 'childTo parentTo', populate: { path: 'history' }}).
   exec( function (err, parentGoal) {
-      if (err) { return err; }
+      if (err) { return next(err); }
       hData.
       findById(parentGoal.history).
       exec(function (err, parentHistory) {
-          if (err) { return err; }
+          if (err) { return next(err); }
           calcHistoricalData(parentGoal, parentHistory); /* calculate historical data for parent goal */
           parentHistory.save(function (err) {
-              if (err) { return err;}
+              if (err) { return next(err);}
               if (parentGoal.childTo[0]) { 
                   let grandparent = parentGoal.childTo[0];
                   Goal.
                   findById(grandparent).
                   populate({path: 'parentTo', populate: { path: 'history' }}).
                   exec( function (err, grandparentGoal) {
-                      if (err) { return err; }
+                      if (err) { return next(err); }
                       hData.
                       findById(grandparent.history).
                       exec(function (err, grandparentHistory) {
-                          if (err) { return err; }
+                          if (err) { return next(err); }
                           calcHistoricalData(grandparentGoal, grandparentHistory); /* calculate historical data for grandparent goal */
                           grandparentHistory.save(function (err) {
-                              if (err) { return err;}
+                              if (err) { return next(err);}
                               return res.send("successfuly updated history");     
                           });
                       });
@@ -116,7 +116,7 @@ exports.updateOneTaskImplementation = (req, res, next) => {
                     { "_id": theGoal._id, "task._id": theGoal.task[t]._id }, 
                     { "$set": { "task.$.implemented": implemented }},
                     (err) => {
-                        if (err) { return err; }
+                        if (err) { return next(err); }
                     }
                 );
             }
@@ -127,14 +127,14 @@ exports.updateOneTaskImplementation = (req, res, next) => {
     findOne({ parentTo: req.body.id }). 
     populate('parentTo'). 
     exec((err, parentGoal) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         if (parentGoal) {
             calcTaskImpl(parentGoal);
             Goal.
             findOne({ parentTo: parentGoal._id }). 
             populate('parentTo'). 
             exec((err, grandparentGoal) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
                 if (grandparentGoal) {
                     calcTaskImpl(grandparentGoal);
                 }
@@ -171,7 +171,7 @@ exports.updateAllTasksImplementation =  (req, res, next) => {
                 { "_id": theGoal._id, "task._id": theGoal.task[t]._id }, 
                 { "$set": { "task.$.implemented": implemented }},
                 (err) => {
-                    if (err) { return err; }
+                    if (err) { return next(err); }
                 }
             );
         }
@@ -181,14 +181,14 @@ exports.updateAllTasksImplementation =  (req, res, next) => {
     findOne({ parentTo: req.body.id }). 
     populate('parentTo'). 
     exec((err, parentGoal) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         if (parentGoal) {
             calcTaskImpl(parentGoal);
             Goal. 
             findOne({ parentTo: parentGoal._id }). 
             populate('parentTo'). 
             exec((err, grandparentGoal) => {
-                if (err) { return err; }
+                if (err) { return next(err); }
                 if (grandparentGoal) {
                     calcTaskImpl(grandparentGoal);
                 }

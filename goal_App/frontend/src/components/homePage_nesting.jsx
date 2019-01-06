@@ -48,19 +48,21 @@ export default class Nesting extends React.Component {
 
   handleSubmit1 = (event) => {
     
-
     axios
       .post('/editWeight', {  })
       .then(response => {
-        if (response.data.constructor === Array) {
-          for (let i = 0; i < response.data.length; i++) {
-            alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
-          }
+        if (response.status === 200) {
+          console.log('success');
         }
       })
       .catch(error => {
-        if (error.response) {
-          alert(error.response.data);
+        const errorMessage = error.response.data.errors.message;
+        if (errorMessage.constructor === Array) {
+          for (let i = 0; i < errorMessage.length; i++) {
+            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+          }
+        } else {
+          alert(errorMessage);
         }
       });
   }
@@ -70,34 +72,41 @@ export default class Nesting extends React.Component {
     const task = this.state.task.find(task => task._id === taskId);
     const { _id, implemented, weight, description } = task;
     axios
-      .post('/taskImplementation', { id: this.state.id, taskId: _id, implemented, weight, description })
+      .post('/taskImplementation', { 
+        id: this.state.id, 
+        taskId: _id, 
+        implemented, 
+        weight, 
+        description
+      })
       .then(response => {
-        if (response.data.constructor === Array) {
-          for (let i = 0; i < response.data.length; i++) {
-            alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
-          }
-        } else {
+        if (response.status === 200) {
           axios.get('/details/' + this.props.goal._id)
-            .then(response => {
-              if (response.status === 200) {
-                if (response.data.constructor === Array) {
-                  for (let i = 0; i < response.data.length; i++) {
-                    alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
-                  }
-                }
-                this.props.updateGoalToDisplay(response);
+          .then(response => {
+            if (response.status === 200) {
+              this.props.updateGoalToDisplay(response);
+            }
+          })
+          .catch(error => {
+            const errorMessage = error.response.data.errors.message;
+            if (errorMessage.constructor === Array) {
+              for (let i = 0; i < errorMessage.length; i++) {
+                alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
               }
-            })
-            .catch(error => {
-              if (error.response) {
-                alert(error.response.data);
-              }
-            });
+            } else {
+              alert(errorMessage);
+            }
+          });
         }
       })
       .catch(error => {
-        if (error.response) {
-          alert(error.response.data);
+        const errorMessage = error.response.data.errors.message;
+        if (errorMessage.constructor === Array) {
+          for (let i = 0; i < errorMessage.length; i++) {
+            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+          }
+        } else {
+          alert(errorMessage);
         }
       });
   }

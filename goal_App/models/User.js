@@ -28,7 +28,7 @@ UsersSchema.methods.generateJWT = function() {
   return jwt.sign({
     id: this._id,
     exp: parseInt(expirationTime, 10),
-  }, 'secret');
+  }, process.env.SECRET2);
 }
 
 UsersSchema.methods.toAuthJSON = function() {

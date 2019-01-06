@@ -29,21 +29,24 @@ export default class Login extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     axios.post('/login', {
-      empId: this.state.empId,
-      password: this.state.password
-    })
-    .then(response => {
-      if (response.status === 200) {
-        this.props.loadData(response);
-      } else {
-        console.log("something went wrong");
-      }
-    })
-    .catch(error => {
-      if (error.response) {
-        alert(error.response.data);
-      }
-    });
+        empId: this.state.empId,
+        password: this.state.password
+      })
+      .then(response => {
+        if (response.status === 200) {
+          this.props.loadData(response);
+        }
+      })
+      .catch(error => {
+        const errorMessage = error.response.data.errors.message;
+        if (errorMessage.constructor === Array) {
+          for (let i = 0; i < errorMessage.length; i++) {
+            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+          }
+        } else {
+          alert(errorMessage);
+        }
+      });
   }
 
   render() {

@@ -16,7 +16,11 @@ exports.validate_cookie = [
       return next();
     }
     else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];
@@ -33,7 +37,11 @@ exports.user_login_post = [
       return next();
     }
     else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];
@@ -61,7 +69,11 @@ exports.goal_add_post = [
     if (errors.isEmpty()) {
       return next();
     } else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];
@@ -77,7 +89,11 @@ exports.goal_details_get = [
     if (errors.isEmpty()) {
       return next();
     } else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];
@@ -96,7 +112,11 @@ exports.goal_addCurrentScore_post = [
     if (errors.isEmpty()) {
       return next();
     } else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];
@@ -115,7 +135,11 @@ exports.goal_editWeight_post = [
     if (errors.isEmpty()) {
       return next();
     } else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];
@@ -139,7 +163,11 @@ exports.goal_taskImplementation_post = [
     if (errors.isEmpty()) {
       return next();
     } else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];
@@ -177,7 +205,11 @@ exports.goal_edit_post = [
     if (errors.isEmpty()) {
       return next();
     } else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];
@@ -195,7 +227,11 @@ exports.goal_delete_post = [
     if (errors.isEmpty()) {
       return next();
     } else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];
@@ -228,7 +264,11 @@ exports.goal_offerTo_post = [
     if (errors.isEmpty()) {
       return next();
     } else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];
@@ -245,7 +285,11 @@ exports.goal_acceptOffer_post = [
     if (errors.isEmpty()) {
       return next();
     } else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];
@@ -276,7 +320,11 @@ exports.goal_ownersOffer_post = [
     if (errors.isEmpty()) {
       return next();
     } else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];
@@ -312,7 +360,11 @@ exports.goal_approversOffer_post = [
     if (errors.isEmpty()) {
       return next();
     } else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];
@@ -329,7 +381,11 @@ exports.goal_approve_post = [
     if (errors.isEmpty()) {
       return next();
     } else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];
@@ -346,7 +402,11 @@ exports.goal_reject_post = [
     if (errors.isEmpty()) {
       return next();
     } else {
-      return res.send(errors.array());
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
     }
   }
 ];

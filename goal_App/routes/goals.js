@@ -19,7 +19,7 @@ router.get('/',
 /* POST add */
 router.post('/add', 
   validationController.validate_cookie, 
-  auth.required, 
+  auth.required,  
   validationController.goal_add_post, 
   goalController.goal_add_post
 );
@@ -75,7 +75,7 @@ router.get('/myOwn',
 /* GET myOwn (others' goals) */
 router.get('/myOwn/:id', 
   validationController.validate_cookie, 
-  auth.required, 
+  auth.required,
   goalController.goal_myOwn_get
 );
 

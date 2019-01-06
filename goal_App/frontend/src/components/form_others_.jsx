@@ -36,13 +36,24 @@ export default class FormOthers extends React.Component {
   }
 
   updateOthersGoals = () => {
-    axios.get('/others').then(
-      response => {
-        this.setState({
-          othersGoals: response.data.othersGoals
-        });
-      }
-    );
+    axios.get('/others')
+      .then(response => {
+        if (response.status === 200) {
+          this.setState({
+            othersGoals: response.data.othersGoals
+          });
+        }
+      })
+      .catch(error => {
+        const errorMessage = error.response.data.errors.message;
+        if (errorMessage.constructor === Array) {
+          for (let i = 0; i < errorMessage.length; i++) {
+            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+          }
+        } else {
+          alert(errorMessage);
+        }  
+      });
   }
 
   render() {

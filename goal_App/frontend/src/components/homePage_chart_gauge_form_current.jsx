@@ -41,23 +41,28 @@ export default class FormCurrent extends React.Component {
       }
     } else {
       const { date, currScore } = this.state;
-      axios.post('/addCurrentScore', {id: this.props.goal.history._id, date, currScore})
+      axios
+        .post('/addCurrentScore', {
+          id: this.props.goal.history._id, 
+          date, 
+          currScore
+        })
         .then(response => { 
           if (response.status === 200) {
             axios.get('/details/' + this.props.goal._id)
               .then(response => {
                 if (response.status === 200) {
-                  if (response.data.constructor === Array) {
-                    for (let i = 0; i < response.data.length; i++) {
-                      alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
-                    }
-                  }
                   this.props.updateGoalToDisplay(response);
                 }
               })
               .catch(error => {
-                if (error.response) {
-                  alert(error.response.data);
+                const errorMessage = error.response.data.errors.message;
+                if (errorMessage.constructor === Array) {
+                  for (let i = 0; i < errorMessage.length; i++) {
+                    alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+                  }
+                } else {
+                  alert(errorMessage);
                 }
               });
             let event = new Event('fake');
@@ -66,8 +71,13 @@ export default class FormCurrent extends React.Component {
         }  
       )
       .catch(error => {
-        if (error.response) {
-          alert(error.response.data);
+        const errorMessage = error.response.data.errors.message;
+        if (errorMessage.constructor === Array) {
+          for (let i = 0; i < errorMessage.length; i++) {
+            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+          }
+        } else {
+          alert(errorMessage);
         }
       });
     }

@@ -15,18 +15,22 @@ export default class Users extends React.Component {
   }
 
   loadUsers = () => {
-    axios
-    .get('/users')
-    .then(response => {
-      this.setState({
-        users: response.data.users
+    axios.get('/users')
+      .then(response => {
+        this.setState({
+          users: response.data.users
+        });
+      })
+      .catch(error => {
+        const errorMessage = error.response.data.errors.message;
+        if (errorMessage.constructor === Array) {
+          for (let i = 0; i < errorMessage.length; i++) {
+            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+          }
+        } else {
+          alert(errorMessage);
+        }
       });
-    })
-    .catch(error => {
-      if (error.response) {
-        alert(error.response.data);
-      }
-    });
   }
 
   handleChange = (event) => {
@@ -40,23 +44,26 @@ export default class Users extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const { empId, name, password, role } = this.state;
-    axios
-      .post('/users', { empId, name, password, role })
+    axios.post('/users', { 
+        empId, 
+        name, 
+        password, 
+        role 
+      })
       .then(response => {
         if (response.status === 200) {
-          if (response.data.constructor === Array) {
-            for (let i = 0; i < response.data.length; i++) {
-              alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
-            }
-            return;
-          }
           alert('successfuly added a user');
           this.loadUsers();
         }
       })
       .catch(error => {
-        if (error.response) {
-          alert(error.response.data);
+        const errorMessage = error.response.data.errors.message;
+        if (errorMessage.constructor === Array) {
+          for (let i = 0; i < errorMessage.length; i++) {
+            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+          }
+        } else {
+          alert(errorMessage);
         }
       });
   }

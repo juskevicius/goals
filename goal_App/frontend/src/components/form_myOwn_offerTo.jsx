@@ -77,24 +77,24 @@ export default class FormOfferTo extends React.Component {
     let { offers } = this.state;
     offers = offers.filter((offer) => { return offer.owner; });
     axios.post('/offerTo', {
-      id: this.props.goal._id, 
-      name: this.props.goal.name, 
-      offers
-    })
+        id: this.props.goal._id, 
+        name: this.props.goal.name, 
+        offers
+      })
       .then(response => {
         if (response.status === 200) {
-          if (response.data.constructor === Array) {
-            for (let i = 0; i < response.data.length; i++) {
-              alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
-            }
-          }
           let event = new Event('fake');
           this.props.toggleDisplayForm("formOfferTo", null, event);
         }
       })
       .catch(error => {
-        if (error.response) {
-          alert(error.response.data);
+        const errorMessage = error.response.data.errors.message;
+        if (errorMessage.constructor === Array) {
+          for (let i = 0; i < errorMessage.length; i++) {
+            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+          }
+        } else {
+          alert(errorMessage);
         }
       });
   }

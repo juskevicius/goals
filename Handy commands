@@ -7,7 +7,11 @@ mongo --port 27017 -u "myUserAdmin" -p "abc123" --authenticationDatabase "admin"
 
 To do:
 
+
 developement:
+gauge chart:
+disable 'edit current score' when it's calculated automatically
+
 line chart:
 edit entered scores
 
@@ -18,11 +22,19 @@ nesting:
 edit weights of children goals
 current score is incorrect
 
+hide weights of tasks if tasks are dedicated to children
+spread tasks to see their implementation per child
+
 Check hdata calculations and whether they should be initiated. 
 
 production:
-proper error handling 
-NODE_ENV ???
+NODE_ENV
+mongo atlas
+
+production?
+
+
+
 use helmet?
 Auto restart the app if the app or server crashes 
 tls -> https

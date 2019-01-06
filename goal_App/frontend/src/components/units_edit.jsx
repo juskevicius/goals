@@ -57,22 +57,28 @@ export default class UnitsEdit extends React.Component {
     event.preventDefault();
     const { id, name, owner, unitType, childTo, parentTo } = this.state;
     axios
-      .post('/unitsUpdate', { id, name, owner, unitType, childTo, parentTo})
+      .post('/unitsUpdate', { 
+        id, 
+        name, 
+        owner, 
+        unitType, 
+        childTo, 
+        parentTo
+      })
       .then(response => {
         if (response.status === 200) {
-          if (response.data.constructor === Array) {
-            for (let i = 0; i < response.data.length; i++) {
-              alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
-            }
-            return;
-          }
           alert("successfuly updated a unit");
           this.props.loadData();
         }
       })
       .catch(error => {
-        if (error.response) {
-          alert(error.response.data);
+        const errorMessage = error.response.data.errors.message;
+        if (errorMessage.constructor === Array) {
+          for (let i = 0; i < errorMessage.length; i++) {
+            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+          }
+        } else {
+          alert(errorMessage);
         }
       });
   }
@@ -84,14 +90,18 @@ export default class UnitsEdit extends React.Component {
       .post('/unitsDelete', { id })
       .then(response => {
         if (response.status === 200) {
-          if (response.data.constructor === Array) {
-            for (let i = 0; i < response.data.length; i++) {
-              alert("Something went wrong with the field '" + response.data[i].param + "'\nError message: " + response.data[i].msg);
-            }
-            return;
-          }
           alert("successfuly deleted a unit");
           this.props.loadData();
+        }
+      })
+      .catch(error => {
+        const errorMessage = error.response.data.errors.message;
+        if (errorMessage.constructor === Array) {
+          for (let i = 0; i < errorMessage.length; i++) {
+            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+          }
+        } else {
+          alert(errorMessage);
         }
       });
   }

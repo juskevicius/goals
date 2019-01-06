@@ -8,7 +8,7 @@ const passport = require('passport');
 
 exports.user_login_post = (req, res, next) => {
     passport.authenticate('local', { session: false }, (err, passportUser, info) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         if (passportUser) {
         const user = passportUser;
         user.token = passportUser.generateJWT();
@@ -34,7 +34,7 @@ exports.logout_get = (req, res) => {
 
 exports.user_create_get = (req, res) => {
     User.find({}, (err, users) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         return res.send({ users });
     });
 };
@@ -52,7 +52,7 @@ exports.user_create_post = (req, res, next) => {
     newUser.setPassword(req.body.password);
     return newUser.save(
          (err) => {
-            if (err) { return err; }
+            if (err) { return next(err); }
             return res.send('successfuly added a user');
         }
     );
@@ -62,7 +62,7 @@ exports.user_create_post = (req, res, next) => {
 
 exports.user_update_post = (req, res) => {
     User.findById(req.body.id, (err, user) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         user.empId = req.body.empId;
         user.name = req.body.name;
         user.role = req.body.role;
@@ -70,7 +70,7 @@ exports.user_update_post = (req, res) => {
             user.setPassword(req.body.password);
         }
         user.save((err) => {
-            if (err) return err;
+            if (err) return next(err);
             return res.send('successfuly updated a user');
         });
     });
@@ -80,7 +80,7 @@ exports.user_update_post = (req, res) => {
 
 exports.user_delete_post = (req, res, next) => {
     User.findByIdAndRemove(req.body.id, (err) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         return res.send('successfuly deleted a user');
     });
 }
@@ -98,9 +98,9 @@ exports.unit_create_get = function(req, res) {
     populate("childTo").
     populate("owner").
     exec((err, units) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         User.find({}, (err, users) => {
-            if (err) { return err; }
+            if (err) { return next(err); }
             return res.send({ units, users});
         });
     });
@@ -118,7 +118,7 @@ exports.unit_create_post = (req, res) => {
         childTo: req.body.childTo,
     });
     newUnit.save((err) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         return res.send('successfuly added a unit');
     });
 };
@@ -127,7 +127,7 @@ exports.unit_create_post = (req, res) => {
 
 exports.unit_update_post = (req, res) => {
     Unit.findById(req.body.id, (err, unit) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         /* Update existing unit */
         unit.set({
             name: req.body.name,
@@ -138,7 +138,7 @@ exports.unit_update_post = (req, res) => {
             _id: req.body.id
         });
         unit.save((err) => {
-            if (err) { return err; }
+            if (err) { return next(err); }
             return res.send('successfuly updated a unit');
         });
     });
@@ -148,7 +148,7 @@ exports.unit_update_post = (req, res) => {
 
 exports.unit_delete_post = (req, res) => {
     Unit.findByIdAndRemove(req.body.id, (err) => {
-        if (err) { return err; }
+        if (err) { return next(err); }
         return res.send('successfuly deleted a unit');
     });
 };

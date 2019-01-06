@@ -13,8 +13,13 @@ export default class FormAcceptOffer extends React.Component {
       }
     })
     .catch(error => {
-      if (error.response) {
-        alert(error.response.data);
+      const errorMessage = error.response.data.errors.message;
+      if (errorMessage.constructor === Array) {
+        for (let i = 0; i < errorMessage.length; i++) {
+          alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+        }
+      } else {
+        alert(errorMessage);
       }
     });
   }
