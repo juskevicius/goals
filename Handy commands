@@ -8,9 +8,7 @@ mongo --port 27017 -u "myUserAdmin" -p "abc123" --authenticationDatabase "admin"
 To do:
 
 
-developement:
-gauge chart:
-disable 'edit current score' when it's calculated automatically
+///////DEVELOPEMENT:
 
 line chart:
 edit entered scores
@@ -18,29 +16,24 @@ edit entered scores
 goal details:
 edit goal details
 
-nesting:
-edit weights of children goals
-current score is incorrect
-
-hide weights of tasks if tasks are dedicated to children
 spread tasks to see their implementation per child
 
 Check hdata calculations and whether they should be initiated. 
 
-production:
+current goal:
+update if it's deleted, offered or edited in myOwn goals
+
+
+///////PRODUCTION:
+
 NODE_ENV
 mongo - change IP to the one that the host uses
 
 cookie session vs express session
 sessions? Redis, mongo?
 
-production?
-
-
-
 Auto restart the app if the app or server crashes 
 tls -> https
-
 
 secure cookies
 implement rate-limiting, protect the app against brute-force attacks

@@ -32,13 +32,13 @@ router.get('/details/:id',
   goalController.goal_details_get
 );
 
-/* POST add current score */
-router.post('/addCurrentScore', 
+/* POST score */
+router.post('/score', 
   validationController.validate_cookie, 
   auth.required,
   authorization.restrict_to_owner_h_id, 
-  validationController.goal_addCurrentScore_post, 
-  goalController.goal_addCurrentScore_post, 
+  validationController.goal_score_post, 
+  goalController.goal_score_post, 
   hDataController.hData_update_post
 );
 
@@ -46,7 +46,7 @@ router.post('/addCurrentScore',
 router.post('/editWeight', 
   validationController.validate_cookie, 
   auth.required,
-  /*authorization.restrict_to_owner, */
+  authorization.restrict_to_approver,
   validationController.goal_editWeight_post, 
   goalController.goal_editWeight_post, 
   hDataController.hData_update_post

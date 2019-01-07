@@ -125,38 +125,69 @@ exports.goal_details_get = (req, res) => {
 
 // Handle Goal add Current Score on POST.
 
-exports.goal_addCurrentScore_post = (req, res, next) => {
-    hData.
-    findById(req.body.id).
-    exec((err, history) => {
-        if(err) { return next(err); }
-        const newDate = new Date(req.body.date);
-        const index = history.data.findIndex(i => (i.date.getFullYear() === newDate.getFullYear()) && (i.date.getMonth() === newDate.getMonth()) && (i.date.getDate() === newDate.getDate()));
-        if (index > -1) {
-            history.data.splice(index, 1);
-        }
-        history.data.push({
-            date: newDate,
-            value: req.body.currScore
-        });
-        history.save((err, historyUpdated) => {
-            if (err) { return next(err); }
-            
-            Goal. 
-            findOne({ history: historyUpdated.id}).
-            populate({path: 'childTo', populate: { path: 'childTo'}}).
-            exec((err, goal) => {
+exports.goal_score_post = (req, res, next) => {
+    
+    if (req.body.entryId) {
+        
+        /* update entry */
+        hData.
+        updateOne(
+            { "_id": req.body.id, "data._id": req.body.entryId },
+            { "$set": { "data.$.date": req.body.date, "data.$.value": req.body.value }},
+            (err) => {
                 if (err) { return next(err); }
-                if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
-                    res.locals.parent = goal.childTo[0];
-                    res.locals.currGoal = goal.id;
-                    next();
-                } else {
-                    return res.send('successfuly updated the current score');
-                }
+
+                Goal. 
+                findOne({ history: req.body.id}).
+                populate({path: 'childTo', populate: { path: 'childTo'}}).
+                exec((err, goal) => {
+                    if (err) { return next(err); }
+                    if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
+                        res.locals.parent = goal.childTo[0];
+                        res.locals.currGoal = goal.id;
+                        next();
+                    } else {
+                        return res.send('successfuly updated the current score');
+                    }
+                });
             });
-        });
-    }); 
+
+    } else {
+
+        /* new entry */
+        hData.
+        findById(req.body.id).
+        exec((err, history) => {
+            if(err) { return next(err); }
+            
+            const newDate = new Date(req.body.date);
+            const index = history.data.findIndex(i => (i.date.getFullYear() === newDate.getFullYear()) && (i.date.getMonth() === newDate.getMonth()) && (i.date.getDate() === newDate.getDate()));
+            if (index > -1) {
+                history.data.splice(index, 1);
+            }
+            history.data.push({
+                date: newDate,
+                value: req.body.value
+            });
+            history.save((err) => {
+                if (err) { return next(err); }
+                
+                Goal. 
+                findOne({ history: req.body.id}).
+                populate({path: 'childTo', populate: { path: 'childTo'}}).
+                exec((err, goal) => {
+                    if (err) { return next(err); }
+                    if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
+                        res.locals.parent = goal.childTo[0];
+                        res.locals.currGoal = goal.id;
+                        next();
+                    } else {
+                        return res.send('successfuly updated the current score');
+                    }
+                });
+            });
+        }); 
+    }
 }
 
 // Handle Goal edit weight on POST.
@@ -200,11 +231,9 @@ exports.goal_taskImplementation_post = (req, res, next) => {
             Goal.findById(req.body.id, 'history task initScore', (err, goal) => {
                 if (err) { return next(err); }
                 let sumTaskImpl = goal.initScore ? goal.initScore : 0;
-                console.log(goal.initScore);
                 for (let i = 0; i < goal.task.length; i++) {
-                    sumTaskImpl = sumTaskImpl + (goal.task[i].implemented / 100 * goal.task[i].weight);
+                    sumTaskImpl = sumTaskImpl + Math.round(goal.task[i].implemented / 100 * goal.task[i].weight);
                 }
-                console.log(sumTaskImpl);
                 hData.
                 findById(goal.history).
                 exec((err, history) => {
@@ -222,8 +251,6 @@ exports.goal_taskImplementation_post = (req, res, next) => {
                     });            
                 });
             });
-            
-
             next();
         }
     );
@@ -379,6 +406,18 @@ exports.goal_delete_post = (req, res, next) => {
         Goal.findByIdAndDelete(req.body.id).
         exec((err) => {
             if(err) { return next(err); }
+            Goal.
+            findOne({ childTo: req.body.id }).
+            exec((err, childGoal) => {
+                if(err) { return next(err); }
+                if (childGoal) {
+                    const index = childGoal.childTo.indexOf(req.body.id);
+                    childGoal.childTo.splice(index, 1);
+                    childGoal.save((err) => {
+                        if(err) { return next(err); }
+                    });
+                }
+            });
             Goal.
             findOne({ parentTo: req.body.id }).
             exec((err, parentGoal) => {

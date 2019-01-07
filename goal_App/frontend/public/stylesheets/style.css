@@ -543,6 +543,37 @@ nav ul {
   width: 100%;
 }
 
+/* Styling the form current score */
+
+.form-current form input:first-child {
+  margin-bottom: 10%;
+}
+
+.form-current .score, .form-current .date {
+  width: 20%;
+  display: inline-block;
+  text-align: center;
+}
+
+.form-current .date {
+  margin: 0 5% 0 25%;
+}
+
+.form-current .score {
+  margin: 0 25% 0 5%;
+}
+
+.form-current .score input, .form-current .date input {
+  width: 94%;
+  padding: 3%;
+  text-align: center;
+}
+
+.form-current input::-webkit-outer-spin-button, .form-current input::-webkit-inner-spin-button {
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
 /* Units and users */
 
 .form-units, .form-users {

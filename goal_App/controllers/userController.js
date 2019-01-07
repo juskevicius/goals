@@ -16,7 +16,11 @@ exports.user_login_post = (req, res, next) => {
         res.cookie("Token", user.token, { httpOnly: true, secure: false, maxAge: 28800000 });
         return next();
         }
-        return res.status(422).send("Login unsuccessful. Either id or password is incorrect");
+        return res.status(422).json({
+            errors: {
+              message: 'Login unsuccessful. Either id or password is incorrect'
+            }
+          });
     })(req, res, next);
 }
 

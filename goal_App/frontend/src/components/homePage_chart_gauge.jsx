@@ -20,8 +20,8 @@ constructor(props) {
 
   draw = (props, duration) => {
     d3.select('.gauge-chart > *').remove();
-    const sortedHistory = props.goal.history.data.sort((a, b) => { return a.date - b.date; });
-    const currentScore = sortedHistory[sortedHistory.length - 1].value;
+    const currentScore = props.goal.history.data.reduce((prev, curr) => { return (prev.date > curr.date) ? prev : curr; }).value;
+    
     const perc = currentScore / 100;
     const targetVal = props.goal.targScore / 100;
     
@@ -123,17 +123,21 @@ constructor(props) {
   
   toggleDisplayForm = (form, event) => {
     event.preventDefault();
-    if (this.state[form]) { 
-      if (event.target === event.currentTarget) {
-        this.setState({ /* if the form is currently visible, then hide it */
-          [form]: false
+    const approvedChildrenGoals = this.props.goal.parentTo.filter((childGoal) => { return childGoal.status === 'Approved'; });
+    if (approvedChildrenGoals.length === 0) { /* if the goal is not delegated to children, then allow to edit current score. Otherwise it will be calculated automatically  */
+      if (this.state[form]) { 
+        if (event.target === event.currentTarget) {
+          this.setState({ /* if the form is currently visible, then hide it */
+            [form]: false
+          });
+        }
+      } else {
+        this.setState({
+          [form]: true
         });
       }
-    } else {
-      this.setState({
-        [form]: true
-      });
     }
+    
   }
 
   render() {

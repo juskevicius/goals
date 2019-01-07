@@ -98,11 +98,14 @@ exports.goal_details_get = [
   }
 ];
 
-exports.goal_addCurrentScore_post = [
+exports.goal_score_post = [
   body('id').custom(id => {
     return id.match(/^[a-fA-F0-9]{24}$/) ? true : false;
   }).withMessage('id is not valid'),
-  body('currScore').trim().isNumeric().isLength({ min: 1, max: 11 }).withMessage('Current score failure'),
+  body('entryId').trim().optional({ checkFalsy: true }).custom(id => {
+    return id.match(/^[a-fA-F0-9]{24}$/) ? true : false;
+  }).withMessage('id is not valid'),
+  body('value').trim().isNumeric().isLength({ min: 1, max: 11 }).withMessage('Current score failure'),
   body('date').trim().isISO8601().withMessage('Date is not valid'),
   
   sanitizeBody('*').trim().escape(),
@@ -126,7 +129,7 @@ exports.goal_editWeight_post = [
   body('id').custom(id => {
     return id.match(/^[a-fA-F0-9]{24}$/) ? true : false;
   }).withMessage('id is not valid'),
-  body('weight').trim().isNumeric().isLength({ max: 11 }).withMessage('Current score failure'),
+  body('weight').trim().optional({ checkFalsy: true }).isNumeric().isLength({ max: 11 }).withMessage('Current score failure'),
   
   sanitizeBody('*').trim().escape(),
 
