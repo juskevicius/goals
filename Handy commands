@@ -29,9 +29,7 @@ update if it's deleted, offered or edited in myOwn goals
 NODE_ENV
 mongo - change IP to the one that the host uses
 
-cookie session vs express session
-sessions? Redis, mongo?
-
+logger - debug or similar
 Auto restart the app if the app or server crashes 
 tls -> https
 
