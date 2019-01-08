@@ -34,7 +34,7 @@ export default class Login extends React.Component {
       })
       .then(response => {
         if (response.status === 200) {
-          this.props.loadData(response);
+          this.props.loginSuccessful();
         }
       })
       .catch(error => {

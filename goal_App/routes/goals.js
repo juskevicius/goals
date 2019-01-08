@@ -10,7 +10,7 @@ const validationController = require('../controllers/validationController');
 /* Home page routes */
 
 /* GET home page. */
-router.get('/', 
+router.get('/homepage', 
   validationController.validate_cookie, 
   auth.required, 
   goalController.goal_homePage_get
@@ -39,6 +39,16 @@ router.post('/score',
   authorization.restrict_to_owner_h_id, 
   validationController.goal_score_post, 
   goalController.goal_score_post, 
+  hDataController.hData_update_post
+);
+
+/* POST score */
+router.post('/scoreDelete', 
+  validationController.validate_cookie, 
+  auth.required,
+  authorization.restrict_to_owner_h_id, 
+  validationController.goal_scoreDelete_post, 
+  goalController.goal_scoreDelete_post, 
   hDataController.hData_update_post
 );
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
 import * as serviceWorker from './serviceWorker';
 import Login from './components/login';
 import HomePage from './components/homePage_';
@@ -8,29 +9,32 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loginSuccessful: false
+      loginSuccessful: true
     }
   }
 
-  updateGoalToDisplay = (response) => {
-    this.setState({
-      goalToDisplay: response.data.goalToDisplay
-    });
+  logout = (event) => {
+    event.preventDefault();
+    axios.get('/logout')
+      .then(
+        this.setState({
+          loginSuccessful: false
+        })
+      )
+      .catch(error => {
+        const errorMessage = error.response.data.errors.message;
+        if (errorMessage.constructor === Array) {
+          for (let i = 0; i < errorMessage.length; i++) {
+            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+          }
+        } else {
+          alert(errorMessage);
+        }
+      });
   }
 
-  logout = () => {
+  loginSuccessful = () => {
     this.setState({
-      loginSuccessful: false
-    });
-  }
-
-  loadData = (response) => {
-    this.setState({
-      goalToDisplay: response.data.goalToDisplay,
-      orgChart: response.data.orgChart,
-      childrenGoals: response.data.childrenGoals,
-      ownerUnit: response.data.ownerUnit,
-      userRole: response.data.userRole,
       loginSuccessful: true
     });
   }
@@ -40,8 +44,8 @@ class App extends React.Component {
     return (
       <div>
         {this.state.loginSuccessful ? 
-          <HomePage goalToDisplay={this.state.goalToDisplay} updateGoalToDisplay={this.updateGoalToDisplay} logout={this.logout} orgChart={this.state.orgChart} ownerUnit={this.state.ownerUnit} userRole={this.state.userRole}/> :
-          <Login loadData={this.loadData}/>
+          <HomePage logout={this.logout}/> :
+          <Login loginSuccessful={this.loginSuccessful}/>
         }
       </div>
     );

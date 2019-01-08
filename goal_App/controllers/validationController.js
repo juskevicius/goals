@@ -124,6 +124,30 @@ exports.goal_score_post = [
   }
 ];
 
+exports.goal_scoreDelete_post = [
+  body('id').trim().escape().custom(id => {
+    return id.match(/^[a-fA-F0-9]{24}$/) ? true : false;
+  }).withMessage('id is not valid'),
+  body('entryId').trim().escape().custom(id => {
+    return id.match(/^[a-fA-F0-9]{24}$/) ? true : false;
+  }).withMessage('id is not valid'),
+
+  sanitizeBody('*').trim().escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      return next();
+    } else {
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
+    }
+  }
+];
+
 
 exports.goal_editWeight_post = [
   body('id').trim().escape().custom(id => {
@@ -192,7 +216,7 @@ exports.goal_edit_post = [
   body('initScore').trim().escape().optional({ checkFalsy: true }).isNumeric().isLength({ max: 11 }).withMessage('Initial score failure'),
   body('targScore').trim().escape().optional({ checkFalsy: true }).isNumeric().isLength({ max: 11 }).withMessage('Target score failure'),
   body('comment').trim().escape().isLength({ max: 400 }).withMessage('Comment is too long'),
-  body('task').custom(task => { 
+  body('task').trim().escape().optional({ checkFalsy: true }).custom(task => { 
     for (i = 0; i < task.length; i++) {
       if (task[i].description.length > 200 || (task[i].weight && (!isNumeric(task[i].weight) || task[i].weight.toString().length > 11))) {
         return false;

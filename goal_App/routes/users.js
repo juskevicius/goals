@@ -43,8 +43,7 @@ router.post('/usersDelete',
 router.post('/login', 
   auth.optional, 
   validationController.user_login_post,
-  userController.user_login_post, 
-  goalController.goal_homePage_get
+  userController.user_login_post
 );
 
 /* GET unit management */

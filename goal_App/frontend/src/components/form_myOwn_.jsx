@@ -57,27 +57,11 @@ export default class FormMyOwn extends React.Component {
       });
   }
 
-  getGoalDetails = (event) => {
+  getGoalDetails = (event, goalId) => {
     event.preventDefault();
-    const url = event.target.getAttribute('href');
-    axios.get(url)
-      .then(response => {
-        if (response.status === 200) {
-          this.props.updateGoalToDisplay(response);
-          const event = new Event('fake');
-          this.props.toggleDisplayForm("formMyOwn", event);
-        }
-      })
-      .catch(error => {
-        const errorMessage = error.response.data.errors.message;
-        if (errorMessage.constructor === Array) {
-          for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
-          }
-        } else {
-          alert(errorMessage);
-        }
-      });
+    const ev = new Event('fake');
+    this.props.toggleDisplayForm("formMyOwn", ev);
+    this.props.updateGoalToDisplay(goalId);
   } 
 
   render() {
@@ -153,7 +137,7 @@ export default class FormMyOwn extends React.Component {
               {headers()}
               {myApproved.map((goal) => { return  (
               <div className="col-data-row" key={goal._id}>
-                <div className="col-data col-data-goal-name"><a href={'/details/' + goal._id} onClick={this.getGoalDetails}>{goal.name}</a></div>
+                <div className="col-data col-data-goal-name"><a href={'/details/' + goal._id} onClick={event => this.getGoalDetails(event, goal._id)}>{goal.name}</a></div>
                 <div className="col-data">{goal.initScore}</div>
                 <div className="col-data">{goal.targScore}</div>
                 <div className="col-data">{goal.status}</div>

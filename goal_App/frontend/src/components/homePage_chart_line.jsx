@@ -3,12 +3,7 @@ import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
 
 export default class LineChart extends React.Component {
-constructor(props) {
-  super(props);
-  this.state = {
 
-  }
-}
   componentDidMount() {
     this.draw(this.props);
   }
@@ -19,10 +14,10 @@ constructor(props) {
 
   draw = (props) => {
     d3.select('.line-chart > *').remove();
-    const sortedHistory = props.goal.history.data.sort((a, b) => { return new Date(a.date) - new Date(b.date); });
+    const sortedHistory = props.history.sort((a, b) => { return new Date(a.date) - new Date(b.date); });
     const dates = sortedHistory.map((entry) => { return entry.date});
     const values = sortedHistory.map((entry) => { return entry.value});
-    const targetVal = props.goal.targScore; 
+    const targetVal = props.targScore; 
     const width = ReactDOM.findDOMNode(this).offsetWidth;
     const height = width * 0.65;
     const fontSize = width * 0.064;
@@ -49,6 +44,7 @@ constructor(props) {
         .append('svg')
         .attr("width", width)
         .attr("height", height)
+        .on('click', (event = new Event('fake')) => props.toggleDisplayForm("formCurrentScore", event))
         .style("background-color", "white");
     const g = svg.append("g")
         .attr("transform", 

@@ -13,7 +13,7 @@ exports.goal_homePage_get = (req, res) => {
     exec((err, orgChart) => {
         if (err) { return next(err); }
         Unit. /* find owner's unit */
-        findOne({ owner: res.locals.currUser }).
+        findOne({ owner: req.payload.id }).
         populate('parentTo').
         exec((err, ownerUnit) => {
             if (err) { return next(err); }
@@ -24,7 +24,7 @@ exports.goal_homePage_get = (req, res) => {
             exec((err, ownerGoals) => {
                 if (err) { return next(err); }
                 User.
-                findById(res.locals.currUser).
+                findById(req.payload.id).
                 exec((err, user) => {
                     if (err) { return next(err); }
                     const myApproved = ownerGoals.filter((goal) => { return goal.statusOwner === 'Approved' && goal.statusApprover === 'Approved'; });
@@ -188,6 +188,34 @@ exports.goal_score_post = (req, res, next) => {
             });
         }); 
     }
+}
+
+
+// Handle Goal delete score on POST.
+
+exports.goal_scoreDelete_post = (req, res, next) => {
+    
+    hData.
+    updateOne(
+        { "_id": req.body.id },
+        { "$pull": { data: { "_id": req.body.entryId }}},
+        (err) => {
+            if (err) { return next(err); }
+
+            Goal. 
+            findOne({ history: req.body.id}).
+            populate({path: 'childTo', populate: { path: 'childTo'}}).
+            exec((err, goal) => {
+                if (err) { return next(err); }
+                if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
+                    res.locals.parent = goal.childTo[0];
+                    res.locals.currGoal = goal.id;
+                    next();
+                } else {
+                    return res.send('successfuly updated the current score');
+                }
+            });
+        });
 }
 
 // Handle Goal edit weight on POST.

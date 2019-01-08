@@ -12,9 +12,9 @@ exports.user_login_post = (req, res, next) => {
         if (passportUser) {
         const user = passportUser;
         user.token = passportUser.generateJWT();
-        res.locals.currUser = user._id;
+        /*res.locals.currUser = user._id;*/
         res.cookie("Token", user.token, { httpOnly: true, secure: false, maxAge: 28800000 });
-        return next();
+        return res.send('login successful');
         }
         return res.status(422).json({
             errors: {

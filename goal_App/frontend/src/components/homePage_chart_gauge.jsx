@@ -1,15 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
-import FormCurrent from './homePage_chart_gauge_form_current';
+
 
 export default class GaugeChart extends React.Component {
-constructor(props) {
-  super(props);
-  this.state = {
-
-  }
-}
+  
   componentDidMount() {
     this.draw(this.props, 750);
   }
@@ -20,11 +15,9 @@ constructor(props) {
 
   draw = (props, duration) => {
     d3.select('.gauge-chart > *').remove();
-    const currentScore = props.goal.history.data.reduce((prev, curr) => { return (prev.date > curr.date) ? prev : curr; }).value;
-    
+    const currentScore = props.history.reduce((prev, curr) => { return (prev.date > curr.date) ? prev : curr; }).value;
     const perc = currentScore / 100;
-    const targetVal = props.goal.targScore / 100;
-    
+    const targetVal = props.targScore / 100;
     const width = ReactDOM.findDOMNode(this).offsetWidth;
     const height = width * 0.65;
     const fontSize = width * 0.064;
@@ -50,6 +43,7 @@ constructor(props) {
         .attr("x", -width * 0.8 / 2)
         .attr("y", -height * 0.8 + fontSize)
         .attr("font-size", fontSize)
+        .on('click', (event = new Event('fake')) => props.toggleDisplayForm("formCurrentScore", event))
         .style("fill", "#606060")
         .transition()
         .duration(duration)
@@ -58,6 +52,7 @@ constructor(props) {
         .attr("x", -width * 0.8 / 2 + fontSize)
         .attr("y", -height * 0.8 + fontSize * 2.2)
         .attr("font-size", fontSize)
+        .on('click', (event = new Event('fake')) => props.toggleDisplayForm("formCurrentScore", event))
         .style("fill", "#606060")
         .transition()
         .duration(duration)
@@ -110,7 +105,7 @@ constructor(props) {
         .attr("class", "middle-text")
         .attr("text-anchor", "middle")
         .attr("font-size", fontSize * 2)
-        .on('click', (event = new Event('fake')) => this.toggleDisplayForm("formCurrentScore", event))
+        .on('click', (event = new Event('fake')) => props.toggleDisplayForm("formCurrentScore", event))
         .transition()
         .duration(duration)
         .tween("text", function() {
@@ -120,30 +115,9 @@ constructor(props) {
         });
   }
 
-  
-  toggleDisplayForm = (form, event) => {
-    event.preventDefault();
-    const approvedChildrenGoals = this.props.goal.parentTo.filter((childGoal) => { return childGoal.status === 'Approved'; });
-    if (approvedChildrenGoals.length === 0) { /* if the goal is not delegated to children, then allow to edit current score. Otherwise it will be calculated automatically  */
-      if (this.state[form]) { 
-        if (event.target === event.currentTarget) {
-          this.setState({ /* if the form is currently visible, then hide it */
-            [form]: false
-          });
-        }
-      } else {
-        this.setState({
-          [form]: true
-        });
-      }
-    }
-    
-  }
-
   render() {
     return (
       <div className="gauge-chart">
-        {this.state.formCurrentScore && <FormCurrent goal={this.props.goal} updateGoalToDisplay={this.props.updateGoalToDisplay} toggleDisplayForm={this.toggleDisplayForm}/>}
       </div>
     );
   }

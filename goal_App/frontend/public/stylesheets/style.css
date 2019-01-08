@@ -110,13 +110,30 @@ body {
   padding: 0!important;
 }
 
-.gauge-chart text:nth-child(1), .gauge-chart text:nth-child(2), .middle-text {
+.gauge-chart text:nth-child(1), .gauge-chart text:nth-child(2), .middle-text, .line-chart {
   cursor: pointer;
 }
 
 .l-main2, .r-main2 {
   padding: 50px;
 }
+
+/* goal info: */
+
+.l-main2 .goal-info label {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.l-main2 .goal-info input {
+  width: 97%;
+  padding: 1.5%;
+  border: none;
+  margin: 3% 0 5% 0;
+  font-size: 14px;
+}
+
+/* nesting: */
 
 .r-main2 .col-headers-row {
   width: 100%;
@@ -441,7 +458,6 @@ nav ul {
 }
 
 .overlay2 {
-  /*display: none;*/
   position: fixed;
   width: 100%;
   height: 100%;
@@ -549,18 +565,31 @@ nav ul {
   margin-bottom: 10%;
 }
 
-.form-current .score, .form-current .date {
+.form-current .score, .form-current .delete, .form-current .date {
   width: 20%;
   display: inline-block;
   text-align: center;
 }
 
+.form-current .delete {
+  width: 10%;
+  visibility: hidden;
+}
+
+.form-current .score-group:hover .delete {
+  visibility: visible;
+}
+
+.form-current .delete:hover {
+  cursor: pointer;
+}
+
 .form-current .date {
-  margin: 0 5% 0 25%;
+  margin: 0 0 0 25%;
 }
 
 .form-current .score {
-  margin: 0 25% 0 5%;
+  margin: 0 25% 0 0;
 }
 
 .form-current .score input, .form-current .date input {
