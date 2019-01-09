@@ -324,19 +324,35 @@ exports.goal_edit_post = (req, res, next) => {
         populate('history').
         exec((err, goal) => {
             if(err) { return next(err); }
+            let status = '';
+            if (req.body.name !== goal.name || 
+                (req.body.initScore && (req.body.initScore !== goal.initScore) ||
+                (req.body.targScore && (req.body.targScore !== goal.targScore)) {
+                    status = 'Pending';
+                }
+                function objectsAreSame(x, y) {
+                    var objectsAreSame = true;
+                    for(var propertyName in x) {
+                       if(x[propertyName] !== y[propertyName]) {
+                          objectsAreSame = false;
+                          break;
+                       }
+                    }
+                    return objectsAreSame;
+                 }
             goal.set(
                 {
-                    //name: {type: String, required: true},
+                    name: req.body.name,
                     //owner: {type: Schema.Types.ObjectId, ref: 'Unit'},
-                    initScore: ownerUnit.childTo.length > 0 ? goal.initScore : req.body.initScore,
-                    targScore: ownerUnit.childTo.length > 0 ? goal.targScore : req.body.targScore,
+                    initScore: req.body.initScore ? req.body.initScore : goal.initScore,
+                    targScore: req.body.targScore ? req.body.targScore : goal.targScore,
                     //childTo: [{type: Schema.Types.ObjectId, ref: 'Goal'}],
                     //parentTo: [{type: Schema.Types.ObjectId, ref: 'Goal'}],
                     //statusOwner: {type: String, enum: ['Approved', 'Pending', 'Rejected']},
                     statusApprover: ownerUnit.childTo.length > 0 ? 'Pending' : 'Approved',
                     //history: {type: Schema.Types.ObjectId, ref: 'hData'},
                     //created: {type: Date},
-                    updated: ownerUnit.childTo.length > 0 ? goal.updated : new Date(),
+                    updated: new Date(),
                     comment: ownerUnit.childTo.length > 0 ? goal.comment : req.body.comment,
                     task: ownerUnit.childTo.length > 0 ? goal.task : req.body.task,
                     //ownersOffer: {type: Schema.Types.ObjectId, ref: 'Goal'},
