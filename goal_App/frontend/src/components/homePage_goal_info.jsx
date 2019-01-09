@@ -1,6 +1,23 @@
 import React from 'react';
 
 export default class GoalInfo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      textareaHeight: this.textarea.scrollHeight - 12
+    })
+  }
+
+  resizeTextarea = () => {
+    this.setState({
+      textareaHeight: this.textarea.scrollHeight - 12
+    })
+  }
  
   render() {
     return (
@@ -8,6 +25,10 @@ export default class GoalInfo extends React.Component {
         <label>Goal:
           <input type="text" name="name" onChange={this.props.handleGoalDetails} onBlur={this.props.submitGoalDetails} value={this.props.goal.name} required maxLength="100"></input>
         </label>
+        {this.props.goal.status !== 'Approved' &&
+        <label>Status:
+          <input type="text" value={this.props.goal.status} readOnly></input>
+        </label>}
         <label>Owner:
           <input type="text" value={this.props.goal.owner.name} readOnly></input>
         </label>
@@ -18,7 +39,7 @@ export default class GoalInfo extends React.Component {
           <input type="number" name="targScore" onChange={this.props.handleGoalDetails} onBlur={this.props.submitGoalDetails} value={this.props.goal.targScore || ''} maxLength="11"></input>
         </label>
         <label>Comment:
-          <input type="text" name="comment" onChange={this.props.handleGoalDetails} onBlur={this.props.submitGoalDetails} value={this.props.goal.comment || ''} maxLength="400"></input>
+          <textarea ref={el => this.textarea = el} type="text" name="comment" style={{ height: this.state.textareaHeight + 'px', padding: 6 + 'px' }} onChange={event => { this.props.handleGoalDetails(event); this.resizeTextarea(event); }} onBlur={this.props.submitGoalDetails} value={this.props.goal.comment || ''} maxLength="400"></textarea>
         </label>
         <label>Created:
           <input type="text" value={this.props.goal.created_formatted} readOnly></input>

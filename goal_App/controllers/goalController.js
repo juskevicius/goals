@@ -100,7 +100,6 @@ exports.goal_add_post = (req, res) => {
                         goalDoc.save((err, updatedGoalDoc) => {
                             if (err) { return next(err); }
                             return res.send(updatedGoalDoc)
-                        
                         });    
                     });
                 });
@@ -116,6 +115,7 @@ exports.goal_details_get = (req, res) => {
     Goal. /* find details about the current goal */
     findById(req.params.id). /* req params - included in url */
     populate({path: 'history parentTo', populate: { path: 'owner history' }}).
+    populate({path: 'parentTo', populate: { path: 'parentTo', populate: { path: 'owner' } }}).
     populate('owner').
     exec((err, goalToDisplay) => {
         if (err) { return next(err); }   
@@ -144,7 +144,6 @@ exports.goal_score_post = (req, res, next) => {
                     if (err) { return next(err); }
                     if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
                         res.locals.parent = goal.childTo[0];
-                        res.locals.currGoal = goal.id;
                         next();
                     } else {
                         return res.send('successfuly updated the current score');
@@ -179,7 +178,6 @@ exports.goal_score_post = (req, res, next) => {
                     if (err) { return next(err); }
                     if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
                         res.locals.parent = goal.childTo[0];
-                        res.locals.currGoal = goal.id;
                         next();
                     } else {
                         return res.send('successfuly updated the current score');
@@ -209,7 +207,6 @@ exports.goal_scoreDelete_post = (req, res, next) => {
                 if (err) { return next(err); }
                 if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
                     res.locals.parent = goal.childTo[0];
-                    res.locals.currGoal = goal.id;
                     next();
                 } else {
                     return res.send('successfuly updated the current score');
@@ -254,9 +251,8 @@ exports.goal_taskImplementation_post = (req, res, next) => {
         { "$set": { "task.$.implemented": req.body.implemented, "task.$.weight": req.body.weight }},
         (err) => {
             if (err) { return next(err); }
-            res.send('successfuly updated task immplementation');
-
-            Goal.findById(req.body.id, 'history task initScore', (err, goal) => {
+            
+            Goal.findById(req.body.id, 'history task initScore childTo', (err, goal) => {
                 if (err) { return next(err); }
                 let sumTaskImpl = goal.initScore ? goal.initScore : 0;
                 for (let i = 0; i < goal.task.length; i++) {
@@ -276,10 +272,15 @@ exports.goal_taskImplementation_post = (req, res, next) => {
                     });
                     history.save((err) => {
                         if (err) { return next(err); }
+                        if (goal.childTo.length > 0) {
+                            res.locals.parent = goal.childTo[0];
+                            res.locals.updateHistory = true;
+                            next();
+                        }
                     });            
                 });
             });
-            next();
+            
         }
     );
 }
@@ -324,22 +325,29 @@ exports.goal_edit_post = (req, res, next) => {
         populate('history').
         exec((err, goal) => {
             if(err) { return next(err); }
-            let status = '';
-            if (req.body.name !== goal.name || 
-                (req.body.initScore && (req.body.initScore !== goal.initScore) ||
-                (req.body.targScore && (req.body.targScore !== goal.targScore)) {
-                    status = 'Pending';
+            let statusApprover = 'Approved';
+            if (req.body.name !== goal.name ||   /* if the user has modified name, initScore or targScore then set status as pending */
+                (req.body.initScore && (req.body.initScore !== goal.initScore)) ||
+                (req.body.targScore && (req.body.targScore !== goal.targScore))) {
+                    statusApprover = 'Pending';
                 }
-                function objectsAreSame(x, y) {
-                    var objectsAreSame = true;
-                    for(var propertyName in x) {
-                       if(x[propertyName] !== y[propertyName]) {
-                          objectsAreSame = false;
-                          break;
-                       }
+            if (req.body.task) {  /* if the user has modified the tasks then set status as pending */
+                if (req.body.task.length === goal.task.length) {
+                    for (let i = 0; i < req.body.task.length; i++) {
+                        if (req.body.task[i].description !== goal.task[i].description) {
+                            statusApprover = 'Pending';
+                            i = req.body.task.length;
+                            break;
+                        }
                     }
-                    return objectsAreSame;
-                 }
+                } else {
+                    statusApprover = 'Pending'; 
+                } 
+            }
+            if (ownerUnit.childTo.length === 0) {  /* if the user has no parents then set status as approved */
+                statusApprover = 'Approved';
+            }
+                
             goal.set(
                 {
                     name: req.body.name,
@@ -349,12 +357,12 @@ exports.goal_edit_post = (req, res, next) => {
                     //childTo: [{type: Schema.Types.ObjectId, ref: 'Goal'}],
                     //parentTo: [{type: Schema.Types.ObjectId, ref: 'Goal'}],
                     //statusOwner: {type: String, enum: ['Approved', 'Pending', 'Rejected']},
-                    statusApprover: ownerUnit.childTo.length > 0 ? 'Pending' : 'Approved',
+                    statusApprover: statusApprover,
                     //history: {type: Schema.Types.ObjectId, ref: 'hData'},
                     //created: {type: Date},
                     updated: new Date(),
-                    comment: ownerUnit.childTo.length > 0 ? goal.comment : req.body.comment,
-                    task: ownerUnit.childTo.length > 0 ? goal.task : req.body.task,
+                    comment: req.body.comment ? req.body.comment : goal.comment,
+                    task: req.body.task ? req.body.task : goal.task,
                     //ownersOffer: {type: Schema.Types.ObjectId, ref: 'Goal'},
                     //approversOffer: {type: Schema.Types.ObjectId, ref: 'Goal'},
                     //weight: {type: Number}
@@ -369,9 +377,9 @@ exports.goal_edit_post = (req, res, next) => {
                     exec((err, ownersOffer) => {
                         if (err) { return next(err); }
                         ownersOffer.set({
-                            name: req.body.name.replace('&#x27;', '’'),
-                            initScore: req.body.initScore,
-                            targScore: req.body.targScore,
+                            name: req.body.name,
+                            initScore: req.body.initScore ? req.body.initScore : ownersOffer.initScore,
+                            targScore: req.body.targScore ? req.body.targScore : ownersOffer.targScore,
                             //childTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
                             //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
                             //statusOwner: 'Pending',
@@ -379,8 +387,8 @@ exports.goal_edit_post = (req, res, next) => {
                             //history: hDataObj._id, - implemented below
                             //created: Date(Date.now()),
                             updated: new Date(),
-                            comment: req.body.comment,
-                            task: req.body.task,
+                            comment: req.body.comment ? req.body.comment : ownersOffer.comment,
+                            task: req.body.task ? req.body.task : ownersOffer.task,
                             //ownersOffer: {type: Schema.Types.ObjectId, ref: 'goalList'},
                             //approversOffer: {type: Schema.Types.ObjectId, ref: 'goalList'},
                             //weight: {type: Number, default: 1}
@@ -388,8 +396,13 @@ exports.goal_edit_post = (req, res, next) => {
                         });
                         ownersOffer.save((err) => {
                             if (err) { return next(err); }
-                            res.locals.currGoal = goalUpdated.id;
-                            return res.send(goalUpdated);  
+                            if (statusApprover === 'Pending' && goalUpdated.childTo.length > 0) {
+                                res.locals.parent = goalUpdated.childTo[0];
+                                res.locals.updateTasks = true;
+                                next(); /* calc history */
+                            } else {
+                                return res.send('successfuly modified the goal');  
+                            }
                         });
                     });
                 } else {
@@ -397,20 +410,21 @@ exports.goal_edit_post = (req, res, next) => {
                         {
                             name: req.body.name,
                             owner: ownerUnit.id,
-                            initScore: req.body.initScore,
-                            targScore: req.body.targScore,
+                            initScore: goalUpdated.initScore,
+                            targScore: goalUpdated.targScore,
                             //childTo: [{type: Schema.Types.ObjectId, ref: 'Goal'}],
                             //parentTo: [{type: Schema.Types.ObjectId, ref: 'Goal'}],
                             statusOwner: 'Pending',
                             statusApprover: 'Pending',
                             history: goalUpdated.history.id,
                             created: new Date(),
-                            updated: ownerUnit.childTo.length > 0 ? goal.updated : new Date(),
-                            comment: ownerUnit.childTo.length > 0 ? goal.comment : req.body.comment,
-                            task: ownerUnit.childTo.length > 0 ? goal.task : req.body.task,
+                            //updated: {type: Date},
+                            comment: goalUpdated.comment,
+                            task: goalUpdated.task,
                             //ownersOffer: {type: Schema.Types.ObjectId, ref: 'Goal'},
                             //approversOffer: {type: Schema.Types.ObjectId, ref: 'Goal'},
                             //weight: {type: Number}
+                            _id: mongoose.Types.ObjectId()
                         }
                     );
                     goal.isNew = true;
@@ -426,8 +440,13 @@ exports.goal_edit_post = (req, res, next) => {
                             });
                             mainGoal.save((err, goalUpdated) => {
                                 if (err) { return next(err); }
-                                res.locals.currGoal = goalUpdated.id;
-                                return res.send(goalUpdated);  
+                                if (statusApprover === 'Pending' && goalUpdated.childTo.length > 0) {
+                                    res.locals.parent = goalUpdated.childTo[0];
+                                    res.locals.updateTasks = true;
+                                    next(); /* calc history */
+                                } else {
+                                    return res.send('successfuly modified the goal');  
+                                }
                             });
                         });
                     });
@@ -629,7 +648,6 @@ exports.goal_acceptOffer_post = (req, res, next) => {
                 hDataToUpdate._id = goalAccepted.history.id;
                 hDataToUpdate.save((err) => {
                     if (err) { return next(err); }
-                    res.send('successfuly accepted the offer');  
                     next();
                 });
             });

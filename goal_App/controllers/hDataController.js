@@ -2,14 +2,14 @@ var Goal = require('../models/Goal');
 var hData = require('../models/hData');
 const mongoose = require('mongoose');
 
-exports.hData_update_post = (req, res) => {
+exports.hData_update_post = (req, res, next) => {
   
   /* function to calculate historical data from children goals and/or grandchildren goals */
   function calcHistoricalData(theGoal) {
     theGoal.parentTo = theGoal.parentTo.filter((child) => { return child.status === 'Approved'; });
-    let weights = theGoal.parentTo.filter((childGoal) => { return childGoal.weight > 0;});
+    /*let weights = theGoal.parentTo.filter((childGoal) => { return childGoal.weight > 0;});*/
     let newHistory = [];
-    if (theGoal.parentTo.length === weights.length || !weights.length) { /* if either all weights or none of the weights are defned, then continue */
+    /*if (theGoal.parentTo.length === weights.length || !weights.length) {*/ /* if either all weights or none of the weights are defned, then continue */
         let dates = theGoal.parentTo.map((child) => { return child.history.data.map((entry) => { return entry.date.getTime();})}); /* extract all dates from child goals */
         let datesArr = dates.reduce((arr, val) => { return arr.concat(val);}).sort((a, b) => { return a - b; }); /* build an array and sort it in ascending order */
         let uniqueDates = datesArr.filter((v, i) => { return datesArr.indexOf(v) === i;}); /* remove duplicates */
@@ -40,12 +40,12 @@ exports.hData_update_post = (req, res) => {
             calcHistData.push(dataToAdd);
         }
         newHistory = calcHistData;
-    } else {
-        newHistory = [{ /* not all weights for children goals are defined. Must be either all or none. Reset the historical data */
-            date: new Date('2019-01-01'),
+   /* } else {
+        newHistory = [{ *//* not all weights for children goals are defined. Must be either all or none. Reset the historical data */
+            /*date: new Date('2019-01-01'),
             value: 0
         }];
-    }
+    }*/
 
     hData.
     updateOne( 
@@ -56,7 +56,6 @@ exports.hData_update_post = (req, res) => {
         }
     );
   }
-
 
   let parent = res.locals.parent; 
   Goal.
@@ -73,10 +72,18 @@ exports.hData_update_post = (req, res) => {
             exec((err, grandparentGoal) => {
                 if (err) { return next(err); }
                 calcHistoricalData(grandparentGoal); /* calculate historical data for grandparent goal */
-                return res.send("successfuly updated parent's and grandparent's history"); 
+                if (res.locals.updateTasks) {
+                    next();
+                } else {
+                    return res.send("successfuly updated parent's and grandparent's history"); 
+                } 
             });
         } else {
-        return res.send("successfuly updated parent's history");               
+            if (res.locals.updateTasks) {
+                next();
+            } else {
+                return res.send("successfuly updated parent's history");
+            }            
         }
   });
 }
@@ -93,12 +100,13 @@ exports.updateOneTaskImplementation = (req, res, next) => {
                 for (let i = 0; i < theGoal.parentTo.length; i++) { /* loop through goals of children */
                     for (let j = 0; j < theGoal.parentTo[i].task.length; j++) { /* loop through tasks in children goals */
                         if (req.body.description === theGoal.parentTo[i].task[j].description && theGoal.parentTo[i].status === 'Approved') { /* if current task is found in a child's goal  */
-                            impl[i] = theGoal.parentTo[i].task[j].implemented ? theGoal.parentTo[i].task[j].implemented : 0; /* then copy its implementation status into an array */
-                            weight[i] = theGoal.parentTo[i].weight ? theGoal.parentTo[i].weight : 100; /* also copy child goal's weight  */
-                            sumWeight = sumWeight + weight[i]; /* a sum of all weights. Required to be able to calculate the weighted average */
+                            impl.push(theGoal.parentTo[i].task[j].implemented ? theGoal.parentTo[i].task[j].implemented : 0); /* then copy its implementation status into an array */
+                            weight.push(theGoal.parentTo[i].weight ? theGoal.parentTo[i].weight : 100); /* also copy child goal's weight  */
+                            sumWeight = sumWeight + (theGoal.parentTo[i].weight ? theGoal.parentTo[i].weight : 100); /* a sum of all weights. Required to be able to calculate the weighted average */
                         }
                     }
                 }
+               
                 for (let i = 0; i < impl.length; i++) {
                     sum = sum + impl[i] * weight[i]; /* multiply weights and implementation statuses */
                 }
@@ -129,8 +137,25 @@ exports.updateOneTaskImplementation = (req, res, next) => {
                 if (err) { return next(err); }
                 if (grandparentGoal) {
                     calcTaskImpl(grandparentGoal);
+                    if (res.locals.updateHistory) {
+                        next();
+                    } else {
+                        return res.send("successfuly updated grandparent's task implementation");
+                    }
+                } else {
+                    if (res.locals.updateHistory) {
+                        next();
+                    } else {
+                        return res.send("successfuly updated parent's task implementation");
+                    }
                 }
             }); 
+        } else {
+            if (res.locals.updateHistory) {
+                next();
+            } else {
+                return res.send("parent goal not found. Task implementation was not updated");
+            }
         }
     });
 }
@@ -148,9 +173,9 @@ exports.updateAllTasksImplementation =  (req, res, next) => {
             for (let i = 0; i < theGoal.parentTo.length; i++) { /* loop through goals of children */
                 for (let j = 0; j < theGoal.parentTo[i].task.length; j++) { /* loo through tasks in children goals */
                     if (currTask == theGoal.parentTo[i].task[j].description && theGoal.parentTo[i].status == 'Approved') { /* if current task is found in a child's goal  */
-                        impl[i] = theGoal.parentTo[i].task[j].implemented ? theGoal.parentTo[i].task[j].implemented : 0; /* then copy its implementation status into an array */
-                        weight[i] = theGoal.parentTo[i].weight ? theGoal.parentTo[i].weight : 100; /* also copy child goal's weight  */
-                        sumWeight = sumWeight + weight[i]; /* a sum of all weights. Required to be able to calculate the weighted average */
+                        impl.push(theGoal.parentTo[i].task[j].implemented ? theGoal.parentTo[i].task[j].implemented : 0); /* then copy its implementation status into an array */
+                        weight.push(theGoal.parentTo[i].weight ? theGoal.parentTo[i].weight : 100); /* also copy child goal's weight  */
+                        sumWeight = sumWeight + (theGoal.parentTo[i].weight ? theGoal.parentTo[i].weight : 100); /* a sum of all weights. Required to be able to calculate the weighted average */
                     }
                 }
             }
@@ -183,8 +208,13 @@ exports.updateAllTasksImplementation =  (req, res, next) => {
                 if (err) { return next(err); }
                 if (grandparentGoal) {
                     calcTaskImpl(grandparentGoal);
+                    return res.send('successfuly updated task implementation');
+                } else {
+                    return res.send('successfuly updated task implementation');
                 }
             });                
+        } else {
+            return res.send('successfuly updated task implementation');
         }
     });
 }

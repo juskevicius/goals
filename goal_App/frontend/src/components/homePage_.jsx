@@ -57,7 +57,7 @@ export default class HomePage extends React.Component {
    }
 
   updateGoalToDisplay = (goalId) => {
-    axios.get('/details/' + goalId || this.state.goalToDisplay._id)
+    axios.get('/details/' + (goalId || this.state.goalToDisplay._id))
       .then(response => {
         if (response.status === 200) {
           this.setState({
@@ -128,7 +128,7 @@ export default class HomePage extends React.Component {
     const value = event.target.value;
       this.setState(prevState => ({
         goalToDisplay: Object.assign({}, prevState.goalToDisplay, { [name]: value })
-      }), () => console.log(this.state));
+      }));
   }
 
   handleScoreSubmit = (event) => {
@@ -175,8 +175,7 @@ export default class HomePage extends React.Component {
       })
       .then(response => {
         if (response.status === 200) {
-          console.log(response);
-          this.updateGoalToDisplay(this.state.goalToDisplay._id);
+          this.updateGoalToDisplay();
         }
       })
       .catch(error => {

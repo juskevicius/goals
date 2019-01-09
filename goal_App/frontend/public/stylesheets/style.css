@@ -125,12 +125,15 @@ body {
   font-size: 16px;
 }
 
-.l-main2 .goal-info input {
+.l-main2 .goal-info input, .l-main2 .goal-info textarea {
   width: 97%;
   padding: 1.5%;
   border: none;
   margin: 3% 0 5% 0;
   font-size: 14px;
+  font-family: 'Open Sans', sans-serif;
+  display: block;
+  overflow: hidden;
 }
 
 /* nesting: */
@@ -176,8 +179,23 @@ body {
 }
 
 .r-main2 .col-data-tasks .col-data:first-child  {
-  width: 60%;
+  width: 50%;
   text-align: left;
+}
+
+.r-main2 .col-data-tasks .fa-caret-square-down {
+  width: 10%;
+  text-align: center;
+  visibility: hidden;
+}
+
+.r-main2 .col-data-tasks:hover .fa-caret-level1 {
+  visibility: visible;
+  cursor: pointer;
+}
+
+.r-main2 .col-data-tasks-level2 .col-data:first-child {
+  text-indent: 10%;
 }
 
 .r-main2 .col-data input {

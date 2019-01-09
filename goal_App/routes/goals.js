@@ -69,7 +69,8 @@ router.post('/taskImplementation',
   authorization.restrict_to_owner,
   validationController.goal_taskImplementation_post,
   goalController.goal_taskImplementation_post, 
-  hDataController.updateOneTaskImplementation
+  hDataController.updateOneTaskImplementation,
+  hDataController.hData_update_post
 );
 
 
@@ -95,7 +96,9 @@ router.post('/edit',
   auth.required, 
   authorization.restrict_to_owner, 
   validationController.goal_edit_post, 
-  goalController.goal_edit_post
+  goalController.goal_edit_post,
+  hDataController.hData_update_post,
+  hDataController.updateAllTasksImplementation
 );
 
 /* POST delete */
