@@ -28,7 +28,7 @@ exports.goal_homePage_get = (req, res) => {
                 exec((err, user) => {
                     if (err) { return next(err); }
                     const myApproved = ownerGoals.filter((goal) => { return goal.statusOwner === 'Approved' && goal.statusApprover === 'Approved'; });
-                    return res.send({goalToDisplay: myApproved[0], orgChart, ownerUnit, userRole: user.role});
+                    return res.send({ goalToDisplay: myApproved[0], orgChart, ownerUnit, userRole: user.role });
                 });
             }); 
         });
@@ -58,7 +58,7 @@ exports.goal_add_post = (req, res) => {
                 created: new Date(),
                 //updated: {type: Date},
                 comment: req.body.comment,
-                task: req.body.task,
+                task: req.body.task
                 //ownersOffer: {type: Schema.Types.ObjectId, ref: 'goalList'}, - implemented below
                 //approversOffer: {type: Schema.Types.ObjectId, ref: 'goalList'},
                 //weight: {type: Number}
@@ -99,7 +99,7 @@ exports.goal_add_post = (req, res) => {
                         goalDoc.set({ownersOffer: newGoalOffer.id});
                         goalDoc.save((err, updatedGoalDoc) => {
                             if (err) { return next(err); }
-                            return res.send(updatedGoalDoc)
+                            return res.send('successfuly added a goal')
                         });    
                     });
                 });
@@ -119,7 +119,7 @@ exports.goal_details_get = (req, res) => {
     populate('owner').
     exec((err, goalToDisplay) => {
         if (err) { return next(err); }   
-        res.send({goalToDisplay});
+        return res.send({ goalToDisplay });
     });
 }
 
@@ -144,7 +144,7 @@ exports.goal_score_post = (req, res, next) => {
                     if (err) { return next(err); }
                     if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
                         res.locals.parent = goal.childTo[0];
-                        next();
+                        return next();
                     } else {
                         return res.send('successfuly updated the current score');
                     }
@@ -178,7 +178,7 @@ exports.goal_score_post = (req, res, next) => {
                     if (err) { return next(err); }
                     if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
                         res.locals.parent = goal.childTo[0];
-                        next();
+                        return next();
                     } else {
                         return res.send('successfuly updated the current score');
                     }
@@ -207,7 +207,7 @@ exports.goal_scoreDelete_post = (req, res, next) => {
                 if (err) { return next(err); }
                 if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
                     res.locals.parent = goal.childTo[0];
-                    next();
+                    return next();
                 } else {
                     return res.send('successfuly updated the current score');
                 }
@@ -233,9 +233,10 @@ exports.goal_editWeight_post = (req, res, next) => {
                 if (err) { return next(err); }
                 if (parent) { /* if the goal has a parent then update the parent's history */
                     res.locals.parent = parent._id;
+                    res.locals.updateTasks = true;
                     return next();
                 } else {
-                    return res.send('successfuly edited the weight');  
+                    return res.send('successfuly modified the weight');  
                 }
             });
         });
@@ -274,8 +275,8 @@ exports.goal_taskImplementation_post = (req, res, next) => {
                         if (err) { return next(err); }
                         if (goal.childTo.length > 0) {
                             res.locals.parent = goal.childTo[0];
-                            res.locals.updateHistory = true;
-                            next();
+                            res.locals.updateTasks = true;
+                            return next();
                         }
                     });            
                 });
@@ -284,7 +285,6 @@ exports.goal_taskImplementation_post = (req, res, next) => {
         }
     );
 }
-
 
 
 /////////////////////////////////////////// MY OWN GOALS:
@@ -306,7 +306,7 @@ exports.goal_myOwn_get = (req, res, next) => {
         populate({ path: 'owner', populate: { path: 'parentTo' }}).
         exec((err, ownerGoals) => {
             if (err) { return next(err); }
-            return res.send({ownerGoals, ownerUnit});
+            return res.send({ ownerGoals });
         });
         
     });
@@ -399,7 +399,7 @@ exports.goal_edit_post = (req, res, next) => {
                             if (statusApprover === 'Pending' && goalUpdated.childTo.length > 0) {
                                 res.locals.parent = goalUpdated.childTo[0];
                                 res.locals.updateTasks = true;
-                                next(); /* calc history */
+                                return next();
                             } else {
                                 return res.send('successfuly modified the goal');  
                             }
@@ -443,7 +443,7 @@ exports.goal_edit_post = (req, res, next) => {
                                 if (statusApprover === 'Pending' && goalUpdated.childTo.length > 0) {
                                     res.locals.parent = goalUpdated.childTo[0];
                                     res.locals.updateTasks = true;
-                                    next(); /* calc history */
+                                    return next(); /* calc history */
                                 } else {
                                     return res.send('successfuly modified the goal');  
                                 }
@@ -491,10 +491,11 @@ exports.goal_delete_post = (req, res, next) => {
                     parentGoal.save((err, updatedParentGoal) => {
                         if(err) { return next(err); }
                         res.locals.parent = updatedParentGoal.id;
-                        next();
+                        res.locals.updateTasks = true;
+                        return next();
                     });
                 } else {
-                    res.send("successfully deleted the goal");
+                    return res.send("successfuly deleted the goal");
                 }
             });
         });
@@ -592,7 +593,7 @@ exports.goal_offerTo_post = (req, res) => {
                 }, 
                 (err) => {
                     if (err) { return next(err); }
-                    return res.send('successfully made some offers');
+                    return res.send('successfuly made some offers');
                 });
             });
         });
@@ -648,7 +649,11 @@ exports.goal_acceptOffer_post = (req, res, next) => {
                 hDataToUpdate._id = goalAccepted.history.id;
                 hDataToUpdate.save((err) => {
                     if (err) { return next(err); }
-                    next();
+                    if (goal.childTo.length > 0) {
+                        res.locals.parent = goal.childTo[0];
+                        res.locals.updateTasks = true;
+                        return next();
+                    }
                 });
             });
         });
@@ -678,7 +683,7 @@ exports.goal_ownersOffer_post = (req, res) => {
                 });
                 ownersOffer.save((err) => {
                     if (err) { return next(err); }
-                    res.send('owners offer has been updated');
+                    return res.send('owners offer has been updated');
                 });
             });
         } else {
@@ -713,7 +718,7 @@ exports.goal_ownersOffer_post = (req, res) => {
                 );
                 goal.save((err) => {
                     if (err) { return next(err); }
-                    res.send('owners offer has been submitted');
+                    return res.send('owners offer has been submitted');
                 });
             });
         }
@@ -739,7 +744,7 @@ exports.goal_others_get = (req, res) => {
             .populate({ path: 'ownersOffer approversOffer', populate: { path: 'owner' }})
             .exec((err, othersGoals) => {
             if (err) { return next(err); }
-            return res.send({othersGoals});
+            return res.send({ othersGoals });
         });  
     });
 };
@@ -766,7 +771,7 @@ exports.goal_approversOffer_post = (req, res) => {
                 });
                 approversOffer.save((err) => {
                     if (err) { return next(err); }
-                    res.send('approvers offer has been updated');
+                    return res.send('approvers offer has been updated');
                 });
             });
         } else {
@@ -806,7 +811,7 @@ exports.goal_approversOffer_post = (req, res) => {
                     );
                     goal.save((err) => {
                         if (err) { return next(err); }
-                        res.send('approvers offer has been submitted');
+                        return res.send('approvers offer has been submitted');
                     });
                 });
             });
@@ -821,7 +826,7 @@ exports.goal_approve_post = (req, res, next) => {
     populate('ownersOffer').
     populate('history').
     exec((err, goal) => {
-        if(err) { return next(err); } 
+        if (err) { return next(err); } 
         goal.set({
             name: goal.ownersOffer.name,
             initScore: goal.ownersOffer.initScore,
@@ -862,8 +867,11 @@ exports.goal_approve_post = (req, res, next) => {
                 hDataToUpdate._id = goalAccepted.history.id;
                 hDataToUpdate.save((err) => {
                     if (err) { return next(err); }
-                    res.send('successfuly accepted the offer');  
-                    next();
+                    if (goal.childTo.length > 0) {
+                        res.locals.parent = goal.childTo[0];
+                        res.locals.updateTasks = true;
+                        return next();
+                    }
                 });
             });
         });
@@ -892,8 +900,9 @@ exports.goal_reject_post = (req, res, next) => {
                             return res.send('successfuly rejected the goal');
                         });
                     }
+                } else {
+                    return res.send('successfuly rejected the goal');
                 }
-                return res.send('successfuly rejected the goal');
             });
         });
     });       

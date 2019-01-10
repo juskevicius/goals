@@ -10,14 +10,14 @@ To do:
 
 ///////DEVELOPEMENT:
 
-spread tasks to see their implementation per child
-
-add tasks in nesting (edit goal details)
-
-Check hdata calculations and whether they should be initiated. 
-
 current goal:
-update if it's deleted, offered or edited in myOwn goals
+update if it's deleted, offered or edited in myOwn goals or rejected in others goals
+
+add or remove tasks in section "nesting" (edit goal details)
+
+populate others' goals with approved goals. Let approvers to make offers on them
+
+allow children to set custom goals and let parents to copy them
 
 
 ///////PRODUCTION:

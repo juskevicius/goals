@@ -7,22 +7,20 @@ export default class Task extends React.Component {
     this.state = {
       children: this.props.children,
       task: this.props.task,
-      id: this.props.id,
-      showLevel2: false,
-      showLevel3: false
+      id: this.props.id
     }
   }
 
-  componentDidMount() {
-    for (let i = 0; i < this.state.task.length; i++) {
-      let currTask = this.state.task[i].description;
-      for (let j = 0; j < this.state.children.length; j++) {
-        for (let k = 0; k < this.state.children[j].task.length; k++) {
-          if (currTask === this.state.children[j].task[k].description) {
+  populateTasks = () => {
+    for (let i = 0; i < this.props.task.length; i++) {
+      let currTask = this.props.task[i].description;
+      for (let j = 0; j < this.props.children.length; j++) {
+        for (let k = 0; k < this.props.children[j].task.length; k++) {
+          if (currTask === this.props.children[j].task[k].description) {
             this.setState(prevState => ({
               task: [...prevState.task.slice(0, i),
               Object.assign({}, prevState.task[i], { 
-                readOnly: true, /* if a task is assigned to a child, then the child is responsible for it's weight */
+                readOnly: true, /* if a task is assigned to a child, then the child is responsible for it's implementation and weight. MAke the field readOnly */
                 showChildren: false,
                 childrenTasks: [...(prevState.task[i].childrenTasks || []), { 
                   id: this.state.children[j]._id,
@@ -38,8 +36,39 @@ export default class Task extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.populateTasks();
+  }
+
+  componentDidUpdate(prevProps) {
+    let willHaveToUpdate = false;
+    if (prevProps.task.length !== this.props.task.length) {
+      willHaveToUpdate = true;
+    } else {
+      for (let i = 0; i < prevProps.task.length; i++) {
+        for (let prop in prevProps.task[i]) {
+          if (prevProps.task[i][prop] !== this.props.task[i][prop]) {
+            willHaveToUpdate = true;
+            i = prevProps.task.length;
+            break;
+          }
+        }
+      }
+    }
+    if (willHaveToUpdate) {
+      this.setState({
+        task: this.props.task
+      })
+    }
+    if (prevProps.children.length !== this.props.children.length) {
+      this.setState({
+        task: this.props.task,
+        children: this.props.children
+      }, () => { this.populateTasks(); })
+    }
+  }
+
   handleChange = (event) => {
-    console.log(this.state.task);
     const name = event.target.name;
     let value = event.target.value;
     if (name === 'implemented') {
@@ -66,6 +95,13 @@ export default class Task extends React.Component {
       Object.assign({}, prevState.task[index], { showChildren: !prevState.task[index].showChildren }),
       ...prevState.task.slice(index + 1)]
     }));
+  }
+
+  handleClick = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const goalId = event.target.getAttribute('href');
+    this.props.updateGoalToDisplay(goalId);
   }
 
   handleSubmit = (event) => {
@@ -120,7 +156,7 @@ export default class Task extends React.Component {
             <div className="col-data">{index + 1 + ". "}{task.description}</div>
             <i className={"far fa-caret-square-down " + (task.childrenTasks ? "fa-caret-level1" : "")} id={task._id} onClick={this.toggleShowChildrenTasks}></i>
             <div className="col-data">
-              <input type="number" name="implemented" value={task.implemented || 0} onChange={this.handleChange} onBlur={this.handleSubmit} id={task._id} min={0} max={100}></input>
+              <input type="number" name="implemented" value={task.implemented || 0} onChange={this.handleChange} onBlur={this.handleSubmit} id={task._id} readOnly={task.readOnly} min={0} max={100}></input>
             </div>
             <div className="col-data">
               <input type="number" name='weight' value={task.readOnly ? '' : (task.weight || '')} onChange={task.readOnly ? null : this.handleChange} onBlur={task.readOnly ? null : this.handleSubmit} id={task._id} maxLength="11" readOnly={task.readOnly}></input>
@@ -129,11 +165,11 @@ export default class Task extends React.Component {
               {(task.childrenTasks && task.showChildren) && task.childrenTasks.map((childTask, index) => { return (
               <div className="col-data-tasks-level2" key={index}>
                 <div className="col-data">
-                  <a href={'/details/' + childTask.id} onClick={this.props.updateGoalToDisplay(childTask.id)}>{childTask.owner}</a>
+                  <a href={childTask.id} onClick={this.handleClick} style={childTask.goalStatus !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}}>{childTask.owner}</a>
                 </div>
                 <i className="far fa-caret-square-down fa-caret-level2"></i>
                 <div className="col-data">
-                  <input type="number" value={childTask.implemented || 0} readOnly></input>
+                  <input type="number" value={childTask.implemented || 0} style={childTask.goalStatus !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}} readOnly></input>
                 </div>
                 <div className="col-data">
                 </div>

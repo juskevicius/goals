@@ -25,7 +25,6 @@ export default class Navbar extends React.Component {
     }
   }
   
-  
   viewOthersGoals = (event) => {
     event.preventDefault();
     const unitID = event.target.getAttribute('href');
@@ -78,7 +77,7 @@ export default class Navbar extends React.Component {
                 </li>
               </ul>
             </li>
-            {this.props.userRole === 'admin' && 
+            {this.props.userRole === 'admin' && (
             <li>
               <a href="/admin">Admin center</a>
               <ul>
@@ -89,7 +88,7 @@ export default class Navbar extends React.Component {
                   <a href="/users" onClick={(event) => this.props.toggleDisplayForm('users', event)}>Users</a>
                 </li>
               </ul>
-            </li>}
+            </li>)} 
           </ul>
         </nav>
         {this.state.formMyOwn && <FormMyOwn unitID={this.state.someUnit} toggleDisplayForm={this.toggleDisplayForm} updateGoalToDisplay={this.props.updateGoalToDisplay}/>}

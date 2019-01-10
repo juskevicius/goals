@@ -38,7 +38,7 @@ export default class FormMyOwn extends React.Component {
   }
 
   updateOwnerGoals = () => {
-    const path = this.props.unitID ? '/myOwn/' + this.props.unitID : '/myOwn';
+    const path = this.props.unitID ? ('/myOwn/' + this.props.unitID) : '/myOwn';
     axios.get(path)
       .then( response => {
         this.setState({
@@ -161,12 +161,12 @@ export default class FormMyOwn extends React.Component {
             {goalsOfferedToMe()}
             {goalsCreatedByMe()}
             {myApprovedGoals()}
-            {this.state.formRemove && <FormRemove toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals}/>}
+            {this.state.formRemove && <FormRemove toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals} removeGoalToDisplay={this.props.removeGoalToDisplay} goalInTheBackground={this.props.goalToDisplay}/>}
             {this.state.formNegotiateOwn && <FormNegotiateOwn toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals}/>}
             {this.state.formAcceptOffer && <FormAcceptOffer toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals}/>}
             {this.state.formNegotiateOffered && <FormNegotiateOffered toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals}/>}
-            {this.state.formEdit && <FormEdit toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals}/>}
-            {this.state.formOfferTo && <FormOfferTo toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals} children={this.props.children}/>}
+            {this.state.formEdit && <FormEdit toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals} updateGoalToDisplay={this.props.updateGoalToDisplay} goalInTheBackground={this.props.goalToDisplay}/>}
+            {this.state.formOfferTo && <FormOfferTo toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOwnerGoals={this.updateOwnerGoals} children={this.props.children} updateGoalToDisplay={this.props.updateGoalToDisplay} goalInTheBackground={this.props.goalToDisplay}/>}
           </div>
         </div>
       </div>

@@ -8,6 +8,9 @@ export default class FormReject extends React.Component {
       .then( response => {
         if (response.status === 200) {
           this.props.updateOthersGoals();
+          if (this.props.goalInTheBackground === this.props.goal._id) {
+            this.props.updateGoalToDisplay();
+          }
           let event = new Event('fake');
           this.props.toggleDisplayForm("formReject", null, event);
         }

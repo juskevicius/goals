@@ -7,6 +7,11 @@ export default class FormRemove extends React.Component {
     axios.post('/delete', {id: this.props.goal._id})
       .then(response => {
         if (response.status === 200) {
+          
+          if (this.props.goalInTheBackground === this.props.goal._id) {
+            this.props.removeGoalToDisplay();
+          }
+          
           this.props.updateOwnerGoals();
           let event = new Event('fake');
           this.props.toggleDisplayForm("formRemove", null, event);

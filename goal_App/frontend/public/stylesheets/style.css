@@ -51,7 +51,7 @@ body {
 .login-screen form button {
   background-color: white;
   padding: 10px;
-  color: rgb(88, 88, 88);
+  color: rgb(80, 80, 80);
   border: 1px solid rgb(187, 187, 187);
   box-shadow: none;
   float: right;
@@ -181,6 +181,7 @@ body {
 .r-main2 .col-data-tasks .col-data:first-child  {
   width: 50%;
   text-align: left;
+  user-select: none;
 }
 
 .r-main2 .col-data-tasks .fa-caret-square-down {
@@ -196,6 +197,11 @@ body {
 
 .r-main2 .col-data-tasks-level2 .col-data:first-child {
   text-indent: 10%;
+  user-select: none;
+}
+
+.r-main2 .col-data-tasks-level2 .col-data:first-child a {
+  color: rgb(80, 80, 80);
 }
 
 .r-main2 .col-data input {
@@ -346,7 +352,7 @@ nav ul {
 
 .form-body label {
   font-weight: bold;
-  color: rgb(88, 88, 88);
+  color: rgb(80, 80, 80);
 }
 
 .form-body input, .form-body select {
@@ -371,7 +377,7 @@ nav ul {
 
 .form-btn {
   background-color: white;
-  border: 1px solid rgb(88, 88, 88)!important;
+  border: 1px solid rgb(80, 80, 80)!important;
   width: auto!important;
   padding: 10px!important;
   float: right;

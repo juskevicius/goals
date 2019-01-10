@@ -9,6 +9,14 @@ export default class ChildrenGoals extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.children.length !== this.props.children.length) {
+      this.setState({
+        children: this.props.children
+      })
+    }
+  }
+
   handleChange = (event) => {
     const value = event.target.value;
     const childId = event.target.getAttribute('id');
@@ -18,6 +26,12 @@ export default class ChildrenGoals extends React.Component {
       Object.assign({}, prevState.children[index], { weight: value }),
       ...prevState.children.slice(index + 1)]
     }));
+  }
+
+  handleClick = (event) => {
+    event.preventDefault();
+    const goalId = event.target.getAttribute('href');
+    this.props.updateGoalToDisplay(goalId);
   }
 
   handleSubmit = (event) => {
@@ -67,16 +81,26 @@ export default class ChildrenGoals extends React.Component {
               <h4>Weight</h4>
             </div>
           </div>
+
           {this.state.children.map((child) => { return (
-          <div className="col-data-row" key={child._id} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(88, 88, 88)'}}>
-            <div className="col-data"><a href={'/details/' + child._id} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(88, 88, 88)'}}>{child.owner.name}</a></div>
-            <div className="col-data">{child.initScore}</div>
-            <div className="col-data">{child.history ? (child.history.data.reduce((prev, curr) => { return (prev.date > curr.date) ? prev : curr;})).value : ''}</div>
-            <div className="col-data">{child.targScore}</div>
+          <div className="col-data-row" key={child._id} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}}>
             <div className="col-data">
-              <input type="number" name="weight" value={child.weight || ''} onChange={this.handleChange} onBlur={this.handleSubmit} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(88, 88, 88)'}} id={child._id} maxLength="11"></input>
+              <a href={child._id} onClick={this.handleClick} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}}>{child.owner.name}</a>
+            </div>
+            <div className="col-data">
+              {child.initScore}
+            </div>
+            <div className="col-data">
+              {child.history ? (child.history.data.reduce((prev, curr) => { return (prev.date > curr.date) ? prev : curr;})).value : ''}
+            </div>
+            <div className="col-data">
+              {child.targScore}
+            </div>
+            <div className="col-data">
+              <input type="number" name="weight" value={child.weight || ''} onChange={this.handleChange} onBlur={this.handleSubmit} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}} id={child._id} maxLength="11"></input>
             </div>
           </div>);})}
+
         </div>}
       </div>
     );

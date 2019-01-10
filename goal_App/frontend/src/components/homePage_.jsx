@@ -28,12 +28,12 @@ export default class HomePage extends React.Component {
         if (response.status === 200) {
           this.setState({
             goalToDisplay: response.data.goalToDisplay,
-            history: response.data.goalToDisplay.history.data,
+            history: response.data.goalToDisplay ? response.data.goalToDisplay.history.data : [],
             orgChart: response.data.orgChart,
             ownerUnit: response.data.ownerUnit,
             userRole: response.data.userRole
           }, () => {
-            const approvedChildrenGoals = this.state.goalToDisplay.parentTo.filter((childGoal) => { return childGoal.status === 'Approved'; });
+            const approvedChildrenGoals = this.state.goalToDisplay ? this.state.goalToDisplay.parentTo.filter((childGoal) => { return childGoal.status === 'Approved'; }) : [];
             if (approvedChildrenGoals.length === 0) { /* if the goal is not delegated to children, then allow to edit current score. Otherwise it will be calculated automatically  */
               this.setState({
                 currScoreEditable: true
@@ -43,8 +43,6 @@ export default class HomePage extends React.Component {
         }
       })
       .catch(error => {
-        console.log(error.response);
-        /*
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
@@ -52,7 +50,7 @@ export default class HomePage extends React.Component {
           }
         } else {
           alert(errorMessage);
-        }*/
+        }
       });
    }
 
@@ -78,6 +76,12 @@ export default class HomePage extends React.Component {
           alert(errorMessage);
         }
       });
+  }
+
+  removeGoalToDisplay = () => {
+    this.setState({
+      goalToDisplay: null
+    });
   }
 
   toggleDisplayForm = (form, event) => {
@@ -249,8 +253,8 @@ export default class HomePage extends React.Component {
           </div>
         </div>
         {this.state.formAdd && <FormAdd toggleDisplayForm={this.toggleDisplayForm}/>}
-        {this.state.formMyOwn && <FormMyOwn toggleDisplayForm={this.toggleDisplayForm} children={children} updateGoalToDisplay={this.updateGoalToDisplay}/>}
-        {this.state.formOthers && <FormOthers toggleDisplayForm={this.toggleDisplayForm} children={children}/>}
+        {this.state.formMyOwn && <FormMyOwn toggleDisplayForm={this.toggleDisplayForm} children={children} updateGoalToDisplay={this.updateGoalToDisplay} removeGoalToDisplay={this.removeGoalToDisplay} goalToDisplay={this.state.goalToDisplay && this.state.goalToDisplay._id}/>}
+        {this.state.formOthers && <FormOthers toggleDisplayForm={this.toggleDisplayForm} children={children} updateGoalToDisplay={this.updateGoalToDisplay} goalToDisplay={this.state.goalToDisplay && this.state.goalToDisplay._id}/>}
         {(this.state.formCurrentScore && this.state.currScoreEditable) && <FormCurrent toggleDisplayForm={this.toggleDisplayForm} goal={this.state.goalToDisplay} history={this.state.history} newScore={this.state.newScore} newDate={this.state.newDate} updateGoalToDisplay={this.updateGoalToDisplay} handleScoreChange={this.handleScoreChange} handleScoreSubmit={this.handleScoreSubmit} handleScoreDelete={this.handleScoreDelete}/>}
         {this.state.units && <Units toggleDisplayForm={this.toggleDisplayForm} />}
         {this.state.users && <Users toggleDisplayForm={this.toggleDisplayForm} />}

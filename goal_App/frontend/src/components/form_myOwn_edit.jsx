@@ -56,6 +56,9 @@ export default class FormEdit extends React.Component {
           response => {
             if (response.status === 200) {
               this.props.updateOwnerGoals();
+              if (this.props.goalInTheBackground === this.props.goal._id) {
+                this.props.updateGoalToDisplay();
+              }
               let event = new Event('fake');
               this.props.toggleDisplayForm("formEdit", null, event);
             }

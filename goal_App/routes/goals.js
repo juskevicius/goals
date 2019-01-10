@@ -52,6 +52,7 @@ router.post('/scoreDelete',
   hDataController.hData_update_post
 );
 
+
 /* POST edit weight */
 router.post('/editWeight', 
   validationController.validate_cookie, 
@@ -59,7 +60,8 @@ router.post('/editWeight',
   authorization.restrict_to_approver,
   validationController.goal_editWeight_post, 
   goalController.goal_editWeight_post, 
-  hDataController.hData_update_post
+  hDataController.hData_update_post,
+  hDataController.tasks_update_post
 );
 
 /* POST edit task implementation */
@@ -69,8 +71,8 @@ router.post('/taskImplementation',
   authorization.restrict_to_owner,
   validationController.goal_taskImplementation_post,
   goalController.goal_taskImplementation_post, 
-  hDataController.updateOneTaskImplementation,
-  hDataController.hData_update_post
+  hDataController.hData_update_post,
+  hDataController.tasks_update_post
 );
 
 
@@ -98,7 +100,7 @@ router.post('/edit',
   validationController.goal_edit_post, 
   goalController.goal_edit_post,
   hDataController.hData_update_post,
-  hDataController.updateAllTasksImplementation
+  hDataController.tasks_update_post
 );
 
 /* POST delete */
@@ -108,7 +110,8 @@ router.post('/delete',
   authorization.restrict_to_owner,
   validationController.goal_delete_post, 
   goalController.goal_delete_post, 
-  hDataController.hData_update_post
+  hDataController.hData_update_post,
+  hDataController.tasks_update_post
 );
 
 /* POST offerTo */
@@ -126,8 +129,9 @@ router.post('/acceptOffer',
   auth.required,
   authorization.restrict_to_owner,
   validationController.goal_acceptOffer_post,
-  goalController.goal_acceptOffer_post, 
-  hDataController.updateAllTasksImplementation
+  goalController.goal_acceptOffer_post,
+  hDataController.hData_update_post, 
+  hDataController.tasks_update_post
 );
 
 /* POST owners offer */
@@ -164,7 +168,9 @@ router.post('/approve',
   auth.required,
   authorization.restrict_to_approver, 
   validationController.goal_approve_post,
-  goalController.goal_approve_post
+  goalController.goal_approve_post,
+  hDataController.hData_update_post, 
+  hDataController.tasks_update_post
 );
 
 /* POST reject */

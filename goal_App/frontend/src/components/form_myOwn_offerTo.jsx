@@ -83,6 +83,9 @@ export default class FormOfferTo extends React.Component {
       })
       .then(response => {
         if (response.status === 200) {
+          if (this.props.goalInTheBackground === this.props.goal._id) {
+            this.props.updateGoalToDisplay();
+          }
           let event = new Event('fake');
           this.props.toggleDisplayForm("formOfferTo", null, event);
         }

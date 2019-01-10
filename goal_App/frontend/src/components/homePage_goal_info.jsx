@@ -26,8 +26,8 @@ export default class GoalInfo extends React.Component {
           <input type="text" name="name" onChange={this.props.handleGoalDetails} onBlur={this.props.submitGoalDetails} value={this.props.goal.name} required maxLength="100"></input>
         </label>
         {this.props.goal.status !== 'Approved' &&
-        <label>Status:
-          <input type="text" value={this.props.goal.status} readOnly></input>
+        <label style={{ color: 'red' }}>Status:
+          <input type="text" value={this.props.goal.status} style={{ color: 'red' }} readOnly></input>
         </label>}
         <label>Owner:
           <input type="text" value={this.props.goal.owner.name} readOnly></input>
