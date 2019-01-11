@@ -4,6 +4,7 @@ import 'react-day-picker/lib/style.css';
 import {formatDate, parseDate } from 'react-day-picker/moment';
 
 export default class FormCurrent extends React.Component {
+
   
   render() {
     return (
@@ -18,12 +19,12 @@ export default class FormCurrent extends React.Component {
               <div className="date">
                 <label>Date
                   <DayPickerInput
-                    onDayChange={this.props.handleScoreChange}
+                    onDayChange={this.props.handleDayChange}
                     value={this.props.newDate}
                     formatDate={formatDate}
                     parseDate={parseDate}
                     format="YYYY-MM-DD"
-                    inputProps={{ required: true, readOnly: true, id:'new', name:'newDate', onBlur:this.props.handleScoreSubmit }}
+                    inputProps={{ required: true, readOnly: true, id:'new', name:'newDate' }}
                     dayPickerProps={{
                       selectedDays: this.props.newDate
                     }}
@@ -42,12 +43,12 @@ export default class FormCurrent extends React.Component {
                 <div className="score-group" key={entry._id}>
                   <div className="date">
                     <DayPickerInput
-                      onDayChange={this.props.handleScoreChange}
+                      onDayChange={this.props.handleDayChange}
                       value={new Date(entry.date)}
                       formatDate={formatDate}
                       parseDate={parseDate}
                       format="YYYY-MM-DD"
-                      inputProps={{ required: true, readOnly: true, id:entry._id, name:'date', onBlur:this.props.handleScoreSubmit }}
+                      inputProps={{ required: true, readOnly: true, id:entry._id, name:'date' }}
                       dayPickerProps={{
                         selectedDays: new Date(entry.date)
                       }}

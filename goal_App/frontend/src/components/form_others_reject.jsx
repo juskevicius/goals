@@ -8,7 +8,7 @@ export default class FormReject extends React.Component {
       .then( response => {
         if (response.status === 200) {
           this.props.updateOthersGoals();
-          if (this.props.goalInTheBackground === this.props.goal._id) {
+          if (this.props.goalInTheBackground === this.props.goal.childTo[0]) {
             this.props.updateGoalToDisplay();
           }
           let event = new Event('fake');

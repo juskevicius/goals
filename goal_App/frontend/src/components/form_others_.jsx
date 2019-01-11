@@ -3,6 +3,7 @@ import axios from 'axios';
 import FormReject from './form_others_reject.jsx';
 import FormNegotiateMyOffered from './form_others_negotiateMyOffered.jsx';
 import FormNegotiateTheirOwn from './form_others_negotiateTheirOwn.jsx';
+import FormNegotiateApproved from './form_others_negotiateApproved.jsx';
 
 export default class FormOthers extends React.Component {
   constructor(props) {
@@ -82,6 +83,18 @@ export default class FormOthers extends React.Component {
         </div>);
     }
 
+    const headers3 = () => {
+      return (
+        <div className="col-headers-row">
+          <div className="col-header col-header-goal-name">Goal</div>
+          <div className="col-header">Owner</div>
+          <div className="col-header">Initial score</div>
+          <div className="col-header">Target score</div>
+          <div className="col-header">Status</div>
+          <div className="col-header">Actions</div>
+        </div>);
+    }
+
     const goalsOfferedByMe = () => {
       if (this.state.othersGoals) {
         const offeredByMe = this.state.othersGoals.filter((goal) => { return goal.statusOwner === "Pending" && goal.statusApprover === "Approved";});
@@ -134,6 +147,31 @@ export default class FormOthers extends React.Component {
       }
     }
 
+    const goalsApproved = () => {
+      if (this.state.othersGoals) {
+        const approved = this.state.othersGoals.filter((goal) => { return goal.statusOwner === "Approved" && goal.statusApprover === "Approved";});
+        if (approved.length > 0) {
+          return (
+            <div className="approved">
+              <div className="section-header">Approved</div>
+              {headers3()}
+              {approved.map((goal) => { return (
+              <div className="col-data-row" key={goal._id}>
+                <div className="col-data col-data-goal-name">{goal.name}</div>
+                <div className="col-data">{goal.owner.name}</div>
+                <div className="col-data">{goal.initScore}</div>
+                <div className="col-data">{goal.targScore}</div>
+                <div className="col-data">{goal.status}</div>
+                <div className="col-data">
+                  <i className="far fa-comment" title="Negotiate" onClick={(event) => this.toggleDisplayForm("formNegotiateApproved", goal, event)}></i>
+                </div>
+              </div>);})}
+            </div>
+          );
+        }
+      }
+    }
+
 
     return (
       <div className="overlay" onClick={(event) => this.props.toggleDisplayForm("formOthers", event)}>
@@ -142,8 +180,10 @@ export default class FormOthers extends React.Component {
           <div className="form-body form-others-body">
             {goalsOfferedByMe()}
             {goalsCreatedByOthers()}
+            {goalsApproved()}
             {this.state.formNegotiateMyOffered && <FormNegotiateMyOffered toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals}/>}
             {this.state.formNegotiateTheirOwn && <FormNegotiateTheirOwn toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals}/>}
+            {this.state.formNegotiateApproved && <FormNegotiateApproved toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals}/>}
             {this.state.formReject && <FormReject toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals} updateGoalToDisplay={this.props.updateGoalToDisplay} goalInTheBackground={this.props.goalToDisplay}/>}
           </div>
         </div>

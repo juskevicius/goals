@@ -7,11 +7,11 @@ exports.hData_update_post = (req, res, next) => {
   /* function to calculate historical data from children goals and/or grandchildren goals */
   function calcHistoricalData(theGoal) {
     theGoal.parentTo = theGoal.parentTo.filter((child) => { return child.status === 'Approved'; });
-    const dates = theGoal.parentTo.map((child) => { return child.history.data.map((entry) => { return entry.date.getTime();})}); /* extract all dates from child goals */
-    const datesArr = dates.reduce((arr, val) => { return arr.concat(val);}).sort((a, b) => { return a - b; }); /* build an array and sort it in ascending order */
-    const uniqueDates = datesArr.filter((v, i) => { return datesArr.indexOf(v) === i;}); /* remove duplicates */
-    const childData = theGoal.parentTo.map((child) => { return child.history.data.map((entry) => { return [entry.date.getTime(), entry.value, child.weight];})}); /* build ar array of arrays for children data [date, value, weight] */
-    let childArr = childData.map((unit) => { return unit.sort((a, b) => { return a[0] - b[0]; });}) /* sort children dates in ascending order  */
+    const dates = theGoal.parentTo.length > 0 && theGoal.parentTo.map((child) => { return child.history.data.map((entry) => { return entry.date.getTime();})}); /* extract all dates from child goals */
+    const datesArr = dates.length > 0 && dates.reduce((arr, val) => { return arr.concat(val);}).sort((a, b) => { return a - b; }); /* build an array and sort it in ascending order */
+    const uniqueDates = datesArr.length > 0 && datesArr.filter((v, i) => { return datesArr.indexOf(v) === i;}); /* remove duplicates */
+    const childData = theGoal.parentTo.length > 0 && theGoal.parentTo.map((child) => { return child.history.data.map((entry) => { return [entry.date.getTime(), entry.value, child.weight];})}); /* build ar array of arrays for children data [date, value, weight] */
+    let childArr = childData.length > 0 && childData.map((unit) => { return unit.sort((a, b) => { return a[0] - b[0]; });}) /* sort children dates in ascending order  */
     let currChildScore = [];
     let calcHistData = [];
     for (let i = 0; i < uniqueDates.length; i++) { /* loop through unique dates */

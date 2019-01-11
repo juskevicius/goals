@@ -171,6 +171,10 @@ export default class FormOfferTo extends React.Component {
               {tasks(this.props.goal.task, null, true)}
               <div className="last-task-row"></div>
             </div>}
+            {/*this.props.goal.task.length === 0 && <div className="task-group">
+              {tasks([{ nr:1 }], null, true)}
+              <div className="last-task-row"></div>
+    </div>*/}
             <form>
               <div className="offer-group">
                 {offers()}

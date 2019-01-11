@@ -109,30 +109,100 @@ export default class HomePage extends React.Component {
     }
   }
 
-  handleScoreChange = (event, x, DayPickerInput) => {
-    const name = event.target ? event.target.name : DayPickerInput.props.inputProps.name;
-    const value = event.target ? event.target.value : event;
-    const currId = event.target ? event.target.getAttribute('id') : DayPickerInput.props.inputProps.id;
-    const index = this.state.history.findIndex(entry => { return entry._id === currId;});
-    if (currId === 'new') {
-      this.setState({
-        [name]: value
-      });
-    } else {
-      this.setState(prevState => ({
-        history: [...prevState.history.slice(0, index),
-            Object.assign({}, prevState.history[index], { [name]: value }),
-            ...prevState.history.slice(index + 1)]
-        }));
-    }  
-  }
-
   handleGoalDetails = (event) => {
     const name = event.target.name;
     const value = event.target.value;
       this.setState(prevState => ({
         goalToDisplay: Object.assign({}, prevState.goalToDisplay, { [name]: value })
       }));
+  }
+
+  handleScoreChange = (event) => {
+    const score = event.target.value;
+    const currId = event.target.getAttribute('id');
+    const index = this.state.history.findIndex(entry => { return entry._id === currId;});
+    if (currId === 'new') {
+      this.setState({
+        value: score
+      });
+    } else {
+      this.setState(prevState => ({
+        history: [...prevState.history.slice(0, index),
+            Object.assign({}, prevState.history[index], { value: score }),
+            ...prevState.history.slice(index + 1)]
+        }));
+    }  
+  }
+
+  handleDayChange = (selectedDay, modifiers, dayPickerInput) => {
+    
+    const currId = dayPickerInput.props.inputProps.id;
+    const index = this.state.history.findIndex(entry => { return entry._id === currId;});
+    const entryInHistory = this.state.history.find(entry => entry._id === currId );
+    const entryId = entryInHistory ? entryInHistory._id : null;
+    
+    if (!entryId) {
+      this.setState({
+        newDate: selectedDay
+      }, () => {
+        if (this.state.newScore) {
+          axios
+          .post('/score', {
+            id: this.state.goalToDisplay.history._id,
+            entryId,
+            date: this.state.newDate, 
+            value: this.state.newScore
+          })
+          .then(response => { 
+            if (response.status === 200) {
+              this.updateGoalToDisplay(this.state.goalToDisplay._id)
+            }
+          })
+          .catch(error => {
+            const errorMessage = error.response.data.errors.message;
+            if (errorMessage.constructor === Array) {
+              for (let i = 0; i < errorMessage.length; i++) {
+                alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+              }
+            } else {
+              alert(errorMessage);
+            }
+          });
+        }
+      });
+    } else {
+      this.setState(prevState => ({
+        history: [...prevState.history.slice(0, index),
+            Object.assign({}, prevState.history[index], { date: selectedDay }),
+            ...prevState.history.slice(index + 1)]
+        }), () => { 
+           if (entryInHistory.value) {
+            axios
+            .post('/score', {
+              id: this.state.goalToDisplay.history._id,
+              entryId,
+              date: selectedDay, 
+              value: entryInHistory.value
+            })
+            .then(response => { 
+              if (response.status === 200) {
+                this.updateGoalToDisplay(this.state.goalToDisplay._id)
+              }
+            })
+            .catch(error => {
+              const errorMessage = error.response.data.errors.message;
+              if (errorMessage.constructor === Array) {
+                for (let i = 0; i < errorMessage.length; i++) {
+                  alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+                }
+              } else {
+                alert(errorMessage);
+              }
+            });
+           }
+        }
+      );
+    }  
   }
 
   handleScoreSubmit = (event) => {
@@ -255,7 +325,7 @@ export default class HomePage extends React.Component {
         {this.state.formAdd && <FormAdd toggleDisplayForm={this.toggleDisplayForm}/>}
         {this.state.formMyOwn && <FormMyOwn toggleDisplayForm={this.toggleDisplayForm} children={children} updateGoalToDisplay={this.updateGoalToDisplay} removeGoalToDisplay={this.removeGoalToDisplay} goalToDisplay={this.state.goalToDisplay && this.state.goalToDisplay._id}/>}
         {this.state.formOthers && <FormOthers toggleDisplayForm={this.toggleDisplayForm} children={children} updateGoalToDisplay={this.updateGoalToDisplay} goalToDisplay={this.state.goalToDisplay && this.state.goalToDisplay._id}/>}
-        {(this.state.formCurrentScore && this.state.currScoreEditable) && <FormCurrent toggleDisplayForm={this.toggleDisplayForm} goal={this.state.goalToDisplay} history={this.state.history} newScore={this.state.newScore} newDate={this.state.newDate} updateGoalToDisplay={this.updateGoalToDisplay} handleScoreChange={this.handleScoreChange} handleScoreSubmit={this.handleScoreSubmit} handleScoreDelete={this.handleScoreDelete}/>}
+        {(this.state.formCurrentScore && this.state.currScoreEditable) && <FormCurrent toggleDisplayForm={this.toggleDisplayForm} goal={this.state.goalToDisplay} history={this.state.history} newScore={this.state.newScore} newDate={this.state.newDate} updateGoalToDisplay={this.updateGoalToDisplay} handleScoreChange={this.handleScoreChange} handleDayChange={this.handleDayChange} handleScoreSubmit={this.handleScoreSubmit} handleScoreDelete={this.handleScoreDelete}/>}
         {this.state.units && <Units toggleDisplayForm={this.toggleDisplayForm} />}
         {this.state.users && <Users toggleDisplayForm={this.toggleDisplayForm} />}
       </div>

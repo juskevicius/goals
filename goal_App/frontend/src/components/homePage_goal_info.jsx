@@ -51,12 +51,3 @@ export default class GoalInfo extends React.Component {
     )
   }
 }
-
-/*
-
-
-              
-              
-              
-
-*/

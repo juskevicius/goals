@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-export default class FormNegotiateTheirOwn extends React.Component {
+export default class FormNegotiateApproved extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,34 +42,12 @@ export default class FormNegotiateTheirOwn extends React.Component {
 
   copyFieldValues = () => {
     this.setState({
-      name: this.props.goal.ownersOffer.name || '',
-      initScore: this.props.goal.ownersOffer.initScore || '',
-      targScore: this.props.goal.ownersOffer.targScore || '',
-      comment: this.props.goal.ownersOffer.comment || '',
-      task: this.props.goal.ownersOffer.task || '',
+      name: this.props.goal.name || '',
+      initScore: this.props.goal.initScore || '',
+      targScore: this.props.goal.targScore || '',
+      comment: this.props.goal.comment || '',
+      task: this.props.goal.task || '',
     });
-  }
-
-  handleSubmit1 = () => {
-    axios.post('/approve', {id: this.props.goal._id})
-      .then(response => {
-        if (response.status === 200) {
-          this.props.updateOthersGoals();
-          let event = new Event('fake');
-          
-          this.props.toggleDisplayForm("formNegotiateTheirOwn", null, event);
-        }
-      })
-      .catch(error => {
-        const errorMessage = error.response.data.errors.message;
-        if (errorMessage.constructor === Array) {
-          for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
-          }
-        } else {
-          alert(errorMessage);
-        }
-      });
   }
 
   handleSubmit2 = () => {
@@ -94,7 +72,7 @@ export default class FormNegotiateTheirOwn extends React.Component {
           if (response.status === 200) {
             this.props.updateOthersGoals();
             let event = new Event('fake');
-            this.props.toggleDisplayForm("formNegotiateTheirOwn", null, event);
+            this.props.toggleDisplayForm("formNegotiateApproved", null, event);
           }
         })
         .catch(error => {
@@ -129,36 +107,32 @@ export default class FormNegotiateTheirOwn extends React.Component {
       );});
     }
 
-    const ownersOffer = this.props.goal.ownersOffer;
+    const goal = this.props.goal;
     const approversOffer = this.props.goal.approversOffer;
 
     return (
-      <div className="overlay" onClick={(event) => this.props.toggleDisplayForm("formNegotiateTheirOwn", null, event)}>
+      <div className="overlay" onClick={(event) => this.props.toggleDisplayForm("formNegotiateApproved", null, event)}>
         <div className="form-negotiateTheirOwn">
           <div className="form-header">Negotiate a goal</div>
           <div className="form-body">
             <form>
-              <h4>A goal set by {ownersOffer.owner.name} {ownersOffer.updated_formatted ? ownersOffer.updated_formatted : ownersOffer.created_formatted}:</h4>
+              <h4>A goal set by {goal.owner.name} {goal.updated_formatted ? goal.updated_formatted : goal.created_formatted}:</h4>
               <label>Goal:
-                <input type="text" value={ownersOffer.name || ''} readOnly></input>
+                <input type="text" value={goal.name || ''} readOnly></input>
               </label>
               <label>Initial score:
-                <input type="number" value={ownersOffer.initScore || ''} readOnly></input>
+                <input type="number" value={goal.initScore || ''} readOnly></input>
               </label>
               <label>Target score:
-                <input type="number" value={ownersOffer.targScore || ''} readOnly></input>
+                <input type="number" value={goal.targScore || ''} readOnly></input>
               </label>
               <label>Comment:
-                <input type="text" value={ownersOffer.comment || ''} readOnly></input>
+                <input type="text" value={goal.comment || ''} readOnly></input>
               </label>
-              {ownersOffer.task.length > 0 && 
+              {goal.task.length > 0 && 
               <div className="task-group">
-                {tasks(ownersOffer.task, true)}
+                {tasks(goal.task, true)}
                 <div className="last-task-row"></div>
-              </div>}
-              {ownersOffer && 
-              <div className="form-btn-center">
-                <input className="form-btn" type="submit" value="Approve" onClick={this.handleSubmit1}></input>
               </div>}
             </form>
             <form ref={el => this.form = el}>
