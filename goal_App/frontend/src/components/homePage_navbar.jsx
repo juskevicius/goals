@@ -55,7 +55,7 @@ export default class Navbar extends React.Component {
         <nav>
           <ul className="nav">
             <li>
-              <a href={this.props.chart && this.props.chart._id} onClick={this.viewOthersGoals}><i className="fa fa-sitemap" style={{fontSize: 24 + "px"}}></i> Lithuania</a>
+              <a href={this.props.chart && this.props.chart._id} onClick={this.viewOthersGoals}><i className="fa fa-sitemap" style={{fontSize: 24 + "px"}}></i> Enterprise</a>
               <ul>
                 {orgChart}
               </ul>
@@ -71,9 +71,6 @@ export default class Navbar extends React.Component {
                 </li>
                 <li>
                   <a href="/others" onClick={(event) => this.props.toggleDisplayForm('formOthers', event)}>Others'</a>
-                </li>
-                <li>
-                  <a href="/rejected">Rejected</a>
                 </li>
               </ul>
             </li>

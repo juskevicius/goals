@@ -111,7 +111,7 @@ export default class FormOthers extends React.Component {
                 <div className="col-data">{goal.approversOffer.targScore}</div>
                 <div className="col-data">{goal.status}</div>
                 <div className="col-data">
-                  <i className="far fa-comment" title="Negotiate" style={goal.ownersOffer && ((goal.ownersOffer.updated_formatted || goal.ownersOffer.created_formatted) > (goal.approversOffer.updated_formatted || goal.approversOffer.created_formatted)) ? {color: '#515ad8', fontWeight: 'bold'} : {}} onClick={(event) => this.toggleDisplayForm("formNegotiateMyOffered", goal, event)}></i>
+                  <i className="far fa-comment" title="Negotiate" style={goal.ownersOffer && ((goal.ownersOffer.updated_formatted || goal.ownersOffer.created_formatted) > (goal.approversOffer.updated_formatted || goal.approversOffer.created_formatted)) ? {color: '#217068', fontWeight: 'bold'} : {}} onClick={(event) => this.toggleDisplayForm("formNegotiateMyOffered", goal, event)}></i>
                   <i className="fa fa-remove" title="Remove" onClick={(event) => this.toggleDisplayForm("formReject", goal, event)}></i>
                 </div>
               </div>);})}
@@ -137,7 +137,7 @@ export default class FormOthers extends React.Component {
                 <div className="col-data">{goal.ownersOffer.targScore}</div>
                 <div className="col-data">{goal.status}</div>
                 <div className="col-data">
-                  <i className="far fa-comment triggerNegotiateTheirOwn" title="Negotiate" style={!goal.approversOffer || (goal.approversOffer && ((goal.ownersOffer.updated_formatted || goal.ownersOffer.created_formatted) > (goal.approversOffer.updated_formatted || goal.approversOffer.created_formatted))) ? {color: '#515ad8', fontWeight: 'bold'} : {}} onClick={(event) => this.toggleDisplayForm("formNegotiateTheirOwn", goal, event)}></i>
+                  <i className="far fa-comment triggerNegotiateTheirOwn" title="Negotiate" style={!goal.approversOffer || (goal.approversOffer && ((goal.ownersOffer.updated_formatted || goal.ownersOffer.created_formatted) > (goal.approversOffer.updated_formatted || goal.approversOffer.created_formatted))) ? {color: '#217068', fontWeight: 'bold'} : {}} onClick={(event) => this.toggleDisplayForm("formNegotiateTheirOwn", goal, event)}></i>
                   <i className="fa fa-remove" title="Reject" onClick={(event) => this.toggleDisplayForm("formReject", goal, event)}></i>
                 </div>
               </div>);})}
@@ -176,7 +176,7 @@ export default class FormOthers extends React.Component {
     return (
       <div className="overlay" onClick={(event) => this.props.toggleDisplayForm("formOthers", event)}>
         <div className="form-others">
-          <div className="form-header">Unapproved others' goals</div>
+          <div className="form-header">Goals of my subordinates</div>
           <div className="form-body form-others-body">
             {goalsOfferedByMe()}
             {goalsCreatedByOthers()}

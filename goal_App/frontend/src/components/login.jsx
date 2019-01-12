@@ -52,9 +52,9 @@ export default class Login extends React.Component {
   render() {
     return (
       <div className="login-screen">
-        <img className="logo" alt="logo" src="/images/Norian_grow_logo2.png"></img>
+        <img className="logo" alt="logo" src="/images/Grow_logo.png"></img>
         <form onSubmit={this.handleSubmit}>
-          <label>id:</label>
+          <label>username:</label>
           <input type="text" name="empId" value={this.state.empId} onChange={this.handleChange} onInput={this.handleInput} required pattern="5029[a-z]{3}"></input>
           <label>password:</label>
           <input type="password" name="password" value={this.state.password} onChange={this.handleChange} required></input>

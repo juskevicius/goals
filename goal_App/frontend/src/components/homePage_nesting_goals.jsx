@@ -64,9 +64,9 @@ export default class ChildrenGoals extends React.Component {
       <div>
       {this.state.children.length > 0 && 
         <div className="children-goals">
-          <div className="col-headers-row">
+          <div className="col-headers-row col-headers-goals">
             <div className="col-header">
-              <h4>Parent to</h4>
+              <h4>Accountable</h4>
             </div>
             <div className="col-header">
               <h4>Initial score</h4>
@@ -83,7 +83,7 @@ export default class ChildrenGoals extends React.Component {
           </div>
 
           {this.state.children.map((child) => { return (
-          <div className="col-data-row" key={child._id} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}}>
+          <div className="col-data-row col-data-goals" key={child._id} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}}>
             <div className="col-data">
               <a href={child._id} onClick={this.handleClick} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}}>{child.owner.name}</a>
             </div>

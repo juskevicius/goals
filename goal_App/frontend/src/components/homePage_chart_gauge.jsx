@@ -79,7 +79,7 @@ export default class GaugeChart extends React.Component {
         .attr("d", theGauge);  
       svg.append("path") // add foreground
         .datum({endAngle: (2 * 0 - 1) * deg180})
-        .attr("fill", "#515ad8")
+        .attr("fill", "#217068")
         .attr("d", theGauge)
         .transition()
         .duration(duration)
@@ -99,7 +99,7 @@ export default class GaugeChart extends React.Component {
         .attr("d", theTarget)
         .transition()
         .duration(duration)
-        .attr("fill", "#214566")
+        .attr("fill", "#33477a")
         .attr("d", theTarget);
       svg.append('text') // animate current value
         .attr("class", "middle-text")

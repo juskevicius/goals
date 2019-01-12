@@ -5,10 +5,10 @@ const Goal = require('../models/Goal');
 const hData = require('../models/hData');
 const Unit = require('../models/Unit');
 
-exports.goal_homePage_get = (req, res) => {
+exports.goal_homePage_get = (req, res, next) => {
     
     Unit. /* extract the whole org. chart structure */
-    findOne({name: 'Lithuania'}). 
+    findOne({name: 'Enterprise'}). 
     populate({ path: 'parentTo', populate: { path: 'parentTo' }}).
     exec((err, orgChart) => {
         if (err) { return next(err); }
@@ -36,7 +36,7 @@ exports.goal_homePage_get = (req, res) => {
 };
 
 // Handle Goal create on POST.
-exports.goal_add_post = (req, res) => {
+exports.goal_add_post = (req, res, next) => {
     Unit.
     findOne({ owner: req.payload.id }).
     populate('parentTo').
@@ -111,7 +111,7 @@ exports.goal_add_post = (req, res) => {
 
 // Handle Goal details on GET.
 
-exports.goal_details_get = (req, res) => {
+exports.goal_details_get = (req, res, next) => {
     Goal. /* find details about the current goal */
     findById(req.params.id). /* req params - included in url */
     populate({path: 'history parentTo', populate: { path: 'owner history' }}).
@@ -506,7 +506,7 @@ exports.goal_delete_post = (req, res, next) => {
 
 // Handle Goal offerTo on POST.
 
-exports.goal_offerTo_post = (req, res) => {
+exports.goal_offerTo_post = (req, res, next) => {
     //Detect the unit which is making the offer
     Unit.
     findOne({ owner: req.payload.id }).
@@ -666,7 +666,7 @@ exports.goal_acceptOffer_post = (req, res, next) => {
 
 // Handle Goal negotiate on POST. - owners offer
 
-exports.goal_ownersOffer_post = (req, res) => {
+exports.goal_ownersOffer_post = (req, res, next) => {
     Goal.
     findById(req.body.id).
     exec((err, goal) => {
@@ -714,10 +714,11 @@ exports.goal_ownersOffer_post = (req, res) => {
             );
             ownersOffer.save((err, newOwnersOffer) => {
                 if (err) { return next(err); }
+                const status = goal.statusOwner === 'Aproved' ? 'Pending' : 'Approved';
                 goal.set(
                     {
                         ownersOffer: newOwnersOffer.id,
-                        statusApprover:'Pending',
+                        statusApprover: status,
                         _id: goal._id
                     }
                 );
@@ -734,7 +735,7 @@ exports.goal_ownersOffer_post = (req, res) => {
 
 // Display others' goals on GET.
 
-exports.goal_others_get = (req, res) => {
+exports.goal_others_get = (req, res, next) => {
     Unit.
     findOne({ owner: req.payload.id }).
     populate('parentTo').
@@ -755,7 +756,7 @@ exports.goal_others_get = (req, res) => {
 };
 
 // Handle Goal negotiate on POST. - approvers
-exports.goal_approversOffer_post = (req, res) => {
+exports.goal_approversOffer_post = (req, res, next) => {
     Goal.
     findById(req.body.id).
     exec((err, goal) => {
@@ -808,10 +809,11 @@ exports.goal_approversOffer_post = (req, res) => {
                 );
                 approversOffer.save((err, newApproversOffer) => {
                     if (err) { return next(err); }
+                    const status = goal.statusApprover === 'Aproved' ? 'Pending' : 'Approved';
                     goal.set(
                         {
                             approversOffer: newApproversOffer.id,
-                            statusOwner:'Pending',
+                            statusOwner: status,
                             _id: goal._id
                         }
                     );

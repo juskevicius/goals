@@ -123,7 +123,7 @@ export default class HomePage extends React.Component {
     const index = this.state.history.findIndex(entry => { return entry._id === currId;});
     if (currId === 'new') {
       this.setState({
-        value: score
+        newScore: score
       });
     } else {
       this.setState(prevState => ({
@@ -306,7 +306,7 @@ export default class HomePage extends React.Component {
           </div>
           <div className="header">
             <h1>
-              {this.state.goalToDisplay ? this.state.goalToDisplay.name : 'Welcome to Norian Grow!'}
+              {this.state.goalToDisplay ? this.state.goalToDisplay.name : 'Welcome to Enterprise Grow!'}
             </h1>
           </div>
           <div className="l-main1">

@@ -103,7 +103,7 @@ body {
 
 .r-margin a {
   float: right;
-  color: #0e2f4d;
+  color: rgb(51, 71, 122);
 }
 
 .l-main1, .r-main1 {
@@ -141,6 +141,8 @@ body {
 .r-main2 .col-headers-row {
   width: 100%;
   display: inline-block;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .r-main2 .children-goals {
@@ -151,8 +153,12 @@ body {
   width: 100%;
 }
 
-.r-main2 .col-header {
-  width: 20%;
+.r-main2 .col-headers-goals .col-header, .r-main2 .col-data-goals .col-data {
+  width: 18%;
+}
+
+.r-main2 .col-headers-goals .col-header:first-child, .r-main2 .col-data-goals .col-data:first-child  {
+  width: 28%;
 }
 
 .r-main2 .col-headers-tasks .col-header:first-child  {
@@ -270,7 +276,7 @@ nav ul {
 
 .nav li {
     position: relative;
-    background-color: #0e2f4d;
+    background-color: rgb(51, 71, 122);
     border: 1px solid white;
     width: 230px;
     height: 50px;
@@ -299,7 +305,7 @@ nav ul {
   }
 
 .nav li:hover, .nav li:hover > a {
-    background-color: #4574a0;
+    background-color: rgb(63, 87, 150);
 }
 
 .nav > li {
@@ -320,7 +326,7 @@ nav ul {
 }
 
 .form-header {
-  background-color: #515ad8;
+  background-color: rgb(33, 112, 104);
   padding: 4% 10%;
   color: white;
   font-size: 28px;

@@ -26,7 +26,7 @@ exports.user_login_post = (req, res, next) => {
 
 // Handle user logout on GET
 
-exports.logout_get = (req, res) => {
+exports.logout_get = (req, res, next) => {
     req.logout();
     res.cookie("Token", "", { expires: new Date(0)});
     return res.send('successfuly logged out');
@@ -36,7 +36,7 @@ exports.logout_get = (req, res) => {
 
 //Handle user create on GET
 
-exports.user_create_get = (req, res) => {
+exports.user_create_get = (req, res, next) => {
     User.find({}, (err, users) => {
         if (err) { return next(err); }
         return res.send({ users });
@@ -64,7 +64,7 @@ exports.user_create_post = (req, res, next) => {
 
 // Handle user update on POST
 
-exports.user_update_post = (req, res) => {
+exports.user_update_post = (req, res, next) => {
     User.findById(req.body.id, (err, user) => {
         if (err) { return next(err); }
         user.empId = req.body.empId;
@@ -95,7 +95,7 @@ exports.user_delete_post = (req, res, next) => {
 
 // Handle unit create on GET.
 
-exports.unit_create_get = function(req, res) {
+exports.unit_create_get = (req, res, next) => {
     Unit.
     find({}).
     populate("parentTo").
@@ -112,7 +112,7 @@ exports.unit_create_get = function(req, res) {
 
 // Handle unit create on POST.
 
-exports.unit_create_post = (req, res) => {
+exports.unit_create_post = (req, res, next) => {
     /* Create a new unit */
     var newUnit = new Unit({
         name: req.body.name,
@@ -129,7 +129,7 @@ exports.unit_create_post = (req, res) => {
 
 // Handle unit update on POST.
 
-exports.unit_update_post = (req, res) => {
+exports.unit_update_post = (req, res, next) => {
     Unit.findById(req.body.id, (err, unit) => {
         if (err) { return next(err); }
         /* Update existing unit */
@@ -150,7 +150,7 @@ exports.unit_update_post = (req, res) => {
 
 // Handle unit delete on POST.
 
-exports.unit_delete_post = (req, res) => {
+exports.unit_delete_post = (req, res, next) => {
     Unit.findByIdAndRemove(req.body.id, (err) => {
         if (err) { return next(err); }
         return res.send('successfuly deleted a unit');

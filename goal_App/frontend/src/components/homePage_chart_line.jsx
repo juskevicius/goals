@@ -87,7 +87,7 @@ export default class LineChart extends React.Component {
     g.append("path")
     .datum(LCData)
     .attr("fill", "none")
-    .attr("stroke", "#515ad8")
+    .attr("stroke", "#217068")
     .attr("stroke-linejoin", "round")
     .attr("stroke-linecap", "round")
     .attr("stroke-width", 5.5)
@@ -96,7 +96,7 @@ export default class LineChart extends React.Component {
     g.append("path")
     .datum(tData)
     .attr("fill", "none")
-    .attr("stroke", "#214566")
+    .attr("stroke", "#33477a")
     .attr("stroke-linejoin", "round")
     .attr("stroke-linecap", "round")
     .attr("stroke-width", 2)
@@ -114,7 +114,7 @@ export default class LineChart extends React.Component {
     focus.append("circle")
     .attr("class", "y")
     .style("fill", "none")
-    .style("stroke", "blue")
+    .style("stroke", "#217068")
     .attr("r", 4);
     //append text above the intersection
     focus.append("text")
