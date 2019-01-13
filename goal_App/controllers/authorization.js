@@ -26,7 +26,7 @@ exports.restrict_to_admin = [
 exports.restrict_to_owner_h_id = [ /* restrict to owner. ID - history ID*/
   sanitizeBody('*').trim().escape(),
   (req, res, next) => {
-    User.findById(req.payload.id, "_id", (err, user) => {
+    User.findById(req.payload.id, "_id, role", (err, user) => {
       if (err) { return next(err); }
       Goal.
         findOne({ history: req.body.id }).
@@ -34,7 +34,7 @@ exports.restrict_to_owner_h_id = [ /* restrict to owner. ID - history ID*/
         populate('owner').
         exec((err, goal) => {
           if (err) { return next(err); }
-          if (user._id.equals(goal.owner.owner)) {
+          if (user._id.equals(goal.owner.owner) && user.role !== 'guest') {
             return next();
           } else {
             return res.status(401).json({
@@ -51,7 +51,7 @@ exports.restrict_to_owner_h_id = [ /* restrict to owner. ID - history ID*/
 exports.restrict_to_owner = [
   sanitizeBody('*').trim().escape(),
   (req, res, next) => {
-    User.findById(req.payload.id, "_id", (err, user) => {
+    User.findById(req.payload.id, "_id, role", (err, user) => {
       if (err) { return next(err); }
       Goal.
         findById(req.body.id).
@@ -59,7 +59,7 @@ exports.restrict_to_owner = [
         populate('owner').
         exec((err, goal) => {
           if (err) { return next(err); }
-          if (user._id.equals(goal.owner.owner)) {
+          if (user._id.equals(goal.owner.owner) && user.role !== 'guest') {
             return next();
           } else {
             return res.status(401).json({
@@ -69,6 +69,24 @@ exports.restrict_to_owner = [
             });
           }
         });
+    });
+  }
+];
+
+exports.restrict_to_guest = [
+  sanitizeBody('*').trim().escape(),
+  (req, res, next) => {
+    User.findById(req.payload.id, "_id, role", (err, user) => {
+      if (err) { return next(err); }
+      if (user.role !== 'guest') {
+        return next();
+      } else {
+        return res.status(401).json({
+          errors: {
+            message: 'You are not authorised to perform this action'
+          }
+        });
+      }
     });
   }
 ];

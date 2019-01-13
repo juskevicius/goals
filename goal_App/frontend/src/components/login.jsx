@@ -49,6 +49,29 @@ export default class Login extends React.Component {
       });
   }
 
+  handleSubmit2 = (event) => {
+    event.preventDefault();
+    axios.post('/login', {
+        empId: '5029btb',
+        password: '123456'
+      })
+      .then(response => {
+        if (response.status === 200) {
+          this.props.loginSuccessful();
+        }
+      })
+      .catch(error => {
+        const errorMessage = error.response.data.errors.message;
+        if (errorMessage.constructor === Array) {
+          for (let i = 0; i < errorMessage.length; i++) {
+            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+          }
+        } else {
+          alert(errorMessage);
+        }
+      });
+  }
+
   render() {
     return (
       <div className="login-screen">
@@ -58,7 +81,8 @@ export default class Login extends React.Component {
           <input type="text" name="empId" value={this.state.empId} onChange={this.handleChange} onInput={this.handleInput} required pattern="5029[a-z]{3}"></input>
           <label>password:</label>
           <input type="password" name="password" value={this.state.password} onChange={this.handleChange} required></input>
-          <button type="submit" value="submit">Submit</button>
+          <input className="form-btn" type="button" value="login as user" onClick={this.handleSubmit}></input>
+          <input className="form-btn guest-login" type="button" value="login as guest" onClick={this.handleSubmit2}></input>
         </form>
       </div>
     );

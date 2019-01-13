@@ -48,21 +48,6 @@ body {
   padding: 5px;
 }
 
-.login-screen form button {
-  background-color: white;
-  padding: 10px;
-  color: rgb(80, 80, 80);
-  border: 1px solid rgb(187, 187, 187);
-  box-shadow: none;
-  float: right;
-  margin-top: 20px;
-}
-
-.login-screen form button:hover {
-  cursor: pointer;
-}
-
-
 /*Styling the dashboard*/
 
 .grid-container {

@@ -19,7 +19,8 @@ router.get('/homepage',
 /* POST add */
 router.post('/add', 
   validationController.validate_cookie, 
-  auth.required,  
+  auth.required,
+  authorization.restrict_to_guest, 
   validationController.goal_add_post, 
   goalController.goal_add_post
 );

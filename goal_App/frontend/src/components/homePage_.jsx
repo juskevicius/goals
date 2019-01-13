@@ -18,6 +18,7 @@ export default class HomePage extends React.Component {
     this.state = {
       newDate: new Date(),
       newScore: '',
+      formMyOwn: true
     }
    }
 
