@@ -120,6 +120,9 @@ export default class FormEdit extends React.Component {
               <label>Comment:
                 <input type="text" name="comment" onChange={this.handleChange} value={this.state.comment || ''} maxLength="400"></input>
               </label>
+              {this.state.task.length === 0 && 
+              <label onClick={this.toggleShowtasks}><i className="far fa-plus-square"></i> tasks:
+              </label>}
               {this.state.task.length > 0 && 
               <div className="task-group">
                 {tasks()}
@@ -128,7 +131,6 @@ export default class FormEdit extends React.Component {
               <div className="buttons">
                 <div></div>
                 <div>
-                  {this.state.task.length === 0 && <input className="form-btn add-task" onClick={this.toggleShowtasks} type='button' value='Add task'></input>}
                   <input className="form-btn" onClick={this.handleSubmit} type="submit" value="Save"></input>
                 </div>
               </div>

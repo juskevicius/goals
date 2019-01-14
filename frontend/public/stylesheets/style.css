@@ -313,7 +313,7 @@ nav ul {
 
 /*Styling the forms. General styling */
 
-.form-add, .form-current, .form-remove, .form-acceptOffer, .form-negotiateOffered, .form-negotiateOwn, .form-edit, .form-offerTo, .form-myOwn, .form-others, .form-reject, .form-approve, .form-negotiateMyOffered, .form-negotiateTheirOwn {
+.form-add, .form-current, .form-remove, .form-acceptOffer, .form-negotiateOffered, .form-negotiateOwn, .form-edit, .form-offerTo, .form-myOwn, .form-others, .form-reject, .form-copy, .form-approve, .form-negotiateMyOffered, .form-negotiateTheirOwn {
   margin: 5% 30% 0% 30%;
   cursor: default;
   z-index: 2;
@@ -395,6 +395,10 @@ nav ul {
 
 .form-btn-center {
   text-align: center;
+}
+
+.fa-plus-square:hover {
+  cursor: pointer;
 }
 
 .invalid-feedback {

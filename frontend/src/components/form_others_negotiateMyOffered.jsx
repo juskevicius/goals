@@ -9,7 +9,7 @@ export default class FormNegotiateMyOffered extends React.Component {
       initScore: this.props.goal.approversOffer.initScore || '',
       targScore: this.props.goal.approversOffer.targScore || '',
       comment: this.props.goal.approversOffer.comment || '',
-      task: this.props.goal.approversOffer.task,
+      task: this.props.goal.approversOffer.task || '',
     }
   }
 
@@ -110,6 +110,12 @@ export default class FormNegotiateMyOffered extends React.Component {
     }
   }
 
+  toggleShowtasks = () => {
+    this.setState({
+      task: [{nr: 0, description: '', weight: ''}]
+    });
+  }
+
   
   render() {
 
@@ -176,7 +182,10 @@ export default class FormNegotiateMyOffered extends React.Component {
               <label>Comment:
                 <input type="text" name="comment" value={this.state.comment || ''} onChange={this.handleChange} maxLength="400"></input>
               </label>
-              {this.props.goal.approversOffer.task.length > 0 && 
+              {this.state.task.length === 0 && 
+              <label onClick={this.toggleShowtasks}><i className="far fa-plus-square"></i> tasks:
+              </label>}
+              {this.state.task.length > 0 && 
               <div className="task-group">
                 {tasks(this.state.task, false)}
                 <div className="last-task-row"></div>

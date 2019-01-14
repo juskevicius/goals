@@ -33,7 +33,7 @@ export default class FormReject extends React.Component {
         <div className="form-reject">
           <div className="form-header">Reject a goal</div>
           <div className="form-body">
-            <form action="/reject" method="post" href="">
+            <form>
               <label>Do you really want to reject this goal?
                 <input type="text" name="name" value={this.props.goal.name} readOnly></input>
               </label>

@@ -50,6 +50,13 @@ export default class FormNegotiateApproved extends React.Component {
     });
   }
 
+  toggleShowtasks = () => {
+    this.setState({
+      task: [{nr: 0, description: '', weight: ''}]
+    });
+  }
+
+
   handleSubmit2 = () => {
     if (this.form.checkValidity() === false) {
       for (let i = 0; i < this.form.length; i++) {
@@ -150,6 +157,9 @@ export default class FormNegotiateApproved extends React.Component {
               <label>Comment:
                 <input type="text" name="comment" value={this.state.comment || ''} onChange={this.handleChange} maxLength="400"></input>
               </label>
+              {this.state.task.length === 0 && 
+              <label onClick={this.toggleShowtasks}><i className="far fa-plus-square"></i> tasks:
+              </label>}
               {this.state.task && 
               <div className="task-group">
                 {tasks(this.state.task, false)}

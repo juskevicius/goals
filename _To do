@@ -10,12 +10,7 @@ To do:
 
 ///////DEVELOPEMENT:
 
-allow to add tasks in negotiation and offer to forms
-
 add or remove tasks in section "nesting" (edit goal details)
-
-allow children to set custom goals and let parents to copy them
-
 
 ///////PRODUCTION:
 
@@ -28,3 +23,58 @@ tls -> https
 
 secure cookies
 implement rate-limiting, protect the app against brute-force attacks
+
+
+total: 6644
+
+controllers (2450)
+25
+107
+917
+136
+158
+439
+668
+
+
+react (3737):
+140
+186
+76
+141
+190
+195
+189
+49
+193
+170
+197
+196
+50
+334
+71
+124
+160
+53
+96
+15
+108
+183
+66
+148
+154
+102
+101
+50
+
+models (119):
+52
+13
+14
+40
+
+routes (272):
+185
+87
+
+66

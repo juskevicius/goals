@@ -437,3 +437,28 @@ exports.goal_reject_post = [
     }
   }
 ];
+
+
+// Handle Goal copy on POST.
+
+exports.goal_copy_post = [
+  body('childTo').trim().escape().optional({ checkFalsy: true }).custom(id => {
+    return id.match(/^[a-fA-F0-9]{24}$/) ? true : false;
+  }).withMessage('parent id is not valid'),
+  body('id').trim().escape().custom(id => {
+    return id.match(/^[a-fA-F0-9]{24}$/) ? true : false;
+  }).withMessage('goal id is not valid'),
+  sanitizeBody('*').trim().escape(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      return next();
+    } else {
+      return res.status(422).json({
+        errors: {
+          message: errors.array()
+        }
+      });
+    }
+  }
+];

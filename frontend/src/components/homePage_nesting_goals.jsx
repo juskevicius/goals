@@ -85,7 +85,7 @@ export default class ChildrenGoals extends React.Component {
           {this.state.children.map((child) => { return (
           <div className="col-data-row col-data-goals" key={child._id} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}}>
             <div className="col-data">
-              <a href={child._id} onClick={this.handleClick} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}}>{child.owner.name}</a>
+              <a href={child._id} onClick={this.handleClick} title={'Goal: ' + child.name} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}}>{child.owner.name}</a>
             </div>
             <div className="col-data">
               {child.initScore}

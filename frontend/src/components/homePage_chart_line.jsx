@@ -14,7 +14,7 @@ export default class LineChart extends React.Component {
 
   draw = (props) => {
     d3.select('.line-chart > *').remove();
-    const sortedHistory = props.history.sort((a, b) => { return new Date(a.date) - new Date(b.date); });
+    const sortedHistory = props.history.length > 0 ? props.history.sort((a, b) => { return new Date(a.date) - new Date(b.date); }) : [{ date: 0, value: 0 }];
     const dates = sortedHistory.map((entry) => { return entry.date});
     const values = sortedHistory.map((entry) => { return entry.value});
     const targetVal = props.targScore; 

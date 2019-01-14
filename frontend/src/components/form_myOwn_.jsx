@@ -150,7 +150,7 @@ export default class FormMyOwn extends React.Component {
               <div className="col-data-row" key={goal._id}>
                 <div className="col-data col-data-goal-name"><a href={'/details/' + goal._id} onClick={event => this.getGoalDetails(event, goal._id)}>{goal.name}</a></div>
                 <div className="col-data">{goal.initScore}</div>
-                <div className="col-data">{goal.history ? (goal.history.data.reduce((prev, curr) => { return (prev.date > curr.date) ? prev : curr;})).value : ''}</div>
+                <div className="col-data">{goal.history.data.length > 0 && (goal.history.data.reduce((prev, curr) => { return (prev.date > curr.date) ? prev : curr;})).value}</div>
                 <div className="col-data">{goal.targScore}</div>
                 <div className="col-data">
                   <i className="fa fa-edit" onClick={(event) => this.toggleDisplayForm("formEdit", goal, event)} title="Edit"></i>

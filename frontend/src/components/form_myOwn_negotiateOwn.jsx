@@ -50,6 +50,12 @@ export default class FormNegotiateOwn extends React.Component {
     });
   }
 
+  toggleShowtasks = () => {
+    this.setState({
+      task: [{nr: 0, description: '', weight: ''}]
+    });
+  }
+
   handleSubmit1 = () => {
     axios.post('/acceptOffer', {id: this.props.goal._id})
       .then(response => {
@@ -174,7 +180,10 @@ export default class FormNegotiateOwn extends React.Component {
               <label>Comment:
                 <input type="text" name="comment" value={this.state.comment} onChange={this.handleChange} maxLength="400"></input>
               </label>
-              {this.props.goal.ownersOffer.task.length > 0 && 
+              {this.state.task.length === 0 && 
+              <label onClick={this.toggleShowtasks}><i className="far fa-plus-square"></i> tasks:
+              </label>}
+              {this.state.task.length > 0 && 
               <div className="task-group">
                 {tasks(this.state.task, false)}
                 <div className="last-task-row"></div>

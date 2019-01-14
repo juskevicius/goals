@@ -4,6 +4,7 @@ import FormReject from './form_others_reject.jsx';
 import FormNegotiateMyOffered from './form_others_negotiateMyOffered.jsx';
 import FormNegotiateTheirOwn from './form_others_negotiateTheirOwn.jsx';
 import FormNegotiateApproved from './form_others_negotiateApproved.jsx';
+import FormCopy from './form_others_copy.jsx';
 
 export default class FormOthers extends React.Component {
   constructor(props) {
@@ -57,6 +58,13 @@ export default class FormOthers extends React.Component {
       });
   }
 
+  getGoalDetails = (event, goalId) => {
+    event.preventDefault();
+    const ev = new Event('fake');
+    this.props.toggleDisplayForm("formOthers", ev);
+    this.props.updateGoalToDisplay(goalId);
+  } 
+
   render() {
 
     const headers1 = () => {
@@ -89,8 +97,8 @@ export default class FormOthers extends React.Component {
           <div className="col-header col-header-goal-name">Goal</div>
           <div className="col-header">Owner</div>
           <div className="col-header">Initial score</div>
+          <div className="col-header">Current score</div>
           <div className="col-header">Target score</div>
-          <div className="col-header">Status</div>
           <div className="col-header">Actions</div>
         </div>);
     }
@@ -127,7 +135,7 @@ export default class FormOthers extends React.Component {
         if (createdByOthers.length > 0) {
           return (
             <div className="createdByOthers">
-              <div className="section-header">Created by others</div>
+              <div className="section-header">Created by them</div>
               {headers2()}
               {createdByOthers.map((goal) => { return (
               <div className="col-data-row" key={goal._id}>
@@ -139,6 +147,8 @@ export default class FormOthers extends React.Component {
                 <div className="col-data">
                   <i className="far fa-comment triggerNegotiateTheirOwn" title="Negotiate" style={!goal.approversOffer || (goal.approversOffer && ((goal.ownersOffer.updated_formatted || goal.ownersOffer.created_formatted) > (goal.approversOffer.updated_formatted || goal.approversOffer.created_formatted))) ? {color: '#515ad8', fontWeight: 'bold'} : {}} onClick={(event) => this.toggleDisplayForm("formNegotiateTheirOwn", goal, event)}></i>
                   <i className="fa fa-remove" title="Reject" onClick={(event) => this.toggleDisplayForm("formReject", goal, event)}></i>
+                  {goal.childTo.length === 0 &&
+                  <i className="fas fa-bezier-curve" title="Copy" onClick={(event) => this.toggleDisplayForm("formCopy", goal, event)}></i>}
                 </div>
               </div>);})}
             </div>
@@ -157,11 +167,11 @@ export default class FormOthers extends React.Component {
               {headers3()}
               {approved.map((goal) => { return (
               <div className="col-data-row" key={goal._id}>
-                <div className="col-data col-data-goal-name">{goal.name}</div>
+                <div className="col-data col-data-goal-name"><a href={'/details/' + goal._id} onClick={event => this.getGoalDetails(event, goal._id)}>{goal.name}</a></div>
                 <div className="col-data">{goal.owner.name}</div>
                 <div className="col-data">{goal.initScore}</div>
+                <div className="col-data">{goal.history.data && goal.history.data.length > 0 && (goal.history.data.reduce((prev, curr) => { return (prev.date > curr.date) ? prev : curr;})).value}</div>
                 <div className="col-data">{goal.targScore}</div>
-                <div className="col-data">{goal.status}</div>
                 <div className="col-data">
                   <i className="far fa-comment" title="Negotiate" onClick={(event) => this.toggleDisplayForm("formNegotiateApproved", goal, event)}></i>
                 </div>
@@ -185,6 +195,7 @@ export default class FormOthers extends React.Component {
             {this.state.formNegotiateTheirOwn && <FormNegotiateTheirOwn toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals}/>}
             {this.state.formNegotiateApproved && <FormNegotiateApproved toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals}/>}
             {this.state.formReject && <FormReject toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals} updateGoalToDisplay={this.props.updateGoalToDisplay} goalInTheBackground={this.props.goalToDisplay}/>}
+            {this.state.formCopy && <FormCopy toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals} updateGoalToDisplay={this.props.updateGoalToDisplay} goalInTheBackground={this.props.goalToDisplay}/>}
           </div>
         </div>
       </div>

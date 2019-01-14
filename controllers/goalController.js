@@ -53,7 +53,7 @@ exports.goal_add_post = (req, res, next) => {
                 //childTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
                 //parentTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
                 statusOwner: 'Approved',
-                statusApprover: ownerUnit.childTo.length ? 'Pending' : 'Approved',
+                statusApprover: ownerUnit.childTo.length > 0 ? 'Pending' : 'Approved',
                 //history: hDataObj._id, - implemented below
                 created: new Date(),
                 //updated: {type: Date},
@@ -97,7 +97,7 @@ exports.goal_add_post = (req, res, next) => {
                     exec((err, goalDoc) => {
                         if (err) { return next(err); }
                         goalDoc.set({ownersOffer: newGoalOffer._id});
-                        goalDoc.save((err, updatedGoalDoc) => {
+                        goalDoc.save((err) => {
                             if (err) { return next(err); }
                             return res.send('successfuly added a goal')
                         });    
@@ -139,10 +139,9 @@ exports.goal_score_post = (req, res, next) => {
 
                 Goal. 
                 findOne({ history: req.body.id}).
-                populate({path: 'childTo', populate: { path: 'childTo'}}).
                 exec((err, goal) => {
                     if (err) { return next(err); }
-                    if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
+                    if (goal.childTo.length > 0) { /* if the goal has a parent then update the parent's history */
                         res.locals.parent = goal.childTo[0];
                         return next();
                     } else {
@@ -173,10 +172,9 @@ exports.goal_score_post = (req, res, next) => {
                 
                 Goal. 
                 findOne({ history: req.body.id}).
-                populate({path: 'childTo', populate: { path: 'childTo'}}).
                 exec((err, goal) => {
                     if (err) { return next(err); }
-                    if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
+                    if (goal.childTo.length > 0) { /* if the goal has a parent then update the parent's history */
                         res.locals.parent = goal.childTo[0];
                         return next();
                     } else {
@@ -202,10 +200,9 @@ exports.goal_scoreDelete_post = (req, res, next) => {
 
             Goal. 
             findOne({ history: req.body.id}).
-            populate({path: 'childTo', populate: { path: 'childTo'}}).
             exec((err, goal) => {
                 if (err) { return next(err); }
-                if (goal.childTo[0]) { /* if the goal has a parent then update the parent's history */
+                if (goal.childTo.length > 0) { /* if the goal has a parent then update the parent's history */
                     res.locals.parent = goal.childTo[0];
                     return next();
                 } else {
@@ -533,7 +530,7 @@ exports.goal_offerTo_post = (req, res, next) => {
             for (let i = 0; i < req.body.offers.length; i++) {
                 if (req.body.offers[i].owner) {
                     let tasks = [];
-                    req.body.offers[i].task.forEach((task) => { if (task.description) {tasks.push({ description: task.description, weight: task.weight}); }});
+                    req.body.offers[i].task.forEach((task) => { if (task.description) {tasks.push({ description: task.description, weight: task.weight }); }});
                     goalArr.push({
                         name: req.body.name,
                         owner: req.body.offers[i].owner,
@@ -687,7 +684,17 @@ exports.goal_ownersOffer_post = (req, res, next) => {
                 });
                 ownersOffer.save((err) => {
                     if (err) { return next(err); }
-                    return res.send('owners offer has been updated');
+                    const status = goal.statusOwner === 'Approved' ? 'Pending' : 'Approved';
+                    goal.set(
+                        {
+                            statusApprover: status,
+                            _id: goal._id
+                        }
+                    );
+                    goal.save((err) => {
+                        if (err) { return next(err); }
+                        return res.send('owners offer has been submitted');
+                    });
                 });
             });
         } else {
@@ -746,7 +753,7 @@ exports.goal_others_get = (req, res, next) => {
         Goal.find()
             .where('owner')
             .in(ownerUnit.parentTo)
-            .populate('owner')
+            .populate('owner history')
             .populate({ path: 'ownersOffer approversOffer', populate: { path: 'owner' }})
             .exec((err, othersGoals) => {
             if (err) { return next(err); }
@@ -755,7 +762,8 @@ exports.goal_others_get = (req, res, next) => {
     });
 };
 
-// Handle Goal negotiate on POST. - approvers
+// Handle Goal negotiate on POST. - approversOffer
+
 exports.goal_approversOffer_post = (req, res, next) => {
     Goal.
     findById(req.body.id).
@@ -777,7 +785,17 @@ exports.goal_approversOffer_post = (req, res, next) => {
                 });
                 approversOffer.save((err) => {
                     if (err) { return next(err); }
-                    return res.send('approvers offer has been updated');
+                    const status = goal.statusApprover === 'Approved' ? 'Pending' : 'Approved';
+                    goal.set(
+                        {
+                            statusOwner: status,
+                            _id: goal._id
+                        }
+                    );
+                    goal.save((err) => {
+                        if (err) { return next(err); }
+                        return res.send('approvers offer has been submitted');
+                    });
                 });
             });
         } else {
@@ -828,6 +846,7 @@ exports.goal_approversOffer_post = (req, res, next) => {
 };
 
 // Handle Goal approve on POST.
+
 exports.goal_approve_post = (req, res, next) => {
     Goal.
     findById(req.body.id).
@@ -889,6 +908,7 @@ exports.goal_approve_post = (req, res, next) => {
 }
 
 // Handle Goal reject on POST.
+
 exports.goal_reject_post = (req, res, next) => {
     Goal.
     findById(req.body.id).
@@ -914,4 +934,112 @@ exports.goal_reject_post = (req, res, next) => {
             });
         });
     });       
+}
+
+
+// Handle Goal copy on POST.
+
+exports.goal_copy_post = (req, res, next) => {
+    
+    if (req.body.childTo) {
+
+        Goal.
+        findById(req.body.childTo).
+        exec((err, parentGoal) => {
+            if (err) { return next(err); }
+            parentGoal.parentTo.push(req.body.id);
+            parentGoal.save((err) => {
+                if (err) { return next(err); }
+                Goal.
+                findById(req.body.id).
+                exec((err, childGoal) => {
+                    if (err) { return next(err); }
+                    childGoal.childTo.push(req.body.childTo);
+                    childGoal.save((err) => {
+                        if (err) { return next(err); }
+                        return res.send('goal linked successfuly');
+                    });
+                });
+            });
+        });
+
+    } else {
+
+        Goal.
+        findById(req.body.id).
+        exec((err, childGoal) => {
+            if (err) { return next(err); }
+            Unit.
+            findOne({ owner: req.payload.id }).
+            exec((err, ownerUnit) => {
+                if (err) { return next(err); }
+                
+                const parentGoal = new Goal(
+                    {
+                        name: childGoal.name,
+                        owner: ownerUnit._id,
+                        initScore: childGoal.initScore,
+                        targScore: childGoal.targScore,
+                        //childTo: [{type: Schema.Types.ObjectId, ref: 'goalList'}],
+                        parentTo: [childGoal._id],
+                        statusOwner: 'Approved',
+                        statusApprover: ownerUnit.childTo.length > 0 ? 'Pending' : 'Approved',
+                        //history: hDataObj._id, - implemented below
+                        created: new Date(),
+                        //updated: {type: Date},
+                        comment: childGoal.comment,
+                        task: childGoal.task
+                        //ownersOffer: {type: Schema.Types.ObjectId, ref: 'goalList'}, - implemented below
+                        //approversOffer: {type: Schema.Types.ObjectId, ref: 'goalList'},
+                        //weight: {type: Number}
+                    }
+                );
+                        
+                        //create historical data object
+                const hdata = new hData(
+                    {
+                        data: [{
+                            date: new Date('2019-01-01'),
+                            value: childGoal.initScore ? childGoal.initScore : 0
+                        }]  
+                    }
+                );
+
+                        //save historical data object and assign it to the goal
+                hdata.save((err, newHdata) => {
+                    if (err) { return next(err); }
+                    parentGoal.history = newHdata._id;
+                    parentGoal.save((err, newParentGoal) => {
+                        if (err) { return next(err); }
+                        //create a copy and assign it as the offer to the original goal
+                        const currId = newParentGoal._id;
+                        newParentGoal.set({
+                            _id: mongoose.Types.ObjectId(),
+                            statusOwner: 'Pending', //this way it will not appear owner's in goal list
+                            statusApprover: 'Pending' //this way it will not appear owner's in goal list
+                        });
+                        newParentGoal.isNew = true;
+                        newParentGoal.save((err, newGoalOffer) => {
+                            if (err) { return next(err); }
+                            //assign offer's id to the original goal
+                            Goal.
+                            findById(currId).
+                            exec((err, goalDoc) => {
+                                if (err) { return next(err); }
+                                goalDoc.set({ ownersOffer: newGoalOffer._id });
+                                goalDoc.save((err, updatedGoalDoc) => {
+                                    if (err) { return next(err); }
+                                    childGoal.childTo.push(updatedGoalDoc._id);
+                                    childGoal.save((err) => {
+                                        if (err) { return next(err); }
+                                        return res.send('goal linked successfuly')
+                                    });
+                                });    
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    }
 }

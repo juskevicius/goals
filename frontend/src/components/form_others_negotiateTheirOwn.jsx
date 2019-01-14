@@ -56,7 +56,6 @@ export default class FormNegotiateTheirOwn extends React.Component {
         if (response.status === 200) {
           this.props.updateOthersGoals();
           let event = new Event('fake');
-          
           this.props.toggleDisplayForm("formNegotiateTheirOwn", null, event);
         }
       })
@@ -108,6 +107,12 @@ export default class FormNegotiateTheirOwn extends React.Component {
           }
         });
     }
+  }
+
+  toggleShowtasks = () => {
+    this.setState({
+      task: [{nr: 0, description: '', weight: ''}]
+    });
   }
   
   render() {
@@ -176,6 +181,9 @@ export default class FormNegotiateTheirOwn extends React.Component {
               <label>Comment:
                 <input type="text" name="comment" value={this.state.comment || ''} onChange={this.handleChange} maxLength="400"></input>
               </label>
+              {this.state.task.length === 0 && 
+              <label onClick={this.toggleShowtasks}><i className="far fa-plus-square"></i> tasks:
+              </label>}
               {this.state.task && 
               <div className="task-group">
                 {tasks(this.state.task, false)}

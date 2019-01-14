@@ -15,7 +15,7 @@ export default class GaugeChart extends React.Component {
 
   draw = (props, duration) => {
     d3.select('.gauge-chart > *').remove();
-    const currentScore = props.history.reduce((prev, curr) => { return (prev.date > curr.date) ? prev : curr; }).value;
+    const currentScore = props.history.length > 0 ? props.history.reduce((prev, curr) => { return (prev.date > curr.date) ? prev : curr; }).value : 0;
     const perc = currentScore / 100;
     const targetVal = props.targScore / 100;
     const width = ReactDOM.findDOMNode(this).offsetWidth;

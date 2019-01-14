@@ -182,4 +182,13 @@ router.post('/reject',
   goalController.goal_reject_post
 );
 
+/* POST copy */
+router.post('/copy', 
+  validationController.validate_cookie, 
+  auth.required,
+  authorization.restrict_to_approver,
+  validationController.goal_copy_post,
+  goalController.goal_copy_post
+);
+
 module.exports = router;
