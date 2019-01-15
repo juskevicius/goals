@@ -121,6 +121,8 @@ export default class FormOthers extends React.Component {
                 <div className="col-data">
                   <i className="far fa-comment" title="Negotiate" style={goal.ownersOffer && ((goal.ownersOffer.updated_formatted || goal.ownersOffer.created_formatted) > (goal.approversOffer.updated_formatted || goal.approversOffer.created_formatted)) ? {color: '#515ad8', fontWeight: 'bold'} : {}} onClick={(event) => this.toggleDisplayForm("formNegotiateMyOffered", goal, event)}></i>
                   <i className="fa fa-remove" title="Remove" onClick={(event) => this.toggleDisplayForm("formReject", goal, event)}></i>
+                  {goal.childTo.length === 0 &&
+                  <i className="fas fa-bezier-curve" title="Copy" onClick={(event) => this.toggleDisplayForm("formCopy", goal, event)}></i>}
                 </div>
               </div>);})}
             </div>
@@ -174,6 +176,8 @@ export default class FormOthers extends React.Component {
                 <div className="col-data">{goal.targScore}</div>
                 <div className="col-data">
                   <i className="far fa-comment" title="Negotiate" onClick={(event) => this.toggleDisplayForm("formNegotiateApproved", goal, event)}></i>
+                  {goal.childTo.length === 0 &&
+                  <i className="fas fa-bezier-curve" title="Copy" onClick={(event) => this.toggleDisplayForm("formCopy", goal, event)}></i>}
                 </div>
               </div>);})}
             </div>

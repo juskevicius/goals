@@ -169,6 +169,13 @@ body {
 
 .r-main2 .col-header h4 {
   margin: 0;
+  font-size: 18px;
+}
+
+@media only screen and (max-width: 1600px) {
+  .r-main2 .col-header h4 {
+    font-size: 16px;
+  }
 }
 
 .r-main2 .col-data-row {
