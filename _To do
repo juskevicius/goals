@@ -10,6 +10,9 @@ To do:
 
 ///////DEVELOPEMENT:
 
+if token is incorrect or expired, then redirect to login page
+if refreshed check for token. If found then stay on the same page.
+
 add or remove tasks in section "nesting" (edit goal details)
 
 ///////PRODUCTION:
