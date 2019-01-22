@@ -35,7 +35,7 @@ export default class GaugeChart extends React.Component {
     const svg = d3.select(".gauge-chart").append("svg")
         .attr("width", width)
         .attr("height", height)
-        .style("background-color", "white")
+        .style("background-color", "rgb(252, 252, 252)")
         .append("g")
         .attr("transform", "translate(" + width / 2 + ", " + (height * 0.9) + ")");
         //add labels on the top-right and top-left corners

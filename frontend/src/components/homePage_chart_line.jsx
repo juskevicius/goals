@@ -45,7 +45,7 @@ export default class LineChart extends React.Component {
         .attr("width", width)
         .attr("height", height)
         .on('click', (event = new Event('fake')) => props.toggleDisplayForm("formCurrentScore", event))
-        .style("background-color", "white");
+        .style("background-color", "rgb(252, 252, 252)");
     const g = svg.append("g")
         .attr("transform", 
         "translate(" + width * 0.1 + "," + height * 0.1 + ")"

@@ -302,13 +302,13 @@ export default class HomePage extends React.Component {
           <div className="l-margin">
             <Navbar toggleDisplayForm={this.toggleDisplayForm} chart={this.state.orgChart} userRole={this.state.userRole} updateGoalToDisplay={this.updateGoalToDisplay}/>
           </div>
-          <div className="r-margin">
-            <a href="/logout" onClick={(event) => this.props.logout(event)}><i className="fa fa-sign-out" style={{fontSize:54 + "px"}}></i></a>
-          </div>
           <div className="header">
             <h1>
               {this.state.goalToDisplay ? this.state.goalToDisplay.name : 'Welcome to Enterprise Grow!'}
             </h1>
+          </div>
+          <div className="r-margin">
+            <a href="/logout" onClick={(event) => this.props.logout(event)}><i className="fa fa-sign-out" style={{fontSize:54 + "px"}}></i></a>
           </div>
           <div className="l-main1">
             {this.state.goalToDisplay && <GaugeChart targScore={this.state.goalToDisplay.targScore} history={this.state.history} toggleDisplayForm={this.toggleDisplayForm}/>}
