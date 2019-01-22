@@ -82,7 +82,7 @@ export default class Login extends React.Component {
           <label>password:</label>
           <input type="password" name="password" value={this.state.password} onChange={this.handleChange} required></input>
           <input className="form-btn" type="button" value="login as user" onClick={this.handleSubmit}></input>
-          <input className="form-btn guest-login" type="button" value="login as guest" onClick={this.handleSubmit2}></input>
+          <input className="form-btn guest-login" type="button" value="enter as guest" onClick={this.handleSubmit2}></input>
         </form>
       </div>
     );
