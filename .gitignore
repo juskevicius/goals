@@ -1,4 +1,7 @@
 
-goal_App/.env
+# dependencies
+/node_modules
+
+# misc
 .env
 Handy commands
