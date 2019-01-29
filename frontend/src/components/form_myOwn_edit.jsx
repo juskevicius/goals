@@ -33,7 +33,7 @@ export default class FormEdit extends React.Component {
          ...prevstate.task.slice(taskNr + 1)
       ]
     }));
-    if (taskNr === (this.state.task.length - 1) && updKey === "description") {
+    if (taskNr === (this.state.task.length - 1) && updKey === 'description') {
       this.setState(prevstate => ({
         task: [...prevstate.task, {nr: prevstate.task.length, description: '', weight: ''}]
       }));
@@ -60,14 +60,14 @@ export default class FormEdit extends React.Component {
                 this.props.updateGoalToDisplay();
               }
               let event = new Event('fake');
-              this.props.toggleDisplayForm("formEdit", null, event);
+              this.props.toggleDisplayForm('formEdit', null, event);
             }
         })
         .catch(error => {
           const errorMessage = error.response.data.errors.message;
           if (errorMessage.constructor === Array) {
             for (let i = 0; i < errorMessage.length; i++) {
-              alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+              alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
             }
           } else {
             alert(errorMessage);
@@ -86,15 +86,15 @@ export default class FormEdit extends React.Component {
 
     const tasks = () => {
       return this.state.task.map((task, index) => { return (
-        <div className="task-row" key={task._id || task.nr}>
-          <div className="descr-block">
-            <label className="task task-label-descr">Task nr {index + 1}:
-              <input className="task task-input-descr" type="text" onChange={this.handleTaskChange} name={"task[" + index + "][description]"} value={task.description} maxLength="200"></input>
+        <div className='task-row' key={task._id || task.nr}>
+          <div className='descr-block'>
+            <label className='task task-label-descr'>Task nr {index + 1}:
+              <input className='task task-input-descr' type='text' onChange={this.handleTaskChange} name={'task[' + index + '][description]'} value={task.description} maxLength='200'></input>
             </label>
           </div>
-          <div className="weight-block">
-            <label className="task task-label-weight">Weight
-              <input className="task task-input-weight" type="number" onChange={this.handleTaskChange} name={"task[" + index + "][weight]"} value={task.weight || ''} maxLength="11"></input>
+          <div className='weight-block'>
+            <label className='task task-label-weight'>Weight
+              <input className='task task-input-weight' type='number' onChange={this.handleTaskChange} name={'task[' + index + '][weight]'} value={task.weight || ''} maxLength='11'></input>
             </label> 
           </div>
         </div>
@@ -102,34 +102,34 @@ export default class FormEdit extends React.Component {
     }
 
     return (
-      <div className="overlay" onClick={(event) => this.props.toggleDisplayForm("formEdit", null, event)}>
-        <div className="form-edit">
-          <div className="form-header">Edit a goal</div>
-          <div className="form-body">
+      <div className='overlay' onClick={(event) => this.props.toggleDisplayForm('formEdit', null, event)}>
+        <div className='form-edit'>
+          <div className='form-header'>Edit a goal</div>
+          <div className='form-body'>
             <form ref={el => this.form = el}>
               <label>Goal:
-                <input type="text" name="name" onChange={this.handleChange} value={this.state.name} required maxLength="100"></input>
-                <div className="invalid-feedback" />
+                <input type='text' name='name' onChange={this.handleChange} value={this.state.name} required maxLength='100'></input>
+                <div className='invalid-feedback' />
               </label>
               <label>Initial score:
-                <input type="number" name="initScore" onChange={this.handleChange} value={this.state.initScore || ''} maxLength="11"></input>
+                <input type='number' name='initScore' onChange={this.handleChange} value={this.state.initScore || ''} maxLength='11'></input>
               </label>
               <label>Target score:
-                <input type="number" name="targScore" onChange={this.handleChange} value={this.state.targScore || ''} maxLength="11"></input>
+                <input type='number' name='targScore' onChange={this.handleChange} value={this.state.targScore || ''} maxLength='11'></input>
               </label>
               <label>Comment:
-                <input type="text" name="comment" onChange={this.handleChange} value={this.state.comment || ''} maxLength="400"></input>
+                <input type='text' name='comment' onChange={this.handleChange} value={this.state.comment || ''} maxLength='400'></input>
               </label>
               {this.state.task.length > 0 && 
-              <div className="task-group">
+              <div className='task-group'>
                 {tasks()}
-                <div className="last-task-row"></div>
+                <div className='last-task-row'></div>
               </div>}
-              <div className="buttons">
+              <div className='buttons'>
                 <div></div>
                 <div>
-                  {this.state.task.length === 0 && <input className="form-btn add-task" onClick={this.toggleShowtasks} type='button' value='Add task'></input>}
-                  <input className="form-btn" onClick={this.handleSubmit} type="submit" value="Save"></input>
+                  {this.state.task.length === 0 && <input className='form-btn add-task' onClick={this.toggleShowtasks} type='button' value='Add task'></input>}
+                  <input className='form-btn' onClick={this.handleSubmit} type='submit' value='Save'></input>
                 </div>
               </div>
             </form>

@@ -4,7 +4,7 @@ const getTokenFromCookies = (req) => {
   const { cookies: { Token } } = req;
   if (Token) {
     return Token;
-  } 
+  }
   return null;
 };
 

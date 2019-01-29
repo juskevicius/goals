@@ -10,7 +10,7 @@ export default class FormAdd extends React.Component {
       targScore: '',
       comment: '',
       showtasks: false,
-      task: [{nr: 0, description: "", weight: ""}]
+      task: [{ nr: 0, description: '', weight: '' }],
     }
   }
 
@@ -40,7 +40,7 @@ export default class FormAdd extends React.Component {
          ...prevstate.task.slice(taskNr + 1)
       ]
     }));
-    if (taskNr === (this.state.task.length - 1) && updKey === "description") {
+    if (taskNr === (this.state.task.length - 1) && updKey === 'description') {
       this.setState(prevstate => ({
         task: [...prevstate.task, {nr: prevstate.task.length, description: '', weight: ''}]
       }));
@@ -71,7 +71,7 @@ export default class FormAdd extends React.Component {
           const errorMessage = error.response.data.errors.message;
           if (errorMessage.constructor === Array) {
             for (let i = 0; i < errorMessage.length; i++) {
-              alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+              alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
             }
           } else {
             alert(errorMessage);
@@ -85,15 +85,15 @@ export default class FormAdd extends React.Component {
 
     function taskElm(taskNr, description, weight, funcAddtask) {
       return (
-        <div className="task-row" key={taskNr}>
-          <div className="descr-block">
-            <label className="task task-label-descr">Task nr {taskNr + 1}
-              <input className="task task-input-descr" onChange={funcAddtask} type="text" name={"task[" + taskNr + "][description]"} value={description || ''} maxLength="200"></input>
+        <div className='task-row' key={taskNr}>
+          <div className='descr-block'>
+            <label className='task task-label-descr'>Task nr {taskNr + 1}
+              <input className='task task-input-descr' onChange={funcAddtask} type='text' name={'task[' + taskNr + '][description]'} value={description || ''} maxLength='200'></input>
             </label>
           </div>
-          <div className="weight-block">
-            <label className="task task-label-weight">Weight
-              <input className="task task-input-weight" onChange={funcAddtask} type="number" name={"task[" + taskNr + "][weight]"} value={weight || ''} maxLength="11"></input>
+          <div className='weight-block'>
+            <label className='task task-label-weight'>Weight
+              <input className='task task-input-weight' onChange={funcAddtask} type='number' name={'task[' + taskNr + '][weight]'} value={weight || ''} maxLength='11'></input>
             </label>
           </div>
         </div>
@@ -101,34 +101,34 @@ export default class FormAdd extends React.Component {
     }
 
     return (
-      <div className="overlay" onClick={(event) => this.props.toggleDisplayForm('formAdd', event)}>
-        <div className="form-add">
-          <div className="form-header">Add a new goal</div>
-          <div className="form-body">
+      <div className='overlay' onClick={(event) => this.props.toggleDisplayForm('formAdd', event)}>
+        <div className='form-add'>
+          <div className='form-header'>Add a new goal</div>
+          <div className='form-body'>
             <form ref={el => this.form = el}>
               <label>Goal:
-                <input type="text" name="name" value={this.state.name} onChange={this.handleChange} required maxLength="100"></input>
-                <div className="invalid-feedback" />
+                <input type='text' name='name' value={this.state.name} onChange={this.handleChange} required maxLength='100'></input>
+                <div className='invalid-feedback' />
               </label>
               <label>Initial score:
-                <input type="number" name="initScore" placeholder="50%" value={this.state.initScore || ''} onChange={this.handleChange} maxLength="11"></input>
+                <input type='number' name='initScore' placeholder='50%' value={this.state.initScore || ''} onChange={this.handleChange} maxLength='11'></input>
               </label>
               <label>Target score:
-                <input type="number" name="targScore" placeholder="99%" value={this.state.targScore || ''} onChange={this.handleChange} maxLength="11"></input>
+                <input type='number' name='targScore' placeholder='99%' value={this.state.targScore || ''} onChange={this.handleChange} maxLength='11'></input>
               </label>
               <label>Comment:
-                <input type="text" name="comment" value={this.state.comment} onChange={this.handleChange || ''} maxLength="400"></input>
+                <input type='text' name='comment' value={this.state.comment} onChange={this.handleChange || ''} maxLength='400'></input>
               </label>
               {this.state.showtasks &&
-              <div className="task-group">
+              <div className='task-group'>
                 {this.state.task.map((task) => {return taskElm(task.nr, task.description, task.weight, this.handleTaskChange);})}
-                <div className="last-task-row"></div>
+                <div className='last-task-row'></div>
               </div>}
-              <div className="buttons">
+              <div className='buttons'>
                 <div></div>
                 <div>
-                  {!this.state.showtasks && <input className="form-btn add-task" onClick={this.toggleShowtasks} type='button' value='Add task'></input>}
-                  <input className="form-btn" onClick={this.handleSubmit} type="submit" value="Save"></input>
+                  {!this.state.showtasks && <input className='form-btn add-task' onClick={this.toggleShowtasks} type='button' value='Add task'></input>}
+                  <input className='form-btn' onClick={this.handleSubmit} type='submit' value='Save'></input>
                 </div>
               </div>
             </form>

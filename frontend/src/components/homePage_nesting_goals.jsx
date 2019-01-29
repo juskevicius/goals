@@ -49,7 +49,7 @@ export default class ChildrenGoals extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -63,41 +63,41 @@ export default class ChildrenGoals extends React.Component {
     return (
       <div>
       {this.state.children.length > 0 && 
-        <div className="children-goals">
-          <div className="col-headers-row col-headers-goals">
-            <div className="col-header">
+        <div className='children-goals'>
+          <div className='col-headers-row col-headers-goals'>
+            <div className='col-header'>
               <h4>Accountable</h4>
             </div>
-            <div className="col-header">
+            <div className='col-header'>
               <h4>Initial score</h4>
             </div>
-            <div className="col-header">
+            <div className='col-header'>
               <h4>Current score</h4>
             </div>
-            <div className="col-header">
+            <div className='col-header'>
               <h4>Target score</h4>
             </div>
-            <div className="col-header">
+            <div className='col-header'>
               <h4>Weight</h4>
             </div>
           </div>
 
           {this.state.children.map((child) => { return (
-          <div className="col-data-row col-data-goals" key={child._id} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}}>
-            <div className="col-data">
+          <div className='col-data-row col-data-goals' key={child._id} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}}>
+            <div className='col-data'>
               <a href={child._id} onClick={this.handleClick} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}}>{child.owner.name}</a>
             </div>
-            <div className="col-data">
+            <div className='col-data'>
               {child.initScore}
             </div>
-            <div className="col-data">
+            <div className='col-data'>
               {child.history ? (child.history.data.reduce((prev, curr) => { return (prev.date > curr.date) ? prev : curr;})).value : ''}
             </div>
-            <div className="col-data">
+            <div className='col-data'>
               {child.targScore}
             </div>
-            <div className="col-data">
-              <input type="number" name="weight" value={child.weight || ''} onChange={this.handleChange} onBlur={this.handleSubmit} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}} id={child._id} maxLength="11"></input>
+            <div className='col-data'>
+              <input type='number' name='weight' value={child.weight || ''} onChange={this.handleChange} onBlur={this.handleSubmit} style={child.status !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}} id={child._id} maxLength='11'></input>
             </div>
           </div>);})}
 

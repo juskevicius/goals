@@ -47,7 +47,7 @@ export default class HomePage extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -71,7 +71,7 @@ export default class HomePage extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -163,7 +163,7 @@ export default class HomePage extends React.Component {
             const errorMessage = error.response.data.errors.message;
             if (errorMessage.constructor === Array) {
               for (let i = 0; i < errorMessage.length; i++) {
-                alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+                alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
               }
             } else {
               alert(errorMessage);
@@ -194,7 +194,7 @@ export default class HomePage extends React.Component {
               const errorMessage = error.response.data.errors.message;
               if (errorMessage.constructor === Array) {
                 for (let i = 0; i < errorMessage.length; i++) {
-                  alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+                  alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
                 }
               } else {
                 alert(errorMessage);
@@ -229,7 +229,7 @@ export default class HomePage extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -257,7 +257,7 @@ export default class HomePage extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -284,7 +284,7 @@ export default class HomePage extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -298,28 +298,28 @@ export default class HomePage extends React.Component {
 
     return (
       <div>
-        <div className="grid-container">
-          <div className="l-margin">
+        <div className='grid-container'>
+          <div className='l-margin'>
             <Navbar toggleDisplayForm={this.toggleDisplayForm} chart={this.state.orgChart} userRole={this.state.userRole} updateGoalToDisplay={this.updateGoalToDisplay}/>
           </div>
-          <div className="header">
+          <div className='header'>
             <h1>
               {this.state.goalToDisplay ? this.state.goalToDisplay.name : 'Welcome to Enterprise Grow!'}
             </h1>
           </div>
-          <div className="r-margin">
-            <a href="/logout" onClick={(event) => this.props.logout(event)}><i className="fa fa-sign-out" style={{fontSize:54 + "px"}}></i></a>
+          <div className='r-margin'>
+            <a href='/logout' onClick={(event) => this.props.logout(event)}><i className='fa fa-sign-out' style={{fontSize:54 + 'px'}}></i></a>
           </div>
-          <div className="l-main1">
+          <div className='l-main1'>
             {this.state.goalToDisplay && <GaugeChart targScore={this.state.goalToDisplay.targScore} history={this.state.history} toggleDisplayForm={this.toggleDisplayForm}/>}
           </div>
-          <div className="r-main1">
+          <div className='r-main1'>
             {this.state.goalToDisplay && <LineChart targScore={this.state.goalToDisplay.targScore} history={this.state.history} toggleDisplayForm={this.toggleDisplayForm}/>}
           </div>
-          <div className="l-main2">
+          <div className='l-main2'>
             {this.state.goalToDisplay && <GoalInfo goal={this.state.goalToDisplay} handleGoalDetails={this.handleGoalDetails} submitGoalDetails={this.submitGoalDetails}/>}
           </div>
-          <div className="r-main2">
+          <div className='r-main2'>
             {this.state.goalToDisplay && <Nesting key={this.state.goalToDisplay._id} children={this.state.goalToDisplay.parentTo} task={this.state.goalToDisplay.task} id={this.state.goalToDisplay._id} updateGoalToDisplay={this.updateGoalToDisplay}/>}
           </div>
         </div>

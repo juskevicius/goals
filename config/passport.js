@@ -10,7 +10,7 @@ passport.use(new LocalStrategy({
 }, (empId, password, done) => {
   Users.findOne({ empId })
     .then((user) => {
-      if(!user || !user.validatePassword(password)) {
+      if (!user || !user.validatePassword(password)) {
         return done(null, false, { errors: { 'employee id or password': 'is invalid' } });
       }
 

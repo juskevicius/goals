@@ -1,19 +1,19 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const helmet = require('helmet')
+const helmet = require('helmet');
 
-//Configure isProduction variable
+// Configure isProduction variable
 const isProduction = process.env.NODE_ENV === 'production';
 
 const app = express();
 
-//Set up mongoose connection.
+// Set up mongoose connection.
 const mongoose = require('mongoose');
+
 const mongoDB = process.env.DB_ADDRESS;
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
@@ -38,21 +38,21 @@ require('./config/passport');
 app.use(require('./routes/users'));
 app.use(require('./routes/goals'));
 
-//Error handlers & middlewares
-if(!isProduction) {
-  app.use((err, req, res, next) => {
+// Error handlers & middlewares
+if (!isProduction) {
+  app.use((err, req, res) => {
     res.status(err.status || 500);
 
     res.json({
       errors: {
         message: err.message,
-        error: err
+        error: err,
       },
     });
   });
 }
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   res.status(err.status || 500);
 
   res.json({

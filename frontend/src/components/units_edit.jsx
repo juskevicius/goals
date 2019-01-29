@@ -40,13 +40,13 @@ export default class UnitsEdit extends React.Component {
     });
     if (target.type === 'checkbox' && target.checked) {
       const name2 = target.name.split('-')[0];
-      const unitId = target.getAttribute("unit-id");
+      const unitId = target.getAttribute('unit-id');
       this.setState(prevstate => ({
         [name2]: [...prevstate[name2], unitId]
       }));
     } else if (target.type === 'checkbox' && !target.checked) {
       const name2 = target.name.split('-')[0];
-      const unitId = target.getAttribute("unit-id");
+      const unitId = target.getAttribute('unit-id');
       this.setState(prevstate => ({
         [name2]: prevstate[name2].filter((unit) => { return unit !== unitId; })
       }));
@@ -67,7 +67,7 @@ export default class UnitsEdit extends React.Component {
       })
       .then(response => {
         if (response.status === 200) {
-          alert("successfuly updated a unit");
+          alert('successfuly updated a unit');
           this.props.loadData();
         }
       })
@@ -75,7 +75,7 @@ export default class UnitsEdit extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -90,7 +90,7 @@ export default class UnitsEdit extends React.Component {
       .post('/unitsDelete', { id })
       .then(response => {
         if (response.status === 200) {
-          alert("successfuly deleted a unit");
+          alert('successfuly deleted a unit');
           this.props.loadData();
         }
       })
@@ -98,7 +98,7 @@ export default class UnitsEdit extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -121,7 +121,7 @@ export default class UnitsEdit extends React.Component {
           </label>
           <label><h3>Unit type:</h3>
             <select name='unitType' value={this.state.unitType} onChange={this.handleChange}>
-              <option value="">Choose</option>
+              <option value=''>Choose</option>
               <option value='Country'>Country</option>
               <option value='Department'>Department</option>
               <option value='Group'>Group</option>

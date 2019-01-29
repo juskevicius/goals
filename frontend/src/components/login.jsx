@@ -20,9 +20,9 @@ export default class Login extends React.Component {
 
   handleInput = (event) => {
     if (event.target.validity.patternMismatch) {
-      event.target.setCustomValidity("User ID pattern is incorrect. Should be 5029***");
+      event.target.setCustomValidity('User ID pattern is incorrect. Should be 5029***');
     } else {
-      event.target.setCustomValidity("");
+      event.target.setCustomValidity('');
     }
   }
 
@@ -41,7 +41,7 @@ export default class Login extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -64,7 +64,7 @@ export default class Login extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -74,15 +74,15 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <div className="login-screen">
-        <img className="logo" alt="logo" src="/images/Grow_logo.png"></img>
+      <div className='login-screen'>
+        <img className='logo' alt='logo' src='/images/Grow_logo.png'></img>
         <form onSubmit={this.handleSubmit}>
           <label>username:</label>
-          <input type="text" name="empId" value={this.state.empId} onChange={this.handleChange} onInput={this.handleInput} required pattern="5029[a-z]{3}"></input>
+          <input type='text' name='empId' value={this.state.empId} onChange={this.handleChange} onInput={this.handleInput} required pattern='5029[a-z]{3}'></input>
           <label>password:</label>
-          <input type="password" name="password" value={this.state.password} onChange={this.handleChange} required></input>
-          <input className="form-btn" type="button" value="login as user" onClick={this.handleSubmit}></input>
-          <input className="form-btn guest-login" type="button" value="enter as guest" onClick={this.handleSubmit2}></input>
+          <input type='password' name='password' value={this.state.password} onChange={this.handleChange} required></input>
+          <input className='form-btn' type='button' value='login as user' onClick={this.handleSubmit}></input>
+          <input className='form-btn guest-login' type='button' value='enter as guest' onClick={this.handleSubmit2}></input>
         </form>
       </div>
     );

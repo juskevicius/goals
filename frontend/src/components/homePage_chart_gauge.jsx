@@ -23,67 +23,67 @@ export default class GaugeChart extends React.Component {
     const fontSize = width * 0.064;
     const deg180 = 0.5 * Math.PI;
     const theGauge = d3.arc()
-        .startAngle(-0.5 * Math.PI)
-        .innerRadius(width / 2 * 0.5)
-        .outerRadius(width / 2 * 0.7)
-        .cornerRadius(6);
+      .startAngle(-0.5 * Math.PI)
+      .innerRadius(width / 2 * 0.5)
+      .outerRadius(width / 2 * 0.7)
+      .cornerRadius(6);
     const theTarget = d3.arc()
-        .startAngle((2 * targetVal - 1) * deg180)
-        .endAngle((2 * targetVal - 1) * deg180 + 0.04)
-        .innerRadius(width / 2 * 0.48)
-        .outerRadius(width / 2 * 0.72);
-    const svg = d3.select(".gauge-chart").append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .style("background-color", "rgb(252, 252, 252)")
-        .append("g")
-        .attr("transform", "translate(" + width / 2 + ", " + (height * 0.9) + ")");
-        //add labels on the top-right and top-left corners
-      svg.append('text') // Current
-        .attr("x", -width * 0.8 / 2)
-        .attr("y", -height * 0.8 + fontSize)
-        .attr("font-size", fontSize)
-        .on('click', (event = new Event('fake')) => props.toggleDisplayForm("formCurrentScore", event))
-        .style("fill", "#606060")
-        .transition()
-        .duration(duration)
-        .text("Current");
-      svg.append('text') // score, % (current)
-        .attr("x", -width * 0.8 / 2 + fontSize)
-        .attr("y", -height * 0.8 + fontSize * 2.2)
-        .attr("font-size", fontSize)
-        .on('click', (event = new Event('fake')) => props.toggleDisplayForm("formCurrentScore", event))
-        .style("fill", "#606060")
-        .transition()
-        .duration(duration)
-        .text(Math.round(perc * 100) + "%");
-      svg.append('text') // Target
-        .attr("x", width * 0.8 / 2 - fontSize * 3)
-        .attr("y", -height * 0.8 + fontSize)
-        .attr("font-size", fontSize)
-        .style("fill", "#606060")
-        .transition()
-        .duration(duration)
-        .text("Target");
-      svg.append('text') // score, % (target)
-        .attr("x", width * 0.8 / 2 - fontSize * 2.75)
-        .attr("y", -height * 0.8 + fontSize * 2.2)
-        .attr("font-size", fontSize)
-        .style("fill", "#606060")
-        .transition()
-        .duration(duration)
-        .text(Math.round(targetVal * 100) + "%");
-      svg.append("path") // add grey backgound
-        .datum({endAngle: deg180})
-        .attr("fill", "#e5e5e5")
-        .attr("d", theGauge);  
-      svg.append("path") // add foreground
-        .datum({endAngle: (2 * 0 - 1) * deg180})
-        .attr("fill", "#217068")
-        .attr("d", theGauge)
-        .transition()
-        .duration(duration)
-        .attrTween("d", arcTween((2 * perc - 1) * deg180));
+      .startAngle((2 * targetVal - 1) * deg180)
+      .endAngle((2 * targetVal - 1) * deg180 + 0.04)
+      .innerRadius(width / 2 * 0.48)
+      .outerRadius(width / 2 * 0.72);
+    const svg = d3.select('.gauge-chart').append('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .style('background-color', 'rgb(252, 252, 252)')
+      .append('g')
+      .attr('transform', 'translate(' + width / 2 + ', ' + (height * 0.9) + ')');
+      //add labels on the top-right and top-left corners
+    svg.append('text') // Current
+      .attr('x', -width * 0.8 / 2)
+      .attr('y', -height * 0.8 + fontSize)
+      .attr('font-size', fontSize)
+      .on('click', (event = new Event('fake')) => props.toggleDisplayForm('formCurrentScore', event))
+      .style('fill', '#606060')
+      .transition()
+      .duration(duration)
+      .text('Current');
+    svg.append('text') // score, % (current)
+      .attr('x', -width * 0.8 / 2 + fontSize)
+      .attr('y', -height * 0.8 + fontSize * 2.2)
+      .attr('font-size', fontSize)
+      .on('click', (event = new Event('fake')) => props.toggleDisplayForm('formCurrentScore', event))
+      .style('fill', '#606060')
+      .transition()
+      .duration(duration)
+      .text(Math.round(perc * 100) + '%');
+    svg.append('text') // Target
+      .attr('x', width * 0.8 / 2 - fontSize * 3)
+      .attr('y', -height * 0.8 + fontSize)
+      .attr('font-size', fontSize)
+      .style('fill', '#606060')
+      .transition()
+      .duration(duration)
+      .text('Target');
+    svg.append('text') // score, % (target)
+      .attr('x', width * 0.8 / 2 - fontSize * 2.75)
+      .attr('y', -height * 0.8 + fontSize * 2.2)
+      .attr('font-size', fontSize)
+      .style('fill', '#606060')
+      .transition()
+      .duration(duration)
+      .text(Math.round(targetVal * 100) + '%');
+    svg.append('path') // add grey backgound
+      .datum({endAngle: deg180})
+      .attr('fill', '#e5e5e5')
+      .attr('d', theGauge);  
+    svg.append('path') // add foreground
+      .datum({endAngle: (2 * 0 - 1) * deg180})
+      .attr('fill', '#217068')
+      .attr('d', theGauge)
+      .transition()
+      .duration(duration)
+      .attrTween('d', arcTween((2 * perc - 1) * deg180));
     //animate foreground
     function arcTween(newAngle) {
         return (d) => {
@@ -94,30 +94,30 @@ export default class GaugeChart extends React.Component {
             };
         };
     }
-      svg.append("path") // add target to the gauge
-        .attr("fill", "#e5e5e5")
-        .attr("d", theTarget)
-        .transition()
-        .duration(duration)
-        .attr("fill", "#33477a")
-        .attr("d", theTarget);
-      svg.append('text') // animate current value
-        .attr("class", "middle-text")
-        .attr("text-anchor", "middle")
-        .attr("font-size", fontSize * 2)
-        .on('click', (event = new Event('fake')) => props.toggleDisplayForm("formCurrentScore", event))
-        .transition()
-        .duration(duration)
-        .tween("text", function() {
-            const that = d3.select(this),
-                i = d3.interpolateNumber(0, perc);
-            return (t) => { that.text( d3.format(".0%")(i(t))); };
-        });
+    svg.append('path') // add target to the gauge
+      .attr('fill', '#e5e5e5')
+      .attr('d', theTarget)
+      .transition()
+      .duration(duration)
+      .attr('fill', '#33477a')
+      .attr('d', theTarget);
+    svg.append('text') // animate current value
+      .attr('class', 'middle-text')
+      .attr('text-anchor', 'middle')
+      .attr('font-size', fontSize * 2)
+      .on('click', (event = new Event('fake')) => props.toggleDisplayForm('formCurrentScore', event))
+      .transition()
+      .duration(duration)
+      .tween('text', function() {
+          const that = d3.select(this),
+              i = d3.interpolateNumber(0, perc);
+          return (t) => { that.text( d3.format('.0%')(i(t))); };
+      });
   }
 
   render() {
     return (
-      <div className="gauge-chart">
+      <div className='gauge-chart'>
       </div>
     );
   }

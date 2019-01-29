@@ -14,14 +14,14 @@ export default class FormRemove extends React.Component {
           
           this.props.updateOwnerGoals();
           let event = new Event('fake');
-          this.props.toggleDisplayForm("formRemove", null, event);
+          this.props.toggleDisplayForm('formRemove', null, event);
         }
       })
       .catch(error => {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -31,15 +31,15 @@ export default class FormRemove extends React.Component {
   
   render() {
     return (
-      <div className="overlay" onClick={(event) => this.props.toggleDisplayForm("formRemove", null, event)}>
-        <div className="form-remove">
-          <div className="form-header">Remove a goal</div>
-          <div className="form-body">
+      <div className='overlay' onClick={(event) => this.props.toggleDisplayForm('formRemove', null, event)}>
+        <div className='form-remove'>
+          <div className='form-header'>Remove a goal</div>
+          <div className='form-body'>
             <form>
               <label>Do you really want to remove this goal?
-                <input type="text" name="name" value={this.props.goal.name} readOnly></input>
+                <input type='text' name='name' value={this.props.goal.name} readOnly></input>
               </label>
-              <input className="form-btn" type="submit" onClick={this.handleSubmit} value="Remove"></input>
+              <input className='form-btn' type='submit' onClick={this.handleSubmit} value='Remove'></input>
             </form>
           </div>
         </div>

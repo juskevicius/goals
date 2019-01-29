@@ -125,7 +125,7 @@ export default class Task extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -139,39 +139,39 @@ export default class Task extends React.Component {
     return (
       <div>
         {this.state.task.length > 0 &&
-        <div className="children-tasks">
-          <div className="col-headers-row col-headers-tasks">
-            <div className="col-header">
+        <div className='children-tasks'>
+          <div className='col-headers-row col-headers-tasks'>
+            <div className='col-header'>
               <h4>Task</h4>
             </div>
-            <div className="col-header">
+            <div className='col-header'>
               <h4>Done, %</h4>
             </div>
-            <div className="col-header">
+            <div className='col-header'>
               <h4>Weight</h4>
             </div>
           </div>
           {this.state.task.map((task, index) => { return (
-          <div className="col-data-row col-data-tasks" key={task._id}>
-            <div className="col-data">{index + 1 + ". "}{task.description}</div>
-            <i className={"far fa-caret-square-down " + (task.childrenTasks ? "fa-caret-level1" : "")} id={task._id} onClick={this.toggleShowChildrenTasks}></i>
-            <div className="col-data">
-              <input type="number" name="implemented" value={task.implemented || 0} onChange={this.handleChange} onBlur={this.handleSubmit} id={task._id} readOnly={task.readOnly} min={0} max={100}></input>
+          <div className='col-data-row col-data-tasks' key={task._id}>
+            <div className='col-data'>{index + 1 + '. '}{task.description}</div>
+            <i className={'far fa-caret-square-down ' + (task.childrenTasks ? 'fa-caret-level1' : '')} id={task._id} onClick={this.toggleShowChildrenTasks}></i>
+            <div className='col-data'>
+              <input type='number' name='implemented' value={task.implemented || 0} onChange={this.handleChange} onBlur={this.handleSubmit} id={task._id} readOnly={task.readOnly} min={0} max={100}></input>
             </div>
-            <div className="col-data">
-              <input type="number" name='weight' value={task.readOnly ? '' : (task.weight || '')} onChange={task.readOnly ? null : this.handleChange} onBlur={task.readOnly ? null : this.handleSubmit} id={task._id} maxLength="11" readOnly={task.readOnly}></input>
+            <div className='col-data'>
+              <input type='number' name='weight' value={task.readOnly ? '' : (task.weight || '')} onChange={task.readOnly ? null : this.handleChange} onBlur={task.readOnly ? null : this.handleSubmit} id={task._id} maxLength='11' readOnly={task.readOnly}></input>
             </div>
             
               {(task.childrenTasks && task.showChildren) && task.childrenTasks.map((childTask, index) => { return (
-              <div className="col-data-tasks-level2" key={index}>
-                <div className="col-data">
+              <div className='col-data-tasks-level2' key={index}>
+                <div className='col-data'>
                   <a href={childTask.id} onClick={this.handleClick} style={childTask.goalStatus !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}}>{childTask.owner}</a>
                 </div>
-                <i className="far fa-caret-square-down fa-caret-level2"></i>
-                <div className="col-data">
-                  <input type="number" value={childTask.implemented || 0} style={childTask.goalStatus !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}} readOnly></input>
+                <i className='far fa-caret-square-down fa-caret-level2'></i>
+                <div className='col-data'>
+                  <input type='number' value={childTask.implemented || 0} style={childTask.goalStatus !== 'Approved' ? {color: 'rgb(187, 187, 187)'} : {color: 'rgb(80, 80, 80)'}} readOnly></input>
                 </div>
-                <div className="col-data">
+                <div className='col-data'>
                 </div>
               </div>);})}
           

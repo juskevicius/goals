@@ -49,7 +49,7 @@ export default class FormMyOwn extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -60,7 +60,7 @@ export default class FormMyOwn extends React.Component {
   getGoalDetails = (event, goalId) => {
     event.preventDefault();
     const ev = new Event('fake');
-    this.props.toggleDisplayForm("formMyOwn", ev);
+    this.props.toggleDisplayForm('formMyOwn', ev);
     this.props.updateGoalToDisplay(goalId);
   } 
 
@@ -68,44 +68,44 @@ export default class FormMyOwn extends React.Component {
 
     const headers = () => {
       return (
-        <div className="col-headers-row">
-          <div className="col-header col-header-goal-name">Goal</div>
-          <div className="col-header">Initial score</div>
-          <div className="col-header">Target score</div>
-          <div className="col-header">Status</div>
-          <div className="col-header">Actions</div>
+        <div className='col-headers-row'>
+          <div className='col-header col-header-goal-name'>Goal</div>
+          <div className='col-header'>Initial score</div>
+          <div className='col-header'>Target score</div>
+          <div className='col-header'>Status</div>
+          <div className='col-header'>Actions</div>
         </div>);
     }
 
     const headers2 = () => {
       return (
-        <div className="col-headers-row">
-          <div className="col-header col-header-goal-name">Goal</div>
-          <div className="col-header">Initial score</div>
-          <div className="col-header">Current score</div>
-          <div className="col-header">Target score</div>
-          <div className="col-header">Actions</div>
+        <div className='col-headers-row'>
+          <div className='col-header col-header-goal-name'>Goal</div>
+          <div className='col-header'>Initial score</div>
+          <div className='col-header'>Current score</div>
+          <div className='col-header'>Target score</div>
+          <div className='col-header'>Actions</div>
         </div>);
     }
 
     const goalsOfferedToMe = () => {
       if (this.state.ownerGoals) {
-        const offeredToMe = this.state.ownerGoals.filter((goal) => { return (goal.statusApprover === "Approved" && goal.statusOwner === "Pending");});
+        const offeredToMe = this.state.ownerGoals.filter((goal) => { return (goal.statusApprover === 'Approved' && goal.statusOwner === 'Pending');});
         if (offeredToMe.length > 0) {
           return (
-            <div className="offeredToMe">
-              <div className="section-header">Received goal offers</div>
+            <div className='offeredToMe'>
+              <div className='section-header'>Received goal offers</div>
               {headers()}
               {offeredToMe.map((goal) => { return (
-              <div className="col-data-row" key={goal._id}>
-                <div className="col-data col-data-goal-name">{goal.approversOffer.name}</div>
-                <div className="col-data">{goal.approversOffer.initScore}</div>
-                <div className="col-data">{goal.approversOffer.targScore}</div>
-                <div className="col-data">{goal.status}</div>
-                <div className="col-data">
-                  <i className="far fa-check-square" onClick={(event) => this.toggleDisplayForm("formAcceptOffer", goal, event)} title="Accept"></i>
-                  <i className="far fa-comment" onClick={(event) => this.toggleDisplayForm("formNegotiateOffered", goal, event)} title="Negotiate" style={!goal.ownersOffer || ((goal.approversOffer.updated || goal.approversOffer.created) > (goal.ownersOffer.updated || goal.ownersOffer.created)) ? {color: '#217068', fontWeight: 'bold'} : {}}></i>
-                  <i className="fa fa-remove" onClick={(event) => this.toggleDisplayForm("formRemove", goal, event)} title="Reject"></i>
+              <div className='col-data-row' key={goal._id}>
+                <div className='col-data col-data-goal-name'>{goal.approversOffer.name}</div>
+                <div className='col-data'>{goal.approversOffer.initScore}</div>
+                <div className='col-data'>{goal.approversOffer.targScore}</div>
+                <div className='col-data'>{goal.status}</div>
+                <div className='col-data'>
+                  <i className='far fa-check-square' onClick={(event) => this.toggleDisplayForm('formAcceptOffer', goal, event)} title='Accept'></i>
+                  <i className='far fa-comment' onClick={(event) => this.toggleDisplayForm('formNegotiateOffered', goal, event)} title='Negotiate' style={!goal.ownersOffer || ((goal.approversOffer.updated || goal.approversOffer.created) > (goal.ownersOffer.updated || goal.ownersOffer.created)) ? {color: '#217068', fontWeight: 'bold'} : {}}></i>
+                  <i className='fa fa-remove' onClick={(event) => this.toggleDisplayForm('formRemove', goal, event)} title='Reject'></i>
                 </div>
               </div>);})}
             </div>);
@@ -115,21 +115,21 @@ export default class FormMyOwn extends React.Component {
 
     const goalsCreatedByMe = () => {
       if (this.state.ownerGoals) {
-        const createdByMe = this.state.ownerGoals.filter((goal) => { return (goal.statusApprover === "Pending" && goal.statusOwner === "Approved");});
+        const createdByMe = this.state.ownerGoals.filter((goal) => { return (goal.statusApprover === 'Pending' && goal.statusOwner === 'Approved');});
         if (createdByMe.length > 0) {
           return (
-            <div className="myOffered">
-              <div className="section-header">Submitted goals</div>
+            <div className='myOffered'>
+              <div className='section-header'>Submitted goals</div>
               {headers()}
               {createdByMe.map((goal) => { return  (
-              <div className="col-data-row" key={goal._id}>
-                <div className="col-data col-data-goal-name">{goal.ownersOffer.name}</div>
-                <div className="col-data">{goal.ownersOffer.initScore}</div>
-                <div className="col-data">{goal.ownersOffer.targScore}</div>
-                <div className="col-data">{goal.status}</div>
-                <div className="col-data">
-                  <i className="far fa-comment" onClick={(event) => this.toggleDisplayForm("formNegotiateOwn", goal, event)} title="Negotiate" style={goal.approversOffer && ((goal.approversOffer.updated || goal.approversOffer.created) > (goal.ownersOffer.updated || goal.ownersOffer.created)) ?  {color: '#217068', fontWeight: 'bold'} : {}}></i>
-                  <i className="fa fa-remove" onClick={(event) => this.toggleDisplayForm("formRemove", goal, event)} title="Reject"></i>
+              <div className='col-data-row' key={goal._id}>
+                <div className='col-data col-data-goal-name'>{goal.ownersOffer.name}</div>
+                <div className='col-data'>{goal.ownersOffer.initScore}</div>
+                <div className='col-data'>{goal.ownersOffer.targScore}</div>
+                <div className='col-data'>{goal.status}</div>
+                <div className='col-data'>
+                  <i className='far fa-comment' onClick={(event) => this.toggleDisplayForm('formNegotiateOwn', goal, event)} title='Negotiate' style={goal.approversOffer && ((goal.approversOffer.updated || goal.approversOffer.created) > (goal.ownersOffer.updated || goal.ownersOffer.created)) ?  {color: '#217068', fontWeight: 'bold'} : {}}></i>
+                  <i className='fa fa-remove' onClick={(event) => this.toggleDisplayForm('formRemove', goal, event)} title='Reject'></i>
                 </div>
               </div>);})}
             </div>
@@ -140,22 +140,22 @@ export default class FormMyOwn extends React.Component {
 
     const myApprovedGoals = () => {
       if (this.state.ownerGoals) {
-        const myApproved = this.state.ownerGoals.filter((goal) => { return (goal.statusApprover === "Approved" && goal.statusOwner === "Approved");});
+        const myApproved = this.state.ownerGoals.filter((goal) => { return (goal.statusApprover === 'Approved' && goal.statusOwner === 'Approved');});
         if (myApproved.length > 0) {
           return (
-            <div className="myApproved">
-              <div className="section-header">Approved goals</div>
+            <div className='myApproved'>
+              <div className='section-header'>Approved goals</div>
               {headers2()}
               {myApproved.map((goal) => { return  (
-              <div className="col-data-row" key={goal._id}>
-                <div className="col-data col-data-goal-name"><a href={'/details/' + goal._id} onClick={event => this.getGoalDetails(event, goal._id)}>{goal.name}</a></div>
-                <div className="col-data">{goal.initScore}</div>
-                <div className="col-data">{goal.history ? (goal.history.data.reduce((prev, curr) => { return (prev.date > curr.date) ? prev : curr;})).value : ''}</div>
-                <div className="col-data">{goal.targScore}</div>
-                <div className="col-data">
-                  <i className="fa fa-edit" onClick={(event) => this.toggleDisplayForm("formEdit", goal, event)} title="Edit"></i>
-                  <i className="fa fa-remove" onClick={(event) => this.toggleDisplayForm("formRemove", goal, event)} title="Delete"></i>
-                  <i className="fa fa-share-alt" onClick={(event) => this.toggleDisplayForm("formOfferTo", goal, event)} title="Ofer to..."></i>
+              <div className='col-data-row' key={goal._id}>
+                <div className='col-data col-data-goal-name'><a href={'/details/' + goal._id} onClick={event => this.getGoalDetails(event, goal._id)}>{goal.name}</a></div>
+                <div className='col-data'>{goal.initScore}</div>
+                <div className='col-data'>{goal.history ? (goal.history.data.reduce((prev, curr) => { return (prev.date > curr.date) ? prev : curr;})).value : ''}</div>
+                <div className='col-data'>{goal.targScore}</div>
+                <div className='col-data'>
+                  <i className='fa fa-edit' onClick={(event) => this.toggleDisplayForm('formEdit', goal, event)} title='Edit'></i>
+                  <i className='fa fa-remove' onClick={(event) => this.toggleDisplayForm('formRemove', goal, event)} title='Delete'></i>
+                  <i className='fa fa-share-alt' onClick={(event) => this.toggleDisplayForm('formOfferTo', goal, event)} title='Ofer to...'></i>
                 </div>
               </div>);})}
             </div>
@@ -165,10 +165,10 @@ export default class FormMyOwn extends React.Component {
     }
 
     return (
-      <div className="overlay" onClick={(event) => this.props.toggleDisplayForm("formMyOwn", event)}>
-        <div className="form-myOwn">
-          <div className="form-header">Own goals</div>
-          <div className="form-body form-myOwn-body">
+      <div className='overlay' onClick={(event) => this.props.toggleDisplayForm('formMyOwn', event)}>
+        <div className='form-myOwn'>
+          <div className='form-header'>Own goals</div>
+          <div className='form-body form-myOwn-body'>
             {goalsOfferedToMe()}
             {goalsCreatedByMe()}
             {myApprovedGoals()}

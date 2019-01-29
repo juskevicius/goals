@@ -33,7 +33,7 @@ export default class FormNegotiateMyOffered extends React.Component {
          ...prevstate.task.slice(taskNr + 1)
       ]
     }));
-    if (taskNr === (this.state.task.length - 1) && updKey === "description") {
+    if (taskNr === (this.state.task.length - 1) && updKey === 'description') {
       this.setState(prevstate => ({
         task: [...prevstate.task, {nr: prevstate.task.length, description: '', weight: ''}]
       }));
@@ -56,14 +56,14 @@ export default class FormNegotiateMyOffered extends React.Component {
         if (response.status === 200) {
           this.props.updateOthersGoals();
           let event = new Event('fake');
-          this.props.toggleDisplayForm("formNegotiateMyOffered", null, event);
+          this.props.toggleDisplayForm('formNegotiateMyOffered', null, event);
         }
       })
       .catch(error => {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -94,14 +94,14 @@ export default class FormNegotiateMyOffered extends React.Component {
           if (response.status === 200) {
             this.props.updateOthersGoals();
             let event = new Event('fake');
-            this.props.toggleDisplayForm("formNegotiateMyOffered", null, event);
+            this.props.toggleDisplayForm('formNegotiateMyOffered', null, event);
           }
         })
         .catch(error => {
           const errorMessage = error.response.data.errors.message;
           if (errorMessage.constructor === Array) {
             for (let i = 0; i < errorMessage.length; i++) {
-              alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+              alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
             }
           } else {
             alert(errorMessage);
@@ -115,15 +115,15 @@ export default class FormNegotiateMyOffered extends React.Component {
 
     const tasks = (tasksToList, readOnly) => {
       return tasksToList.map((task, index) => { return (
-        <div className="task-row" key={task._id || task.nr}>
-          <div className="descr-block">
-            <label className="task task-label-descr">Task nr {index + 1}:
-              <input className="task task-input-descr" type="text" onChange={this.handleTaskChange} name={"task[" + index + "][description]"} value={task.description} readOnly={readOnly} maxLength="200"></input>
+        <div className='task-row' key={task._id || task.nr}>
+          <div className='descr-block'>
+            <label className='task task-label-descr'>Task nr {index + 1}:
+              <input className='task task-input-descr' type='text' onChange={this.handleTaskChange} name={'task[' + index + '][description]'} value={task.description} readOnly={readOnly} maxLength='200'></input>
             </label>
           </div>
-          <div className="weight-block">
-            <label className="task task-label-weight">Weight 
-              <input className="task task-input-weight" type="number" onChange={this.handleTaskChange} name={"task[" + index + "][weight]"} value={task.weight || ''} readOnly={readOnly} maxLength="11"></input>
+          <div className='weight-block'>
+            <label className='task task-label-weight'>Weight 
+              <input className='task task-input-weight' type='number' onChange={this.handleTaskChange} name={'task[' + index + '][weight]'} value={task.weight || ''} readOnly={readOnly} maxLength='11'></input>
             </label>
           </div>
         </div>
@@ -133,61 +133,61 @@ export default class FormNegotiateMyOffered extends React.Component {
     const ownersOffer = this.props.goal.ownersOffer;
 
     return (
-      <div className="overlay" onClick={(event) => this.props.toggleDisplayForm("formNegotiateMyOffered", null, event)}>
-        <div className="form-negotiateMyOffered">
-          <div className="form-header">Negotiate my offered goal</div>
-          <div className="form-body">
+      <div className='overlay' onClick={(event) => this.props.toggleDisplayForm('formNegotiateMyOffered', null, event)}>
+        <div className='form-negotiateMyOffered'>
+          <div className='form-header'>Negotiate my offered goal</div>
+          <div className='form-body'>
             <form>
               <h4>Response {ownersOffer ? 'from ' + ownersOffer.owner.name + ', ' : 'not yet submitted'}{ownersOffer ? (ownersOffer.updated_formatted ? ownersOffer.updated_formatted : ownersOffer.created_formatted) : ''}:</h4>
               <label>Goal:
-                <input type="text" value={(ownersOffer && ownersOffer.name) ? ownersOffer.name : ''} readOnly></input>
+                <input type='text' value={(ownersOffer && ownersOffer.name) ? ownersOffer.name : ''} readOnly></input>
               </label>
               <label>Initial score:
-                <input type="number" value={(ownersOffer && ownersOffer.initScore) ? ownersOffer.initScore : ''} readOnly></input>
+                <input type='number' value={(ownersOffer && ownersOffer.initScore) ? ownersOffer.initScore : ''} readOnly></input>
               </label>
               <label>Target score:
-                <input type="number" value={(ownersOffer && ownersOffer.targScore) ? ownersOffer.targScore : ''} readOnly></input>
+                <input type='number' value={(ownersOffer && ownersOffer.targScore) ? ownersOffer.targScore : ''} readOnly></input>
               </label>
               <label>Comment:
-                <input type="text" value={(ownersOffer && ownersOffer.comment) ? ownersOffer.comment : ''} readOnly></input>
+                <input type='text' value={(ownersOffer && ownersOffer.comment) ? ownersOffer.comment : ''} readOnly></input>
               </label>
               {(ownersOffer && ownersOffer.task.length > 0) && 
-              <div className="task-group">
+              <div className='task-group'>
                 {tasks(ownersOffer.task, true)}
-                <div className="last-task-row"></div>
+                <div className='last-task-row'></div>
               </div>}
               {ownersOffer && 
-              <div className="form-btn-center">
-                <input className="form-btn" type="submit" value="Approve" onClick={this.handleSubmit1}></input>
+              <div className='form-btn-center'>
+                <input className='form-btn' type='submit' value='Approve' onClick={this.handleSubmit1}></input>
               </div>}
             </form>
             <form ref={el => this.form = el}>
               <h4>My offer to {this.props.goal.owner.name + ', '}{this.props.goal.approversOffer.updated_formatted ? this.props.goal.approversOffer.updated_formatted : this.props.goal.approversOffer.created_formatted}:</h4>
               <label>Goal:
-                <input type="text" name="name" value={this.state.name} onChange={this.handleChange} required maxLength="100"></input>
-                <div className="invalid-feedback" />
+                <input type='text' name='name' value={this.state.name} onChange={this.handleChange} required maxLength='100'></input>
+                <div className='invalid-feedback' />
               </label>
               <label>Initial score:
-                <input type="number" name="initScore" value={this.state.initScore || ''} onChange={this.handleChange} maxLength="11"></input>
+                <input type='number' name='initScore' value={this.state.initScore || ''} onChange={this.handleChange} maxLength='11'></input>
               </label>
               <label>Target score:
-                <input type="number" name="targScore" value={this.state.targScore || ''} onChange={this.handleChange} maxLength="11"></input>
+                <input type='number' name='targScore' value={this.state.targScore || ''} onChange={this.handleChange} maxLength='11'></input>
               </label>
               <label>Comment:
-                <input type="text" name="comment" value={this.state.comment || ''} onChange={this.handleChange} maxLength="400"></input>
+                <input type='text' name='comment' value={this.state.comment || ''} onChange={this.handleChange} maxLength='400'></input>
               </label>
               {this.props.goal.approversOffer.task.length > 0 && 
-              <div className="task-group">
+              <div className='task-group'>
                 {tasks(this.state.task, false)}
-                <div className="last-task-row"></div>
+                <div className='last-task-row'></div>
               </div>}
-              <div className="form-btn-center">
-                <input className="form-btn" type="submit" value="Submit a new offer" onClick={this.handleSubmit2}></input>
+              <div className='form-btn-center'>
+                <input className='form-btn' type='submit' value='Submit a new offer' onClick={this.handleSubmit2}></input>
               </div>
             </form>
             {ownersOffer &&
-            <div className="form-btn-center">
-              <input className="form-btn" onClick={this.copyFieldValues} type='button' value='&#8658; copy field values &#8658;'></input>
+            <div className='form-btn-center'>
+              <input className='form-btn' onClick={this.copyFieldValues} type='button' value='&#8658; copy field values &#8658;'></input>
             </div>}
           </div>
         </div>

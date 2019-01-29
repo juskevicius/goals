@@ -25,7 +25,7 @@ export default class Users extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -60,7 +60,7 @@ export default class Users extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -72,9 +72,9 @@ export default class Users extends React.Component {
   render() {
 
     return (
-    <div className="form-users">
-      <div className="form-header">Users</div>
-      <div className="form-body">
+    <div className='form-users'>
+      <div className='form-header'>Users</div>
+      <div className='form-body'>
         <form>
           <label>Id:
             <input type='text' name='empId' value={this.state.empId || ''} onChange={this.handleChange}></input>

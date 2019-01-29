@@ -28,7 +28,7 @@ export default class FormOfferTo extends React.Component {
          ...prevstate.offers.slice(offerNr + 1)
       ]
     }));
-    if (offerNr === (this.state.offers.length - 1) && updKey === "owner") {
+    if (offerNr === (this.state.offers.length - 1) && updKey === 'owner') {
       this.setState(prevstate => ({
         offers: [...prevstate.offers, {
           owner: '',
@@ -59,13 +59,13 @@ export default class FormOfferTo extends React.Component {
          ...prevstate.offers.slice(offerNr + 1)
       ]
     }));
-    if (taskNr === (this.state.offers[offerNr].task.length - 1) && updKey === "description") {
+    if (taskNr === (this.state.offers[offerNr].task.length - 1) && updKey === 'description') {
       this.setState(prevstate => ({
         offers: [
            ...prevstate.offers.slice(0, offerNr),
            Object.assign({}, prevstate.offers[offerNr], { task: [
               ...prevstate.offers[offerNr].task,
-              {nr: prevstate.offers[offerNr].task.length, description: "", weight: ""}
+              {nr: prevstate.offers[offerNr].task.length, description: '', weight: ''}
             ] }),
            ...prevstate.offers.slice(offerNr + 1)
         ]
@@ -87,14 +87,14 @@ export default class FormOfferTo extends React.Component {
             this.props.updateGoalToDisplay();
           }
           let event = new Event('fake');
-          this.props.toggleDisplayForm("formOfferTo", null, event);
+          this.props.toggleDisplayForm('formOfferTo', null, event);
         }
       })
       .catch(error => {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -106,28 +106,28 @@ export default class FormOfferTo extends React.Component {
 
     const offers = () => {
       return this.state.offers.map((offer, index) => { return (
-        <div className="offer-elm" key={offer.owner}>
+        <div className='offer-elm' key={offer.owner}>
           <label>Offer to:
-            <select className="offer-unit" name={"owner[" + index + "]"} value={offer.owner} onChange={this.handleChange}>
-              <option value="">Choose</option>
+            <select className='offer-unit' name={'owner[' + index + ']'} value={offer.owner} onChange={this.handleChange}>
+              <option value=''>Choose</option>
               {this.props.children && this.props.children.map((unit) => { return <option key={unit._id} value={unit._id}>{unit.name}</option>;})}
             </select>
           </label>
           <label>Weight:
-            <input type="number" name={"weight[" + index + "]"} placeholder="100%" value={offer.weight || ''} onChange={this.handleChange}></input>
+            <input type='number' name={'weight[' + index + ']'} placeholder='100%' value={offer.weight || ''} onChange={this.handleChange}></input>
           </label>
           <label>Initial score:
-            <input type="number" name={"initScore[" + index + "]"} value={offer.initScore || ''} onChange={this.handleChange}></input>
+            <input type='number' name={'initScore[' + index + ']'} value={offer.initScore || ''} onChange={this.handleChange}></input>
           </label>
           <label>Target score:
-            <input type="number" name={"targScore[" + index + "]"} value={offer.targScore || ''} onChange={this.handleChange}></input>
+            <input type='number' name={'targScore[' + index + ']'} value={offer.targScore || ''} onChange={this.handleChange}></input>
           </label>
           <label>Comment:
-            <input type="text" name={"comment[" + index + "]"} value={offer.comment || ''} onChange={this.handleChange}></input>
+            <input type='text' name={'comment[' + index + ']'} value={offer.comment || ''} onChange={this.handleChange}></input>
           </label>
-          <div className="task-group">
+          <div className='task-group'>
             {tasks(offer.task, index, false)}
-            <div className="last-task-row"></div>
+            <div className='last-task-row'></div>
           </div>
         </div>
       );});
@@ -135,15 +135,15 @@ export default class FormOfferTo extends React.Component {
 
     const tasks = (tasksToList, ownerNr, readOnly) => {
       return tasksToList.map((task, index) => { return (
-        <div className="task-row" key={task._id || task.nr}>
-          <div className="descr-block">
-            <label className="task task-label-descr">Task nr {index + 1}:
-              <input className="task task-input-descr" type="text" name={"task[" + ownerNr + "][" + index + "][description]"} value={task.description} onChange={this.handleTaskChange} readOnly={readOnly}></input>
+        <div className='task-row' key={task._id || task.nr}>
+          <div className='descr-block'>
+            <label className='task task-label-descr'>Task nr {index + 1}:
+              <input className='task task-input-descr' type='text' name={'task[' + ownerNr + '][' + index + '][description]'} value={task.description} onChange={this.handleTaskChange} readOnly={readOnly}></input>
             </label>
           </div>
-          <div className="weight-block">
-            <label className="task task-label-weight">Weight
-              <input className="task task-input-weight" type="number" name={"task[" + ownerNr + "][" + index + "][weight]"} value={task.weight || ''} onChange={this.handleTaskChange} readOnly={readOnly}></input>
+          <div className='weight-block'>
+            <label className='task task-label-weight'>Weight
+              <input className='task task-input-weight' type='number' name={'task[' + ownerNr + '][' + index + '][weight]'} value={task.weight || ''} onChange={this.handleTaskChange} readOnly={readOnly}></input>
             </label>
           </div>
         </div>
@@ -151,34 +151,30 @@ export default class FormOfferTo extends React.Component {
     }
 
     return (
-      <div className="overlay" onClick={(event) => this.props.toggleDisplayForm("formOfferTo", null, event)}>
-        <div className="form-offerTo">
-          <div className="form-header">Offer the goal</div>
-          <div className="form-body">
+      <div className='overlay' onClick={(event) => this.props.toggleDisplayForm('formOfferTo', null, event)}>
+        <div className='form-offerTo'>
+          <div className='form-header'>Offer the goal</div>
+          <div className='form-body'>
             <label>Goal:
-              <input type="text" value={this.props.goal.name} readOnly></input>
+              <input type='text' value={this.props.goal.name} readOnly></input>
             </label>
             <label>Initial score:
-              <input type="number" value={this.props.goal.initScore || ''} readOnly></input>
+              <input type='number' value={this.props.goal.initScore || ''} readOnly></input>
             </label>
             <label>Target score:
-              <input type="number" value={this.props.goal.targScore || ''} readOnly></input>
+              <input type='number' value={this.props.goal.targScore || ''} readOnly></input>
             </label>
             <label>Comment:
-              <input type="text" value={this.props.goal.comment || ''} readOnly></input>
+              <input type='text' value={this.props.goal.comment || ''} readOnly></input>
             </label>
-            {this.props.goal.task.length > 0 && <div className="task-group">
+            {this.props.goal.task.length > 0 && <div className='task-group'>
               {tasks(this.props.goal.task, null, true)}
-              <div className="last-task-row"></div>
+              <div className='last-task-row'></div>
             </div>}
-            {/*this.props.goal.task.length === 0 && <div className="task-group">
-              {tasks([{ nr:1 }], null, true)}
-              <div className="last-task-row"></div>
-    </div>*/}
             <form>
-              <div className="offer-group">
+              <div className='offer-group'>
                 {offers()}
-                <input className="form-btn make-offer-btn" type="submit" value="Submit the offers" onClick={this.handleSubmit}></input>
+                <input className='form-btn make-offer-btn' type='submit' value='Submit the offers' onClick={this.handleSubmit}></input>
               </div>
             </form>
           </div>

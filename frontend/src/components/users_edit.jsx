@@ -33,7 +33,7 @@ export default class UsersEdit extends React.Component {
       })
       .then(response => {
         if (response.status === 200) {
-          alert("successfuly updated a user");
+          alert('successfuly updated a user');
           this.props.loadUsers();
         }
       })
@@ -41,7 +41,7 @@ export default class UsersEdit extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -55,7 +55,7 @@ export default class UsersEdit extends React.Component {
     axios.post('/usersDelete', { id })
       .then(response => {
         if (response.status === 200) {
-          alert("successfuly deleted a user");
+          alert('successfuly deleted a user');
           this.props.loadUsers();
         }
       })
@@ -63,7 +63,7 @@ export default class UsersEdit extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -75,7 +75,7 @@ export default class UsersEdit extends React.Component {
   render() {
 
     return (
-    <div className="form-editUsers">
+    <div className='form-editUsers'>
         <form>
           <label>Object id:
             <input type='text' name='empId' value={this.state.id || ''} readOnly></input>

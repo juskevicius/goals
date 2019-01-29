@@ -29,7 +29,7 @@ export default class Units extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -46,13 +46,13 @@ export default class Units extends React.Component {
     });
     if (target.type === 'checkbox' && target.checked) {
       const name2 = target.name.split('-')[0];
-      const unitId = target.getAttribute("unit-id");
+      const unitId = target.getAttribute('unit-id');
       this.setState(prevState => ({
         [name2]: [...prevState[name2], unitId]
       }));
     } else if (target.type === 'checkbox' && !target.checked) {
       const name2 = target.name.split('-')[0];
-      const unitId = target.getAttribute("unit-id");
+      const unitId = target.getAttribute('unit-id');
       this.setState(prevState => ({
         [name2]: prevState[name2].filter((unit) => { return unit !== unitId; })
       }));
@@ -66,7 +66,7 @@ export default class Units extends React.Component {
       .post('/units', {name, owner, unitType, childTo, parentTo})
       .then(response => {
         if (response.status === 200) {
-          alert("successfuly aded a unit");
+          alert('successfuly aded a unit');
           this.loadData();
         }
       })
@@ -74,7 +74,7 @@ export default class Units extends React.Component {
         const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
-            alert("Something went wrong with the field '" + errorMessage[i].param + "'\nError message: " + errorMessage[i].msg);
+            alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
@@ -85,9 +85,9 @@ export default class Units extends React.Component {
   render() {     
     return(
       <div>
-        <div className="form-units">
-          <div className="form-header">Units</div>
-          <div className="form-body">
+        <div className='form-units'>
+          <div className='form-header'>Units</div>
+          <div className='form-body'>
             <form>
               <label>Unit name:
                 <input type='text' name='name' value={this.state.name || ''} onChange={this.handleChange}></input>
@@ -99,7 +99,7 @@ export default class Units extends React.Component {
               </label>
               <label>Unit type:
                 <select name='unitType' value={this.state.unitType} onChange={this.handleChange}>
-                  <option value="">Choose</option>
+                  <option value=''>Choose</option>
                   <option value='Country'>Country</option>
                   <option value='Department'>Department</option>
                   <option value='Group'>Group</option>
