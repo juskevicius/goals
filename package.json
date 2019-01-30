@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "devstart": "concurrently \"nodemon ./bin/www\" \"cd frontend && npm start\"",
-    "heroku-postbuild": "cd frontend && npm install && npm run build"
+    "heroku-postbuild": "npm install && cd frontend && npm install && npm run build"
   },
   "dependencies": {
     "async": "2.6.1",

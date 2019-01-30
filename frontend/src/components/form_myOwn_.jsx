@@ -155,7 +155,7 @@ export default class FormMyOwn extends React.Component {
                 <div className='col-data'>
                   <i className='fa fa-edit' onClick={(event) => this.toggleDisplayForm('formEdit', goal, event)} title='Edit'></i>
                   <i className='fa fa-remove' onClick={(event) => this.toggleDisplayForm('formRemove', goal, event)} title='Delete'></i>
-                  <i className='fa fa-share-alt' onClick={(event) => this.toggleDisplayForm('formOfferTo', goal, event)} title='Ofer to...'></i>
+                  <i className='fa fa-share-alt' onClick={(event) => this.toggleDisplayForm('formOfferTo', goal, event)} title='Offer to...'></i>
                 </div>
               </div>);})}
             </div>
