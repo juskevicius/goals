@@ -536,7 +536,13 @@ nav ul {
 
 .offeredByMe, .createdByOthers { width: 100%; }
 
-.form-others .col-header { width: 15%; }
+.form-others .col-header { 
+  width: 15%;
+}
+
+.form-others .col-header span { 
+  display: block;
+}
 
 .form-others .col-data { width: 15%; }
 

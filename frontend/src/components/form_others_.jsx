@@ -9,7 +9,7 @@ export default class FormOthers extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      someGoal: {}
+      someGoal: {},
     }
   }
 
@@ -40,29 +40,100 @@ export default class FormOthers extends React.Component {
     axios.get('/others')
       .then(response => {
         if (response.status === 200) {
+          const othersGoals = response.data.othersGoals
+            .sort((a, b) => { 
+              if (a.statusApprover < b.statusApprover) {
+                return -1;  
+              }
+              if (a.statusApprover > b.statusApprover) {
+                return 1;
+              }
+              return 0;
+            })
+            .sort((a, b) => { 
+              if (a.statusOwner < b.statusOwner) {
+                return -1;  
+              }
+              if (a.statusOwner > b.statusOwner) {
+                return 1;
+              }
+              return 0;
+            });
+
           this.setState({
-            othersGoals: response.data.othersGoals
+            othersGoals: othersGoals
           });
         }
       })
       .catch(error => {
-        const errorMessage = error.response.data.errors.message;
+        /*const errorMessage = error.response.data.errors.message;
         if (errorMessage.constructor === Array) {
           for (let i = 0; i < errorMessage.length; i++) {
             alert('Something went wrong with the field ' + errorMessage[i].param + '\nError message: ' + errorMessage[i].msg);
           }
         } else {
           alert(errorMessage);
-        }  
+        }  */
       });
   }
 
-  render() {
+  sorttBy = (param, order, section) => {
 
+    this.setState((prevState) => {
+      
+      let status1;
+      let status2;
+      switch (section) {
+        case 'Offered':
+          status1 = 'Approved';
+          status2 = 'Pending';
+          break;
+        case 'Their':
+          status1 = 'Pending';
+          status2 = 'Approved';
+          break;
+        case 'Approved':
+          status1 = 'Approved';
+          status2 = 'Approved';
+          break;
+        default:
+          status1 = 'Pending';
+          status2 = 'Pending';
+      }
+
+      const sortBtn = 'sortBtn' + section;
+
+      const newState = prevState.othersGoals.sort((a, b) => {
+        if (a.statusApprover === status1 && a.statusOwner === status2 && b.statusApprover === status1 && b.statusOwner === status2) { 
+          if (a[param] < b[param]) {
+            return order === 'asc' ? -1 : 1;  
+          }
+          if (a[param] > b[param]) {
+            return order === 'asc' ? 1 : -1;
+          }
+          return 0;
+        }
+        return 0;
+      });
+
+      return {
+        othersGoals: newState,
+        [sortBtn]: !prevState[sortBtn],
+      };
+
+    });
+  }  
+
+  render() {
     const headers1 = () => {
       return (
         <div className='col-headers-row'>
-          <div className='col-header col-header-goal-name'>Goal</div>
+          <div className='col-header col-header-goal-name'>
+            <span>Goal</span>
+            {this.state.sortBtnOffered && <i className="fas fa-sort-alpha-down" onClick={() => this.sorttBy('name', 'asc', 'Offered')}></i>}
+            {!this.state.sortBtnOffered && <i className="fas fa-sort-alpha-up" onClick={() => this.sorttBy('name', 'desc', 'Offered')}></i>}
+            <i className="fas fa-filter"></i>
+          </div>
           <div className='col-header'>Offered to</div>
           <div className='col-header'>Initial score</div>
           <div className='col-header'>Target score</div>
@@ -74,7 +145,12 @@ export default class FormOthers extends React.Component {
     const headers2 = () => {
       return (
         <div className='col-headers-row'>
-          <div className='col-header col-header-goal-name'>Goal</div>
+          <div className='col-header col-header-goal-name'>
+            <span>Goal</span>
+            {this.state.sortBtnTheir && <i className="fas fa-sort-alpha-down" onClick={() => this.sorttBy('name', 'asc', 'Their')}></i>}
+            {!this.state.sortBtnTheir && <i className="fas fa-sort-alpha-up" onClick={() => this.sorttBy('name', 'desc', 'Their')}></i>}
+            <i className="fas fa-filter"></i>
+          </div>
           <div className='col-header'>Created by</div>
           <div className='col-header'>Initial score</div>
           <div className='col-header'>Target score</div>
@@ -86,7 +162,12 @@ export default class FormOthers extends React.Component {
     const headers3 = () => {
       return (
         <div className='col-headers-row'>
-          <div className='col-header col-header-goal-name'>Goal</div>
+          <div className='col-header col-header-goal-name'>
+            <span>Goal</span>
+            {this.state.sortBtnApproved && <i className="fas fa-sort-alpha-down" onClick={() => this.sorttBy('name', 'asc', 'Approved')}></i>}
+            {!this.state.sortBtnApproved && <i className="fas fa-sort-alpha-up" onClick={() => this.sorttBy('name', 'desc', 'Approved')}></i>}
+            <i className="fas fa-filter"></i>
+          </div>
           <div className='col-header'>Owner</div>
           <div className='col-header'>Initial score</div>
           <div className='col-header'>Target score</div>
@@ -185,6 +266,7 @@ export default class FormOthers extends React.Component {
             {this.state.formNegotiateTheirOwn && <FormNegotiateTheirOwn toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals}/>}
             {this.state.formNegotiateApproved && <FormNegotiateApproved toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals}/>}
             {this.state.formReject && <FormReject toggleDisplayForm={this.toggleDisplayForm} goal={this.state.someGoal} updateOthersGoals={this.updateOthersGoals} updateGoalToDisplay={this.props.updateGoalToDisplay} goalInTheBackground={this.props.goalToDisplay}/>}
+            {this.state.formFilter && <FormFilter toggleDisplayForm={this.toggleDisplayForm}/>}
           </div>
         </div>
       </div>
